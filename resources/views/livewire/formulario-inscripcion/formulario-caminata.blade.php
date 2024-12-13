@@ -12,26 +12,26 @@
             <x-input class="w-full" name="groupId" value="{{$eventos->id}}" wire:model="create_inscripcion.evento_id"/>
         </div>
         @endforeach
-        @foreach ($grupo as $grupos)
-            @if ($groupId == $grupos->id)
+       {{--  @foreach ($grupo as $grupos)
+            @if ($groupId == $grupos->id) --}}
                 <div class="mb-4 ">
-                    <x-label for="">Grupo {{ $grupos->name }}</x-label>
-                    <x-input class="w-full" name="groupId" value="{{ $grupos->id }}" wire:model="create_inscripcion.grupo_id"/>
+                    <x-label for="">Grupo {{ $grupoP->name }}</x-label>
+                    <x-input class="w-full" name="groupId" wire:model="create_inscripcion.grupo_id"/>
                 </div>
                 <div class="mb-4 ">
-                    <x-label for="">Monto {{ $grupos->costo }} $</x-label>
+                    <x-label for="">Monto {{ $grupoP->costo }} $</x-label>
 
                 </div>
                 <div class="mb-4 ">
-                    <x-label for="">Monto {{ $this->calculo($grupos->costo) }} Bs
-                        <x-input  wire:model="create_inscripcion.monto_pagado_bs"></x-input>
+                    <x-label for="">Monto {{ $this->calculo($grupoP->costo) }} Bs
+                        <x-input wire:model="create_inscripcion.monto_pagado_bs"></x-input>
                     </x-label>
 
 
                 </div>
                 <div class="mb-4 ">
                     <x-label for="">Tasa Dolar {{ $dolars->last()->valor }} Bs</x-label>
-                    <x-input class="w-full" value=" {{ $dolars->last()->id }}" wire:model="create_inscripcion.dolar_id" />
+                    <x-input class="w-full" wire:model="create_inscripcion.dolar_id" />
                 </div>
 
                 <div class="mb-4" hidden>
@@ -41,8 +41,8 @@
                 <div class="mb-4" hidden>
                     <x-label for="">nomenclatura</x-label>
                 </div>
-            @endif
-        @endforeach
+     {{--        @endif
+        @endforeach --}}
 
     </div>
 
@@ -89,8 +89,8 @@
                     <x-label for="">Estado</x-label>
                     <x-select class="w-full" wire:click="changeEvent($event.target.value)" >
                         <option value="">Seleccione un Estado</option>
-                        @foreach ($estado as $post)
-                            <option value="{{ $post->id }}"> {{ $post->estado }}</option>
+                        @foreach ($estados as $estado)
+                            <option value="{{ $estado->id }}"> {{ $estado->estado }}</option>
                         @endforeach
                     </x-select>
                 </div>

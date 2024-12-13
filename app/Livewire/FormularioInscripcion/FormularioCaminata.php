@@ -24,7 +24,7 @@ class FormularioCaminata extends Component
     public $grupo;
     public $dolars;
     public $numero;
-    public $estado;
+    public $estados;
     public $ciudad;
     public $participante_id;
     public $banco;
@@ -34,6 +34,7 @@ class FormularioCaminata extends Component
     public $opcion3=null;
     public $opcion4=null;
     public $groupId=null;
+    public $grupoP;
 
 
     public $create_participante= [
@@ -66,18 +67,24 @@ class FormularioCaminata extends Component
 
     public function mount()
     {
+        $this->groupId = request()->get('groupId');
+        $this->create_inscripcion['grupo_id']= $this->groupId;
         $this->evento = evento::all();
         $this->participante = participante::all();
-        $this->grupo = grupo::all();
-        $this->dolars = dolar::where('');
-        $this->create_inscripcion['monto_pagado_bs']= $this->dolars;
+        //$this->grupo = grupo::where('status',true)->get();
+        $this->grupoP = grupo::find($this->groupId);
+        $this->dolars = dolar::all();
+        $this->create_inscripcion['dolar_id']= $this->dolars->last()->id;
+
+        $this->create_inscripcion['monto_pagado_bs']= $this->calculo($this->grupoP->costo);
         $this->numero = numero::all();
-        $this->estado = estado::all();
+        $this->estados = estado::all();
         $this->ciudad = ciudad::all();
         $this->metodo_pago = DB::table('metodo_pagos')->join('tipo_pagos', 'metodo_pagos.tipo_pago_id', '=', 'tipo_pagos.id')->join('bancos', 'metodo_pagos.banco_id', '=', 'bancos.id')->select('metodo_pagos.*', 'tipo_pagos.name as tipo_pago_nombre', 'bancos.name as banco_nombre')->get();
 
+       //return dd($this->grupoP);
 
-        $this->groupId = request()->get('groupId');
+
 
 
     }
