@@ -1,0 +1,16 @@
+<x-sidebar-layout>
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+            {{ __('Administrar/Metodo Pago') }}
+        </h2>
+    </x-slot>
+
+    <div class="py-12 ">
+        <div class="max-w-7xl mx-auto m:px-6 lg:px-8">
+
+            {{-- <livewire:administrar.admin-banco-t-pago> --}}
+            <livewire:administrar.admin-metodo />
+
+        </div>
+    </div>
+</x-sidebar-layout>
