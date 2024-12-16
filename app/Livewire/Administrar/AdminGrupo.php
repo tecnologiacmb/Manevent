@@ -20,7 +20,7 @@ class AdminGrupo extends Component
     public $postCreate = [
         'recorrido_id' => "",
         'nombre' => "",
-        'precio' => "",
+        'precio' => null,
         'cantidad' => "",
         'estado' => false,
 

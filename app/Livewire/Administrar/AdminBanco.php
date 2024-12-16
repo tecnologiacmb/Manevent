@@ -44,7 +44,7 @@ class AdminBanco extends Component
     }
     public function render()
     {
-        $nameBanco = banco::orderBy('nombre', 'desc')->paginate(5);
+        $nameBanco = banco::orderBy('nombre', 'desc')->paginate(9);
 
         return view('livewire.administrar.admin-banco', [
             'posts' => $nameBanco
