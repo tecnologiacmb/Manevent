@@ -18,5 +18,6 @@ class DatabaseSeeder extends Seeder
         $this->call(tipo_pago_seeder::class);
         $this->call(recorrido_seeder::class);
         $this->call(banco_seeder::class);
+        $this->call(mesa_seeder::class);
     }
 }

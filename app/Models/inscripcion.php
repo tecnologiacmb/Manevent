@@ -10,6 +10,8 @@ use App\Models\metodo_pago;
 use App\Models\grupo;
 use App\Models\dolar;
 use App\Models\numero;
+use App\Models\mesa;
+use App\Models\categoriaHabilitada;
 
 class inscripcion extends Model
 {
@@ -19,10 +21,12 @@ class inscripcion extends Model
 
         'evento_id',
         'participante_id',
-        'metodo_id',
+        'metodo_pago_id',
         'grupo_id',
-        'tasa_dolar_id',
+        'dolar_id',
         'numero_id',
+        'categoria_habilitada_id',
+        'mesa_id',
         'datos',
         'monto_pagado_bs',
         'ip',
@@ -36,7 +40,9 @@ class inscripcion extends Model
     public function participante(){
         return $this->hasOne(participante::class);
     }
-
+    public function categoriaHabilitada(){
+        return $this->hasOne(categoriaHabilitada::class);
+    }
 
     public function grupo(){
         return $this->hasOne(grupo::class);
@@ -52,5 +58,10 @@ class inscripcion extends Model
     public function numero(){
         return $this->hasOne(numero::class);
     }
+
+    public function mesa(){
+        return $this->hasMany(mesa::class);
+    }
+
 
 }

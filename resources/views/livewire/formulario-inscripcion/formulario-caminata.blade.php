@@ -3,19 +3,18 @@
 
 
     <div class="grid grid-cols-5 gap-4 content-start ">
-        @foreach ($evento as $eventos)
-            <div class="mb-4 ">
-                <x-label for="">{{ $eventos->nombre }} </x-label>
 
-                <x-input class="w-full" nombre="groupId" value="{{ $eventos->id }}"
-                    wire:model="create_inscripcion.evento_id" />
+            <div class="mb-4 ">
+                <x-label for="">{{ $evento->nombre }} </x-label>
+
+                <x-input class="w-full" wire:model="create_inscripcion.evento_id" />
             </div>
-        @endforeach
+
         {{--  @foreach ($grupo as $grupos)
             @if ($groupId == $grupos->id) --}}
         <div class="mb-4 ">
             <x-label for="">Grupo {{ $grupoP->nombre }}</x-label>
-            <x-input class="w-full" nombre="groupId" wire:model="create_inscripcion.grupo_id" />
+            <x-input class="w-full" name="groupId" wire:model="create_inscripcion.grupo_id" />
         </div>
         <div class="mb-4 ">
             <x-label for="">Monto {{ $grupoP->precio }} $</x-label>
@@ -29,7 +28,7 @@
 
         </div>
         <div class="mb-4 ">
-            <x-label for="">Tasa Dolar {{ $dolars->last()->precio }} Bs</x-label>
+            <x-label for="">Tasa Dolar {{ $dolars->latest()->first()->precio }} Bs</x-label>
             <x-input class="w-full" wire:model="create_inscripcion.dolar_id" />
         </div>
 
@@ -81,9 +80,9 @@
                 </div>
                 <div class="mb-4">
                     <x-label for="">Fecha de Nacimiento</x-label>
-                    <x-input class="w-full" type="date" wire:model="create_participante.fecha_nacimiento" />
+                    <x-input class="w-full" type="date" wire:model="create_participante.fecha_nacimiento"
+                    wire:click="edad(value.fecha_nacimiento)" />
                 </div>
-
                 <div class="mb-4">
                     <x-label for="">Estado</x-label>
                     <x-select class="w-full" wire:click="changeEvent($event.target.value)">
@@ -240,7 +239,7 @@
                     <div class="mb-4">
                         <x-label for="">Cuenta</x-label>
                         <x-select class="w-full" wire:model="create_inscripcion.metodo_pago_id">
-                            <option value="" disabled>Seleccione la cuenta de pago</option>
+                            <option value="" >Seleccione la cuenta de pago</option>
                             @foreach ($metodo_pago as $metodo_pagos)
                                 <option value="{{ $metodo_pagos->id }}">
                                     {{ $metodo_pagos->tipo_pago_nombre }}--/--{{ $metodo_pagos->banco_nombre }}

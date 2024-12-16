@@ -7,7 +7,7 @@ use App\Models\grupo;
 use App\Models\recorrido;
 use Livewire\Component;
 use Livewire\WithPagination;
-
+use Carbon\Carbon;
 class AdminGrupo extends Component
 {
     use WithPagination;
@@ -29,7 +29,11 @@ class AdminGrupo extends Component
     {
 
         $this->grupos = grupo::all();
-        $this->dolars = dolar::all();
+        $this->dolars = dolar::select('id', 'precio')->whereDate('created_at', Carbon::today())->latest()->first();
+        if (!$this->dolars) {
+            $this->dolars = dolar::latest()->first();
+        }
+        $this->postCreate['dolar_id'] = $this->dolars ? $this->dolars->id : null;
         $this->recorridos = recorrido::all();
     }
 
@@ -38,12 +42,11 @@ class AdminGrupo extends Component
         $this->open = true;
     }
 
-    public function calculo($num)
-    {
+    public function calculo($num){
         $total = 0;
-        $ultimoDolar = $this->dolars->last();
+        $ultimoDolar = $this->dolars;
 
-        $total = $num * $ultimoDolar->valor;
+        $total = $num * $ultimoDolar->precio;
 
         return $total;
     }
