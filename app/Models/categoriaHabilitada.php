@@ -8,9 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class categoriaHabilitada extends Model
 {
     use HasFactory;
-    protected $fillable=[
-        'name',
+    protected $fillable = [
+        'nombre',
         'edad_min',
         'edad_max',
-        ];
+    ];
 }

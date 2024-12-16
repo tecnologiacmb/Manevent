@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('numeros', function (Blueprint $table) {
             $table->id();
-            $table->string("numero");
+            $table->string("numero",);
             $table->boolean("estado");
             $table->boolean("disponible");
             $table->timestamps();

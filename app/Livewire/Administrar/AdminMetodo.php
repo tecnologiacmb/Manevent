@@ -15,7 +15,7 @@ class AdminMetodo extends Component
     public $nameMetodo;
     public $banco;
     public $tipo_pago;
-public $metodo=null;
+    public $metodo = null;
 
     public $open = false;
     public $postCreate = [
@@ -28,7 +28,7 @@ public $metodo=null;
         'ABA' => null,
         'SWIT' => null,
         'correo' => null,
-        'status' => false,
+        'estado' => false,
     ];
 
     public function mount()
@@ -44,7 +44,6 @@ public $metodo=null;
     {
 
         $this->metodo = $value;
-
     }
     public function agg()
     {
@@ -53,7 +52,7 @@ public $metodo=null;
 
     public function seve()
     {
-        $post=metodo_pago::create([
+        $post = metodo_pago::create([
             'tipo_pago_id' => $this->postCreate['tipo_pago_id'],
             'banco_id' => $this->postCreate['banco_id'],
             'n°_cuenta' => $this->postCreate['n°_cuenta'],
@@ -63,7 +62,7 @@ public $metodo=null;
             'ABA' => $this->postCreate['ABA'],
             'SWIT' => $this->postCreate['SWIT'],
             'correo' => $this->postCreate['correo'],
-            'status' => $this->postCreate['status'],
+            'estado' => $this->postCreate['estado'],
         ]);
 
         $this->reset(['postCreate']);

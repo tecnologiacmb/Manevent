@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\prenda_category;
 use App\Models\prenda_talla;
 use App\Models\evento;
+
 class prenda extends Model
 {
     use HasFactory;
@@ -16,17 +17,19 @@ class prenda extends Model
         'prenda_talla_id',
         'cantidad',
         'sexo',
-        'status',
+        'estado',
     ];
 
-    public function prenda_category(){
+    public function prenda_category()
+    {
         return $this->belongsTo(prenda_category::class);
     }
-    public function prenda_talla(){
+    public function prenda_talla()
+    {
         return $this->belongsTo(prenda_talla::class);
     }
-    public function eventos(){
+    public function eventos()
+    {
         return $this->hasMany(evento::class);
     }
 }
-

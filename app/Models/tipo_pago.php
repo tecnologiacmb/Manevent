@@ -10,8 +10,8 @@ class tipo_pago extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'name',
-        'status',
+        'nombre',
+        'estado',
 
     ];
 

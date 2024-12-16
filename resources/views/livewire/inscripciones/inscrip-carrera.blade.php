@@ -7,7 +7,8 @@
     </div>
 
 
-    <div class="relative flex flex-col w-full h-full overflow-scroll text-black bg-white shadow-md rounded-xl bg-clip-border overflow-x-hidden overflow-y-hidden">
+    <div
+        class="relative flex flex-col w-full h-full overflow-scroll text-black bg-white shadow-md rounded-xl bg-clip-border overflow-x-hidden overflow-y-hidden">
 
 
         <table class="w-full text-left table-auto min-w-max">
@@ -50,46 +51,43 @@
             <tbody>
 
                 @foreach ($grupos as $post)
-                @foreach ( $recorrido as $record )
-
-
-                @if ($post->recorrido_id == 2)
-
-
-                    <tr>
-                        <td class="p-4 border-b border-blue-gray-50">
-                            <p
-                                class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-                                {{ $post->id }}
-                            </p>
-                        </td>
-                        <td class="p-4 border-b border-blue-gray-50">
-                            <p
-                                class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-                                {{ $post->name }}
-                            </p>
-                        </td>
-                        <td class="p-4 border-b border-blue-gray-50">
-                            <p
-                                class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-                                {{ $post->costo }} $
-                            </p>
-                        </td>
-                        <td class="p-4 border-b border-blue-gray-50">
-                            <p
-                                class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-                                {{$this->calculo( $post->costo) }} Bs
-                            </p>
-                        </td>
-                        <td class="p-4 border-b border-blue-gray-50">
-                            <a href="/inscripcion" target="_blank"
-                                class="block font-sans text-sm antialiased font-medium leading-normal text-blue-gray-900" wire:navigate.hover>
-                                Edit
-                            </a>
-                        </td>
-                    </tr>
-                    @endif
-                @endforeach
+                    @foreach ($recorrido as $record)
+                        @if ($post->recorrido_id == 2)
+                            <tr>
+                                <td class="p-4 border-b border-blue-gray-50">
+                                    <p
+                                        class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
+                                        {{ $post->id }}
+                                    </p>
+                                </td>
+                                <td class="p-4 border-b border-blue-gray-50">
+                                    <p
+                                        class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
+                                        {{ $post->nombre }}
+                                    </p>
+                                </td>
+                                <td class="p-4 border-b border-blue-gray-50">
+                                    <p
+                                        class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
+                                        {{ $post->precio }} $
+                                    </p>
+                                </td>
+                                <td class="p-4 border-b border-blue-gray-50">
+                                    <p
+                                        class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
+                                        {{ $this->calculo($post->precio) }} Bs
+                                    </p>
+                                </td>
+                                <td class="p-4 border-b border-blue-gray-50">
+                                    <a href="/inscripcion" target="_blank"
+                                        class="block font-sans text-sm antialiased font-medium leading-normal text-blue-gray-900"
+                                        wire:navigate.hover>
+                                        Edit
+                                    </a>
+                                </td>
+                            </tr>
+                        @endif
+                    @endforeach
                 @endforeach
             </tbody>
         </table>

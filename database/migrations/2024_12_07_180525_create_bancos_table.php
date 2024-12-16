@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('bancos', function (Blueprint $table) {
             $table->id();
-            $table->string("name");
-            $table->string("codigo");
-            $table->boolean("status");
+            $table->string("nombre", 50);
+            $table->string("codigo", 20);
+            $table->boolean("estado");
             $table->timestamps();
         });
     }

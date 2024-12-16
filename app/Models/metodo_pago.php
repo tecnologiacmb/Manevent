@@ -21,7 +21,7 @@ class metodo_pago extends Model
         'ABA',
         'SWIT',
         'correo',
-        'status'
+        'estado'
     ];
 
     public function tipo_pago()
@@ -33,7 +33,8 @@ class metodo_pago extends Model
         return $this->hasMany(banco::class);
     }
 
-    public function inscripcion(){
+    public function inscripcion()
+    {
         return $this->belongsToMany(inscripcion::class);
     }
 }

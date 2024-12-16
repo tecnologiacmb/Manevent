@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Livewire\Administrar;
+
 use App\Models\recorrido;
 use App\Models\evento;
 
@@ -10,47 +11,50 @@ class AdminEvento extends Component
 {
 
     public $recorrido;
-    public $open=false;
+    public $open = false;
     public $evento;
-    public $post_create=[
+    public $post_create = [
 
-        'name',
-        'inicio',
-        'finalizacion',
-        'lugar',
+        'nombre',
+        'fecha_inicio',
+        'fecha_finalizacion',
+        'lugar_evento',
         'fecha_evento',
-        'status',
+        'estado',
 
     ];
 
-    public function mount(){
+    public function mount()
+    {
 
         $this->evento = evento::all();
         $this->recorrido = recorrido::all();
-
     }
 
-    public function agg(){
+    public function agg()
+    {
 
         $this->open = true;
     }
 
-    public function seve(){
-        $post=evento::create([
+    public function seve()
+    {
+        $post = evento::create([
 
-            'name' => $this->post_create['name'],
-            'inicio' => $this->post_create['inicio'],
-            'finalizacion' => $this->post_create['finalizacion'],
-            'lugar' => $this->post_create['lugar'],
+            'nombre' => $this->post_create['nombre'],
+            'fecha_inicio' => $this->post_create['fecha_inicio'],
+            'fecha_finalizacion' => $this->post_create['fecha_finalizacion'],
+            'lugar_evento' => $this->post_create['lugar_evento'],
             'fecha_evento' => $this->post_create['fecha_evento'],
-            'status' => $this->post_create['status'],
+            'estado' => $this->post_create['estado'],
 
         ]);
         $this->reset(['post_create']);
         $this->evento = evento::all();
     }
 
-    public function render(){
+    public function render()
+    {
 
         return view('livewire.administrar.admin-evento');
     }

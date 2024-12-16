@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('dolars', function (Blueprint $table) {
             $table->id();
-            $table->double("valor");
+            $table->double("precio");
             $table->timestamps();
         });
     }

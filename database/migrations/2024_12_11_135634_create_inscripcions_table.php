@@ -21,8 +21,8 @@ return new class extends Migration
             $table->foreignId("numero_id")->constrained()->nullable();
             $table->json("datos")->nullable();
             $table->double("monto_pagado_bs")->nullable();
-            $table->string("ip")->nullable();
-            $table->string("nomenclatura")->nullable();
+            $table->string("ip", 30)->nullable();
+            $table->string("nomenclatura", 20)->nullable();
             $table->timestamps();
         });
     }

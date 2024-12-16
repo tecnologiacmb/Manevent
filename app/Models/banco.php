@@ -10,9 +10,9 @@ class banco extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'name',
+        'nombre',
         'codigo',
-        'status'
+        'estado'
     ];
 
     public function metodo_pago()

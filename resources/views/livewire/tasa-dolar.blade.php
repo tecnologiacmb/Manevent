@@ -1,23 +1,25 @@
  <div>
-    <div class="bg-white shadow rounded-lg p-2 mb-4">
-        <h1 class="font-black text-2xl text-gray-800 leading-tight text-normal">
-            Agregar el Precio del Dolar
-        </h1><hr>
-        <form wire:submit="save">
+     <div class="bg-white shadow rounded-lg p-2 mb-4">
+         <h1 class="font-black text-2xl text-gray-800 leading-tight text-normal">
+             Agregar el Precio del Dolar
+         </h1>
+         <hr>
+         <form wire:submit="save">
 
 
-                <div class="flex justify-center space-x-4 py-2">
-                   <x-input placeholder="Precio del Dolar" type="number" step="0.01" wire:model="postCreate.valor" />
-                <x-button>
-                    agregar
-                </x-button>
-                </div>
+             <div class="flex justify-center space-x-4 py-2">
+                 <x-input placeholder="Precio del Dolar" type="number" step="0.01" wire:model="postCreate.precio" />
+                 <x-button>
+                     agregar
+                 </x-button>
+             </div>
 
-        </form>
+         </form>
 
-    </div>
+     </div>
 
-     <div class="relative flex flex-col w-full h-full overflow-scroll text-black bg-white shadow-md rounded-xl bg-clip-border overflow-x-hidden overflow-y-hidden">
+     <div
+         class="relative flex flex-col w-full h-full overflow-scroll text-black bg-white shadow-md rounded-xl bg-clip-border overflow-x-hidden overflow-y-hidden">
 
 
          <table class="w-full text-left table-auto min-w-max">
@@ -62,7 +64,7 @@
                          <td class="p-4 border-b border-blue-gray-50">
                              <p
                                  class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-                                 {{ $post->valor }} Bs
+                                 {{ $post->precio }} Bs
                              </p>
                          </td>
                          <td class="p-4 border-b border-blue-gray-50">

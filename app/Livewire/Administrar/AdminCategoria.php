@@ -1,9 +1,11 @@
 <?php
 
 namespace App\Livewire\Administrar;
+
 use App\Models\categoriaHabilitada;
 use Livewire\Component;
 use Livewire\WithPagination;
+
 class AdminCategoria extends Component
 {
     use WithPagination;
@@ -12,7 +14,7 @@ class AdminCategoria extends Component
 
     public $postCreate = [
 
-        'name' => "",
+        'nombre' => "",
         'edad_min' => "",
         'edad_max' => "",
 
@@ -29,9 +31,9 @@ class AdminCategoria extends Component
     }
     public function save()
     {
-        $post =categoriaHabilitada ::create([
+        $post = categoriaHabilitada::create([
 
-            'name' => $this->postCreate['name'],
+            'nombre' => $this->postCreate['nombre'],
             'edad_min' => $this->postCreate['edad_min'],
             'edad_max' => $this->postCreate['edad_max'],
 
@@ -39,7 +41,6 @@ class AdminCategoria extends Component
 
 
         $this->reset(['postCreate']);
-
     }
     public function render()
     {

@@ -10,8 +10,8 @@ class recorrido extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'name',
-        'status',
+        'nombre',
+        'estado',
 
     ];
     protected $table = 'recorridos';

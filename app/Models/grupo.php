@@ -14,10 +14,10 @@ class grupo extends Model
 
     protected $fillable = [
         'recorrido_id',
-        'name',
-        'costo',
-        'valor',
-        'status'
+        'nombre',
+        'precio',
+        'cantidad',
+        'estado'
     ];
 
     protected $table = 'grupos';
@@ -27,7 +27,8 @@ class grupo extends Model
         return $this->belongsTo(recorrido::class, 'recorrido_id', 'id');
     }
 
-    public function inscripcion(){
+    public function inscripcion()
+    {
         return $this->belongsToMany(inscripcion::class);
     }
 }

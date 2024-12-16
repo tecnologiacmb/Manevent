@@ -6,6 +6,7 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\recorrido;
 use Carbon\Carbon;
+
 class recorrido_seeder extends Seeder
 {
     /**
@@ -15,14 +16,14 @@ class recorrido_seeder extends Seeder
     {
 
 
-            $recorrido = [
-                ["name" => "Caminata", "status" => 1],
-                ["name" => "Carrera", "status" => 1],
+        $recorrido = [
+            ["nombre" => "Caminata", "estado" => 1],
+            ["nombre" => "Carrera", "estado" => 1],
 
-            ];
+        ];
 
         $now = Carbon::now();
         recorrido::insert($recorrido);
-        recorrido::whereNotNull('status')->update(['created_at' => $now, 'updated_at' => $now]);
+        recorrido::whereNotNull('estado')->update(['created_at' => $now, 'updated_at' => $now]);
     }
 }

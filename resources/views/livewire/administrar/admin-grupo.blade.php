@@ -8,7 +8,8 @@
         </x-button>
     </div>
 
-    <div class="relative flex flex-col w-full h-full overflow-scroll text-black bg-white shadow-md rounded-xl bg-clip-border overflow-x-hidden overflow-y-hidden">
+    <div
+        class="relative flex flex-col w-full h-full overflow-scroll text-black bg-white shadow-md rounded-xl bg-clip-border overflow-x-hidden overflow-y-hidden">
 
 
         <table class="w-full text-left table-auto min-w-max">
@@ -59,131 +60,128 @@
             </thead>
 
 
-                <tbody>
-                    @foreach ($posts as $post)
-                    @foreach ($recorridos as $recorrido )
-                    @if ($post->recorrido_id == $recorrido->id)
-
-
-
-                        <tr>
-                            <td class="p-4 border-b border-blue-gray-50">
-                                <p
-                                    class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-                                    {{ $post->id }}
-                                </p>
-                            </td>
-                            <td class="p-4 border-b border-blue-gray-50">
-                                <p
-                                    class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-                                    {{ $recorrido->name }}
-                                </p>
-                            </td>
-                            <td class="p-4 border-b border-blue-gray-50">
-                                <p
-                                    class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-                                    {{ $post->name }}
-                                </p>
-                            </td>
-                            <td class="p-4 border-b border-blue-gray-50">
-                                <p
-                                    class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-                                    {{ $post->costo }} $
-                                </p>
-                            </td>
-                            <td class="p-4 border-b border-blue-gray-50">
-                                <p
-                                    class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-                                    {{ $this->calculo($post->costo) }} Bs
-                                </p>
-                            </td>
-                            <td class="p-4 border-b border-blue-gray-50">
-                                <p
-                                    class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-                                    {{ $post->status }}
-                                </p>
-                            </td>
-                            <td class="p-4 border-b border-blue-gray-50">
-                                <a href="#"
-                                    class="block font-sans text-sm antialiased font-medium leading-normal text-blue-gray-900">
-                                    Edit
-                                </a>
-                            </td>
-                        </tr>
+            <tbody>
+                @foreach ($posts as $post)
+                    @foreach ($recorridos as $recorrido)
+                        @if ($post->recorrido_id == $recorrido->id)
+                            <tr>
+                                <td class="p-4 border-b border-blue-gray-50">
+                                    <p
+                                        class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
+                                        {{ $post->id }}
+                                    </p>
+                                </td>
+                                <td class="p-4 border-b border-blue-gray-50">
+                                    <p
+                                        class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
+                                        {{ $recorrido->nombre }}
+                                    </p>
+                                </td>
+                                <td class="p-4 border-b border-blue-gray-50">
+                                    <p
+                                        class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
+                                        {{ $post->nombre }}
+                                    </p>
+                                </td>
+                                <td class="p-4 border-b border-blue-gray-50">
+                                    <p
+                                        class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
+                                        {{ $post->precio }} $
+                                    </p>
+                                </td>
+                                <td class="p-4 border-b border-blue-gray-50">
+                                    <p
+                                        class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
+                                        {{ $this->calculo($post->precio) }} Bs
+                                    </p>
+                                </td>
+                                <td class="p-4 border-b border-blue-gray-50">
+                                    <p
+                                        class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
+                                        {{ $post->estado }}
+                                    </p>
+                                </td>
+                                <td class="p-4 border-b border-blue-gray-50">
+                                    <a href="#"
+                                        class="block font-sans text-sm antialiased font-medium leading-normal text-blue-gray-900">
+                                        Edit
+                                    </a>
+                                </td>
+                            </tr>
                         @endif
-                        @endforeach
                     @endforeach
-                </tbody>
-            </table>
-            <div>
-                {{ $posts->links() }}
-            </div>
+                @endforeach
+            </tbody>
+        </table>
+        <div>
+            {{ $posts->links() }}
         </div>
+    </div>
 
-        <form wire:submit="seve">
-            <x-dialog-modal wire:model="open">
-                <x-slot name="title">
-                    Actualizar Post
-                </x-slot>
+    <form wire:submit="seve">
+        <x-dialog-modal wire:model="open">
+            <x-slot name="title">
+                Actualizar Post
+            </x-slot>
 
-                <x-slot name="content">
+            <x-slot name="content">
+                <div class="mb-4">
+                    <x-label for="">Categoria </x-label>
+                    <x-select class="w-full" wire:model="postCreate.recorrido_id">
+                        <option value="">Seleccione una categoria</option>
+                        @foreach ($recorridos as $post)
+                            <option value="{{ $post->id }}">
+                                {{ $post->nombre }}</option>
+                        @endforeach
+                    </x-select>
+                </div>
+
+
+                <div class="mb-4">
+                    <x-label for="">Nombre</x-label>
+                    <x-input class="w-full" wire:model="postCreate.nombre" />
+                </div>
+
+                <div class="h-28 grid grid-cols-3 gap-4 content-start ">
                     <div class="mb-4">
-                        <x-label for="">Categoria </x-label>
-                        <x-select class="w-full" wire:model="postCreate.recorrido_id">
-                            <option value="">Seleccione una categoria</option>
-                            @foreach ($recorridos as $post)
-                                <option value="{{ $post->id }}">
-                                    {{ $post->name }}</option>
-                            @endforeach
+                        <x-label for="">Costo $</x-label>
+                        <x-input class="w-full" type="number" step="0.01" wire:model="postCreate.precio" />
+                    </div>
+
+                    <div class="mb-4">
+                        <x-label for="">Valor</x-label>
+                        <x-input class="w-full" type="number" wire:model="postCreate.cantidad" />
+                    </div>
+
+
+                    <div class="mb-4">
+                        <x-label for="">Status</x-label>
+                        <x-select class="w-full" wire:model="postCreate.estado">
+                            <option value="" disabled>Seleccione un Estado</option>
+                            <option value="0">Deshabilitado</option>
+                            <option value="1">Habilitado</option>
+
+
                         </x-select>
                     </div>
 
-
-                    <div class="mb-4">
-                        <x-label for="">Nombre</x-label>
-                        <x-input class="w-full" wire:model="postCreate.name" />
-                    </div>
-
-                    <div class="h-28 grid grid-cols-3 gap-4 content-start ">
-                        <div class="mb-4">
-                            <x-label for="">Costo $</x-label>
-                            <x-input class="w-full" type="number" step="0.01" wire:model="postCreate.costo" />
-                        </div>
-
-                        <div class="mb-4">
-                            <x-label for="">Valor</x-label>
-                            <x-input class="w-full" type="number" wire:model="postCreate.valor" />
-                        </div>
+                </div>
 
 
-                        <div class="mb-4">
-                            <x-label for="">Status</x-label>
-                            <x-select class="w-full" wire:model="postCreate.status">
-                                <option value="" disabled>Seleccione un Estado</option>
-                                <option value="0">Deshabilitado</option>
-                                <option value="1">Habilitado</option>
+            </x-slot>
 
+            <x-slot name="footer">
+                <div class="flex justify-end">
+                    <x-danger-button class="mr-2" wire:click="$set('open',false)">
+                        Cancelar
+                    </x-danger-button>
 
-                            </x-select>
-                        </div>
-
-                    </div>
-
-
-                </x-slot>
-
-                <x-slot name="footer">
-                    <div class="flex justify-end">
-                        <x-danger-button class="mr-2" wire:click="$set('open',false)">
-                            Cancelar
-                        </x-danger-button>
-
-                        <x-button>
-                            Agregar
-                        </x-button>
-                    </div>
-                </x-slot>
-            </x-dialog-modal>
-        </form>
-    </div>
+                    <x-button>
+                        Agregar
+                    </x-button>
+                </div>
+            </x-slot>
+        </x-dialog-modal>
+    </form>
+</div>
 </div>

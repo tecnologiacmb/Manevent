@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('tipo_pagos', function (Blueprint $table) {
             $table->id();
-            $table->string("name");
-            $table->boolean("status");
+            $table->string("nombre", 25);
+            $table->boolean("estado");
             $table->timestamps();
         });
     }

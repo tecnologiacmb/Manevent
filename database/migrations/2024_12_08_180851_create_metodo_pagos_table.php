@@ -17,13 +17,13 @@ return new class extends Migration
             $table->foreignId("tipo_pago_id")->constrained()->onDelete("cascade");
             $table->foreignId("banco_id")->constrained()->onDelete("cascade");
             $table->string("n°_cuenta")->nullable();
-            $table->string("cedula")->nullable();
-            $table->string("telefono")->nullable();
-            $table->string("propietario")->nullable();
-            $table->string("ABA")->nullable();
-            $table->string("SWIT")->nullable();
-            $table->string("correo")->nullable();
-            $table->boolean("status");
+            $table->string("cedula", 20)->nullable();
+            $table->string("telefono", 20)->nullable();
+            $table->string("propietario", 30)->nullable();
+            $table->string("ABA", 30)->nullable();
+            $table->string("SWIT", 30)->nullable();
+            $table->string("correo", 30)->nullable();
+            $table->boolean("estado");
             $table->timestamps();
         });
     }

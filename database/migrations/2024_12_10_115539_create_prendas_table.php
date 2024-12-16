@@ -16,9 +16,9 @@ return new class extends Migration
             $table->foreignId("evento_id")->constrained()->onDelete("cascade");
             $table->foreignId("prenda_category_id")->constrained()->onDelete("cascade");
             $table->foreignId("prenda_talla_id")->constrained()->onDelete("cascade");
-            $table->integer("cantidad");
-            $table->string("sexo");
-            $table->boolean("status");
+            $table->integer("cantidad",);
+            $table->string("sexo", 25);
+            $table->boolean("estado");
             $table->timestamps();
         });
     }

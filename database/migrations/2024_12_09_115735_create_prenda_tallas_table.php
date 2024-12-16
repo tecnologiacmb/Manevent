@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('prenda_tallas', function (Blueprint $table) {
             $table->id();
-            $table->string("talla");
-            $table->boolean("status");
+            $table->string("talla", 25);
+            $table->boolean("estado");
             $table->timestamps();
         });
     }

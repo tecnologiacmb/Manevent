@@ -16,10 +16,10 @@ return new class extends Migration
             $table->foreignId('recorrido_id')->references('id')->on('recorridos')
                 ->constrained()
                 ->onDelete('cascade');
-            $table->string('name');
-            $table->double('costo');
-            $table->string('valor');
-            $table->boolean('status');
+            $table->string('nombre', 50);
+            $table->double('precio');
+            $table->string('cantidad', 20);
+            $table->boolean('estado');
             $table->timestamps();
         });
     }

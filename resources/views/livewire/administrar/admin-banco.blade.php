@@ -8,7 +8,8 @@
         </x-button>
     </div>
 
-    <div class="relative flex flex-col w-full h-full overflow-scroll text-black bg-white shadow-md rounded-xl bg-clip-border overflow-x-hidden overflow-y-hidden">
+    <div
+        class="relative flex flex-col w-full h-full overflow-scroll text-black bg-white shadow-md rounded-xl bg-clip-border overflow-x-hidden overflow-y-hidden">
 
 
         <table class="w-full text-left table-auto min-w-max">
@@ -23,7 +24,7 @@
                     <th class="p-4 border-b border-blue-gray-100 bg-blue-gray-50">
                         <p
                             class="block font-sans text-sm antialiased font-normal leading-none text-blue-gray-900 opacity-70">
-                            Name
+                            nombre
                         </p>
                     </th>
                     <th class="p-4 border-b border-blue-gray-100 bg-blue-gray-50">
@@ -35,7 +36,7 @@
                     <th class="p-4 border-b border-blue-gray-100 bg-blue-gray-50">
                         <p
                             class="block font-sans text-sm antialiased font-normal leading-none text-blue-gray-900 opacity-70">
-                            status
+                            estado
                         </p>
                     </th>
                     <th class="p-4 border-b border-blue-gray-100 bg-blue-gray-50">
@@ -59,7 +60,7 @@
                         <td class="p-4 border-b border-blue-gray-50">
                             <p
                                 class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-                                {{ $post->name }}
+                                {{ $post->nombre }}
                             </p>
                         </td>
                         <td class="p-4 border-b border-blue-gray-50">
@@ -71,7 +72,7 @@
                         <td class="p-4 border-b border-blue-gray-50">
                             <p
                                 class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-                                {{ $post->status }}
+                                {{ $post->estado }}
                             </p>
                         </td>
 
@@ -100,7 +101,7 @@
                 <x-slot name="content">
                     <div class="mb-4">
                         <x-label for="">Banco</x-label>
-                        <x-input class="w-full" wire:model="postCreate.name" />
+                        <x-input class="w-full" wire:model="postCreate.nombre" />
                     </div>
                     <div class="mb-4">
                         <x-label for="">Codigo</x-label>
@@ -108,7 +109,7 @@
                     </div>
                     <div class="mb-4">
                         <x-label for="">Estado</x-label>
-                        <x-select class="w-full" wire:model="postCreate.status">
+                        <x-select class="w-full" wire:model="postCreate.estado">
                             <option value="">Seleccione un Estado</option>
                             <option value="0">Deshabilitado</option>
                             <option value="1">Habilitado</option>

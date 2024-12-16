@@ -14,12 +14,12 @@ return new class extends Migration
         Schema::create('participantes', function (Blueprint $table) {
             $table->id();
             $table->foreignId("ciudad_id")->constrained()->OnDelete("cascade");
-            $table->string("cedula");
-            $table->string("nombre");
-            $table->string("apellido");
-            $table->string("telefono");
-            $table->string("correo");
-            $table->string("direccion");
+            $table->string("cedula", 25);
+            $table->string("nombre", 25);
+            $table->string("apellido", 25);
+            $table->string("telefono", 25);
+            $table->string("correo", 30);
+            $table->string("direccion", 50);
             $table->date("fecha_nacimiento");
             $table->timestamps();
         });

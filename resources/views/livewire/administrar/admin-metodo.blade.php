@@ -7,7 +7,8 @@
             Agregar
         </x-button>
     </div>
-    <div class="relative flex flex-col w-full h-full overflow-scroll text-black bg-white shadow-md rounded-xl bg-clip-border overflow-x-hidden overflow-y-hidden">
+    <div
+        class="relative flex flex-col w-full h-full overflow-scroll text-black bg-white shadow-md rounded-xl bg-clip-border overflow-x-hidden overflow-y-hidden">
 
 
         <table class="w-full text-left table-auto min-w-max">
@@ -28,7 +29,7 @@
                     <th class="p-4 border-b border-blue-gray-100 bg-blue-gray-50">
                         <p
                             class="block font-sans text-sm antialiased font-normal leading-none text-blue-gray-900 opacity-70">
-                            status
+                            estado
                         </p>
                     </th>
                     <th class="p-4 border-b border-blue-gray-100 bg-blue-gray-50">
@@ -39,31 +40,30 @@
                 </tr>
             </thead>
 
-                <tbody>
-                    @foreach ($banco as $ban)
-                    @foreach ( $tipo_pago as $pago )
+            <tbody>
+                @foreach ($banco as $ban)
+                    @foreach ($tipo_pago as $pago)
                         @foreach ($posts as $post)
                             @if ($post->banco_id == $ban->id && $post->tipo_pago_id == $pago->id)
-
-                            <tr>
+                                <tr>
 
                                     <td class="p-4 border-b border-blue-gray-50">
                                         <p
                                             class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-                                            {{ $pago->name }}
+                                            {{ $pago->nombre }}
                                         </p>
                                     </td>
 
                                     <td class="p-4 border-b border-blue-gray-50">
                                         <p
                                             class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-                                            {{ $ban->name }} Bs
+                                            {{ $ban->nombre }} Bs
                                         </p>
                                     </td>
                                     <td class="p-4 border-b border-blue-gray-50">
                                         <p
                                             class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-                                            {{ $post->status}}
+                                            {{ $post->estado }}
                                         </p>
                                     </td>
 
@@ -73,53 +73,53 @@
                                             Edit
                                         </a>
                                     </td>
-                            </tr>
-
+                                </tr>
                             @endif
                         @endforeach
-                        @endforeach
                     @endforeach
-                </tbody>
-            </table>
-            <div>
-                {{ $posts->links() }}
-            </div>
+                @endforeach
+            </tbody>
+        </table>
+        <div>
+            {{ $posts->links() }}
         </div>
+    </div>
 
-        <form wire:submit="seve">
-            <x-dialog-modal wire:model="open">
-                <x-slot name="title">
-                    Actualizar Post
-                </x-slot>
+    <form wire:submit="seve">
+        <x-dialog-modal wire:model="open">
+            <x-slot name="title">
+                Actualizar Post
+            </x-slot>
 
-                <x-slot name="content">
+            <x-slot name="content">
 
-                    <div class="mb-4">
-                        <x-label for="">Metodo</x-label>
-                        <x-select class="w-full" wire:model="postCreate.tipo_pago_id" wire:click="changeEvent($event.target.value)">
-                            <option value="" disabled> Metodo pago</option>
+                <div class="mb-4">
+                    <x-label for="">Metodo</x-label>
+                    <x-select class="w-full" wire:model="postCreate.tipo_pago_id"
+                        wire:click="changeEvent($event.target.value)">
+                        <option value="" disabled> Metodo pago</option>
 
-                            @foreach ($tipo_pago as $pago)
-                                <option value="{{ $pago->id }}">{{ $pago->name }}</option>
-                            @endforeach
+                        @foreach ($tipo_pago as $pago)
+                            <option value="{{ $pago->id }}">{{ $pago->nombre }}</option>
+                        @endforeach
 
-                        </x-select>
-                    </div>
+                    </x-select>
+                </div>
 
-                    <div class="grid grid-cols-2 gap-4">
-                        @if ($metodo == 1 || $metodo==2)
+                <div class="grid grid-cols-2 gap-4">
+                    @if ($metodo == 1 || $metodo == 2)
                         <div class="mb-4">
                             <x-label for="">Banco</x-label>
                             <x-select class="w-full" wire:model="postCreate.banco_id">
                                 <option value="" disabled>Seleccione un Banco</option>
 
                                 @foreach ($banco as $post)
-                                    <option value="{{ $post->id}}">{{$post->name }}</option>
+                                    <option value="{{ $post->id }}">{{ $post->nombre }}</option>
                                 @endforeach
 
                             </x-select>
                         </div>
-                        @elseif ($metodo==3)
+                    @elseif ($metodo == 3)
                         <div class="mb-4">
                             <x-label for="">N° Cuenta</x-label>
                             <x-input type="number" class="w-full" wire:model="postCreate.N°_cuenta" />
@@ -151,14 +151,12 @@
                                 <option value="" disabled>Seleccione un Banco</option>
 
                                 @foreach ($banco as $post)
-                                    <option value="{{ $post->id}}">{{$post->name }}</option>
+                                    <option value="{{ $post->id }}">{{ $post->nombre }}</option>
                                 @endforeach
 
                             </x-select>
                         </div>
-
-                        @elseif ($metodo==4)
-
+                    @elseif ($metodo == 4)
                         <div class="mb-4">
                             <x-label for="">Cedula</x-label>
                             <x-input type="number" class="w-full" wire:model="postCreate.cedula" />
@@ -180,13 +178,12 @@
                                 <option value="" disabled>Seleccione un Banco</option>
 
                                 @foreach ($banco as $post)
-                                    <option value="{{ $post->id}}">{{$post->name }}</option>
+                                    <option value="{{ $post->id }}">{{ $post->nombre }}</option>
                                 @endforeach
 
                             </x-select>
                         </div>
-
-                        @elseif ($metodo==5)
+                    @elseif ($metodo == 5)
                         <div class="mb-4">
                             <x-label for="">N° Cuenta</x-label>
                             <x-input type="number" class="w-full" wire:model="postCreate.N°_cuenta" />
@@ -208,38 +205,38 @@
                                 <option value="" disabled>Seleccione un Banco</option>
 
                                 @foreach ($banco as $post)
-                                    <option value="{{ $post->id}}">{{$post->name }}</option>
+                                    <option value="{{ $post->id }}">{{ $post->nombre }}</option>
                                 @endforeach
 
                             </x-select>
                         </div>
 
-                        @endif
+                    @endif
 
-                        <div class="mb-4">
-                            <x-label for="">Estado</x-label>
-                            <x-select class="w-full" wire:model="postCreate.status">
-                                <option value="">Seleccione un Estado</option>
-                                <option value="0">Deshabilitado</option>
-                                <option value="1">Habilitado</option>
-                            </x-select>
-                        </div>
+                    <div class="mb-4">
+                        <x-label for="">Estado</x-label>
+                        <x-select class="w-full" wire:model="postCreate.estado">
+                            <option value="">Seleccione un Estado</option>
+                            <option value="0">Deshabilitado</option>
+                            <option value="1">Habilitado</option>
+                        </x-select>
                     </div>
+                </div>
 
-                </x-slot>
+            </x-slot>
 
-                <x-slot name="footer">
-                    <div class="flex justify-end">
-                        <x-danger-button class="mr-2" wire:click="$set('open',false)">
-                            Cancelar
-                        </x-danger-button>
+            <x-slot name="footer">
+                <div class="flex justify-end">
+                    <x-danger-button class="mr-2" wire:click="$set('open',false)">
+                        Cancelar
+                    </x-danger-button>
 
-                        <x-button>
-                            Agregar
-                        </x-button>
-                    </div>
-                </x-slot>
-            </x-dialog-modal>
-        </form>
-    </div>
+                    <x-button>
+                        Agregar
+                    </x-button>
+                </div>
+            </x-slot>
+        </x-dialog-modal>
+    </form>
+</div>
 </div>

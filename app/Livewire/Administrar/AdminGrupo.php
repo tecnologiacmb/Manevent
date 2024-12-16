@@ -19,10 +19,10 @@ class AdminGrupo extends Component
 
     public $postCreate = [
         'recorrido_id' => "",
-        'name' => "",
-        'costo' => "",
-        'valor' => "",
-        'status' => false,
+        'nombre' => "",
+        'precio' => "",
+        'cantidad' => "",
+        'estado' => false,
 
     ];
     public function mount()
@@ -52,10 +52,10 @@ class AdminGrupo extends Component
 
         $posts = grupo::create([
             'recorrido_id' => $this->postCreate['recorrido_id'],
-            'name' => $this->postCreate['name'],
-            'costo' => $this->postCreate['costo'],
-            'valor' => $this->postCreate['valor'],
-            'status' => $this->postCreate['status'],
+            'nombre' => $this->postCreate['nombre'],
+            'precio' => $this->postCreate['precio'],
+            'cantidad' => $this->postCreate['cantidad'],
+            'estado' => $this->postCreate['estado'],
 
         ]);
 

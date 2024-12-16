@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('categoria_habilitadas', function (Blueprint $table) {
             $table->id();
-            $table->string("name");
+            $table->string("nombre", 25);
             $table->integer("edad_min");
             $table->integer("edad_max");
             $table->timestamps();

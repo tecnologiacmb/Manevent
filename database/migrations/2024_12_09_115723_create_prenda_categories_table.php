@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('prenda_categories', function (Blueprint $table) {
             $table->id();
-            $table->string("name");
-            $table->boolean("status");
+            $table->string("nombre", 30);
+            $table->boolean("estado");
             $table->timestamps();
         });
     }

@@ -14,14 +14,14 @@ class TasaDolar extends Component
 
     public $postCreate = [
 
-        'valor' => null,
+        'precio' => null,
 
     ];
     public function save()
     {
         $post = dolar::create([
 
-            'valor' => $this->postCreate['valor'],
+            'precio' => $this->postCreate['precio'],
 
         ]);
 

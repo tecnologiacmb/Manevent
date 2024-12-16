@@ -14,9 +14,9 @@ class AdminBanco extends Component
     public $nameBanco;
     public $open = false;
     public $postCreate = [
-        'name' =>null,
+        'nombre' => null,
         'codigo' => null,
-        'status' => false,
+        'estado' => false,
 
     ];
 
@@ -28,9 +28,9 @@ class AdminBanco extends Component
     {
 
         $posts = banco::create([
-            'name' => $this->postCreate['name'],
+            'nombre' => $this->postCreate['nombre'],
             'codigo' => $this->postCreate['codigo'],
-            'status' => $this->postCreate['status'],
+            'estado' => $this->postCreate['estado'],
 
         ]);
 
@@ -44,7 +44,7 @@ class AdminBanco extends Component
     }
     public function render()
     {
-        $nameBanco = banco::orderBy('name', 'desc')->paginate(5);
+        $nameBanco = banco::orderBy('nombre', 'desc')->paginate(5);
 
         return view('livewire.administrar.admin-banco', [
             'posts' => $nameBanco
