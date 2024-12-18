@@ -50,31 +50,31 @@
 
             <tbody>
 
-                @foreach ($grupos as $post)
-                    @if ($post->recorrido_id == 1)
+                @foreach ($grupos as $grupo)
+                    @if ($grupo->recorrido_id == 1)
                         <tr>
                             <td class="p-4 border-b border-blue-gray-50">
                                 <p
                                     class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-                                    {{ $post->id }}
+                                    {{ $grupo->id }}
                                 </p>
                             </td>
                             <td class="p-4 border-b border-blue-gray-50">
                                 <p
                                     class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-                                    {{ $post->nombre }}
+                                    {{ $grupo->nombre }}
                                 </p>
                             </td>
                             <td class="p-4 border-b border-blue-gray-50">
                                 <p
                                     class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-                                    {{ $post->precio }} $
+                                    {{ $grupo->precio }} $
                                 </p>
                             </td>
                             <td class="p-4 border-b border-blue-gray-50">
                                 <p
                                     class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-                                    {{ $this->calculo($post->precio) }} Bs
+                                    {{ $this->calculo($grupo->precio) }} Bs
                                 </p>
                             </td>
                             <td class="p-4 border-b border-blue-gray-50">
@@ -84,7 +84,7 @@
                                 </a>
                             </td>
                             <td class="p-4 border-b border-blue-gray-50">
-                                <a href="/caminata-inscripcion?groupId={{ $post->id }} " target="_blank"
+                                <a href="/caminata/inscripcion/{{ $grupo->id }} "
                                     class="block font-sans text-sm antialiased font-medium leading-normal text-blue-gray-900">
                                     Seleccionar
                                 </a>

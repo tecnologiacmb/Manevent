@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Caminata_controller;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -42,10 +43,10 @@ Route::middleware([
         return view('categoria');
     })->name('categoria');
 
-    Route::get('/caminata', function () {
+/*     Route::get('/caminata', function () {
         return view('caminata');
     })->name('caminata');
-
+ */
     Route::get('/carrera', function () {
         return view('carrera');
     })->name('carrera');
@@ -62,7 +63,15 @@ Route::middleware([
         return view('evento');
     })->name('evento');
 
-    Route::get('/caminata-inscripcion', function () {
+   /*  Route::get('/caminata-inscripcion', function () {
         return view('caminata-inscripcion');
     })->name('caminata-inscripcion');
+ */
+    Route::controller(Caminata_controller::class)->group(function () {
+        Route::group(['prefix' => 'caminata',], function () {
+            Route::get('',  "index")->name('caminata');
+            Route::get('/inscripcion/{id}',  "create")->name('caminata/inscripcion/{id}');
+            Route::get('/editar/{id}', "edit")->name('inmobiliaria/editar/{id}');
+        });
+    });
 });
