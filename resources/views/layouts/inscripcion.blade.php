@@ -22,11 +22,11 @@
 
 <body class="font-sans antialiased">
 
-    <div class="min-h-screen" style="background-color: #d181123b;">
+    <div class="min-h-screen bg-slate-100">
 
 
             @if (isset($header))
-                <header class="w-full shadow " style="background-color: #ca872a45;">
+                <header class="w-full shadow bg-slate-200">
                     <div class="max-w-7xl mx-full py-6 px-4 sm:px-6 lg:px-8">
                         {{ $header }}
                     </div>

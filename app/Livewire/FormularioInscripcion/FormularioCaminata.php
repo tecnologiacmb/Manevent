@@ -50,7 +50,10 @@ class FormularioCaminata extends Component
     public $ciudades = [];
     public $unico = null;
     public $mixto = null;
-
+    public $bolivar = null;
+    public $dolar = null;
+    public $bolivar_mixto = null;
+    public $dolar_mixto = null;
     public $unico_valor = null;
     public $mixto_valor = null;
 
@@ -78,9 +81,8 @@ class FormularioCaminata extends Component
         'grupo_id' => null,
         'dolar_id' => null,
         'numero_id' => null,
-        'categoria_habilitada_id' => null,
         'mesa_id' => null,
-        'datos' => "",
+        'datos' => null,
         'monto_pagado_bs' => "",
         'ip' => "",
         'nomenclatura' => "",
@@ -88,6 +90,18 @@ class FormularioCaminata extends Component
         'metodos' => [],
         'unico' => null,
         'mixto' => null,
+        'bolivar' => null,
+        'dolar' => null,
+        'bolivar_mixto' => null,
+        'dolar_mixto' => null,
+        'monto' => null,
+        'monto_mixto' => null,
+        'fecha' => null,
+        'fecha_mixto' => null,
+        'referencia' => null,
+        'referencia_mixto' => null,
+        'cuenta_mixto_1' => null,
+        'cuenta_mixto_2' => null,
     ];
 
 
@@ -142,9 +156,8 @@ class FormularioCaminata extends Component
                     'grupo_id' => $id,
                     'dolar_id' => $this->dolars->id,
                     'numero_id' => null,
-                    'categoria_habilitada_id' => null,
                     'mesa_id' => null,
-                    'datos' => "",
+                    'datos' => null,
                     'monto_pagado_bs' =>  $this->calculo($this->grupo->precio),
                     'ip' => "",
                     'nomenclatura' => "",
@@ -152,13 +165,19 @@ class FormularioCaminata extends Component
                     'metodos' => [],
                     'unico' => null,
                     'mixto' => null,
+                    'bolivar' => null,
+                    'dolar' => null,
+                    'bolivar_mixto' => null,
+                    'dolar_mixto' => null,
+                    'monto' => null,
+                    'monto_mixto' => null,
+                    'fecha' => null,
+                    'fecha_mixto' => null,
+                    'referencia' => null,
+                    'referencia_mixto' => null,
+                    'cuenta_mixto_1' => null,
+                    'cuenta_mixto_2' => null,
                 ];
-                $this->unico_valor = $this->create_inscripcion[$i]['unico'];
-                $this->mixto_valor = $this->create_inscripcion[$i]['mixto'];
-
-
-                //return var_dump($this->create_participante[$i]);
-
             }
 
             $this->ciudad = ciudad::all();
@@ -200,7 +219,6 @@ class FormularioCaminata extends Component
     public function update_radio($index, $option)
     {
         if ($option === '1') {
-
             $this->create_inscripcion[$index]['unico'] = '1';
             $this->create_inscripcion[$index]['mixto'] = null;
         } elseif ($option === '2') {
@@ -209,7 +227,28 @@ class FormularioCaminata extends Component
         }
     }
 
+    public function update_pago($index, $option)
+    {
+        if ($option === '1') {
 
+            $this->create_inscripcion[$index]['bolivar'] = '1';
+            $this->create_inscripcion[$index]['dolar'] = null;
+        } elseif ($option === '2') {
+            $this->create_inscripcion[$index]['bolivar'] = null;
+            $this->create_inscripcion[$index]['dolar'] = '2';
+        }
+    }
+    public function update_pago_mixto($index, $option)
+    {
+        if ($option === '1') {
+
+            $this->create_inscripcion[$index]['bolivar_mixto'] = '1';
+            $this->create_inscripcion[$index]['dolar_mixto'] = null;
+        } elseif ($option === '2') {
+            $this->create_inscripcion[$index]['bolivar_mixto'] = null;
+            $this->create_inscripcion[$index]['dolar_mixto'] = '2';
+        }
+    }
 
     public function calculo($num)
     {
@@ -221,7 +260,7 @@ class FormularioCaminata extends Component
         return $total;
     }
 
-    public function edad($fecha_nacimiento)
+  /*   public function edad($fecha_nacimiento)
     {
         $fecha_nacimiento = Carbon::parse($fecha_nacimiento);
         $ahora = Carbon::now();
@@ -233,63 +272,30 @@ class FormularioCaminata extends Component
             }
         }
         return null;
-    }
+    } */
 
     public function asignar_num_mesa($inscripcion_id, $cedula)
     {
         $ultimo_digito = substr($cedula, -1);
 
         $this->inscripcion = inscripcion::find($inscripcion_id);
-        if ($ultimo_digito == '0' || $ultimo_digito == '1') {
-            $numero_id = numero::select('id')->where('disponible', true)->where('estado', true)->whereBetween('id', [1, 100])->orderBy('id', 'asc')->first();
+        if ($ultimo_digito == '0' || $ultimo_digito == '1' || $ultimo_digito == '2' || $ultimo_digito == '3' || $ultimo_digito == '4') {
+            $numero_id = numero::select('id')->where('disponible', true)->where('estado', true)->whereBetween('id', [701, 850])->orderBy('id', 'asc')->first();
 
             /* logica asignacion de numeros y mesa*/
             $this->inscripcion->numero_id = $numero_id->id;
-            $this->inscripcion->mesa_id = Mesas_enum::Mesa_1;
+            $this->inscripcion->mesa_id = Mesas_enum::Mesa_6;
             $this->inscripcion->save();
             /* update numero asignado */
             $this->numero = numero::find($numero_id->id);
             $this->numero->disponible = false;
             $this->numero->save();
-        } else if ($ultimo_digito == '2' || $ultimo_digito == '3') {
-            $numero_id = numero::select('id')->where('disponible', true)->where('estado', true)->whereBetween('id', [101, 200])->orderBy('id', 'asc')->first();
+        } else if ( $ultimo_digito == '5' || $ultimo_digito == '6' || $ultimo_digito == '7' || $ultimo_digito == '8' || $ultimo_digito == '9') {
+            $numero_id = numero::select('id')->where('disponible', true)->where('estado', true)->whereBetween('id', [851, 1000])->orderBy('id', 'asc')->first();
 
             /* logica asignacion de numeros y mesa*/
             $this->inscripcion->numero_id = $numero_id->id;
-            $this->inscripcion->mesa_id = Mesas_enum::Mesa_2;
-            $this->inscripcion->save();
-            /* update numero asignado */
-            $this->numero = numero::find($numero_id->id);
-            $this->numero->disponible = false;
-            $this->numero->save();
-        } else if ($ultimo_digito == '4' || $ultimo_digito == '5') {
-            $numero_id = numero::select('id')->where('disponible', true)->where('estado', true)->whereBetween('id', [201, 300])->orderBy('id', 'asc')->first();
-
-            /* logica asignacion de numeros y mesa*/
-            $this->inscripcion->numero_id = $numero_id->id;
-            $this->inscripcion->mesa_id = Mesas_enum::Mesa_3;
-            $this->inscripcion->save();
-            /* update numero asignado */
-            $this->numero = numero::find($numero_id->id);
-            $this->numero->disponible = false;
-            $this->numero->save();
-        } else if ($ultimo_digito == '6' || $ultimo_digito == '7') {
-            $numero_id = numero::select('id')->where('disponible', true)->where('estado', true)->whereBetween('id', [301, 400])->orderBy('id', 'asc')->first();
-
-            /* logica asignacion de numeros y mesa*/
-            $this->inscripcion->numero_id = $numero_id->id;
-            $this->inscripcion->mesa_id = Mesas_enum::Mesa_4;
-            $this->inscripcion->save();
-            /* update numero asignado */
-            $this->numero = numero::find($numero_id->id);
-            $this->numero->disponible = false;
-            $this->numero->save();
-        } else if ($ultimo_digito == '8' || $ultimo_digito == '9') {
-            $numero_id = numero::select('id')->where('disponible', true)->where('estado', true)->whereBetween('id', [401, 500])->orderBy('id', 'asc')->first();
-
-            /* logica asignacion de numeros y mesa*/
-            $this->inscripcion->numero_id = $numero_id->id;
-            $this->inscripcion->mesa_id = Mesas_enum::Mesa_5;
+            $this->inscripcion->mesa_id = Mesas_enum::Mesa_7;
             $this->inscripcion->save();
             /* update numero asignado */
             $this->numero = numero::find($numero_id->id);
@@ -318,28 +324,35 @@ class FormularioCaminata extends Component
             $latestId = participante::latest('id')->first()->id;
             $this->create_inscripcion[$i]['participante_id'] = $latestId;
             $ultimoParticipante = participante::find($latestId);
+
+
             $datos_json = [
                 'monto' => $this->create_inscripcion[$i]['monto'],
                 'fecha' => $this->create_inscripcion[$i]['fecha'],
                 'referencia' => $this->create_inscripcion[$i]['referencia']
             ];
 
-            if (!is_null($this->create_inscripcion[$i]['referencia2'])) {
+            if (!is_null($this->create_inscripcion[$i]['monto_mixto'])) {
                 $datos_json += [
                     'monto_mixto' => $this->create_inscripcion[$i]['monto_mixto'],
                     'fecha_mixto' => $this->create_inscripcion[$i]['fecha_mixto'],
-                    'referencia_mixto' => $this->create_inscripcion[$i]['referencia_mixto']
-
+                    'referencia_mixto' => $this->create_inscripcion[$i]['referencia_mixto'],
+                    'cuenta_mixto_1' => $this->create_inscripcion[$i]['cuenta_mixto_1'],
+                    'cuenta_mixto_2' => $this->create_inscripcion[$i]['cuenta_mixto_2']
                 ];
             }
-            $datos_json=json_encode($this->$datos_json);
+            $datos_json = json_encode($datos_json);
 
             $this->create_inscripcion[$i]['datos'] = $datos_json;
+            // return dd($this->create_inscripcion[$i]['datos']);
 
-            $categoria_id = $this->edad($ultimoParticipante->fecha_nacimiento);
 
-            $this->create_inscripcion[$i]['categoria_habilitada_id'] = $categoria_id;
 
+
+
+            if (is_null($this->create_inscripcion[$i]['metodo_pago_id'])) {
+                $this->create_inscripcion[$i]['metodo_pago_id']=3;
+            }
 
 
             $inscripciones = inscripcion::create([
@@ -349,7 +362,7 @@ class FormularioCaminata extends Component
                 'grupo_id' => $this->create_inscripcion[$i]['grupo_id'],
                 'dolar_id' => $this->create_inscripcion[$i]['dolar_id'],
                 'numero_id' => $this->create_inscripcion[$i]['numero_id'],
-                'categoria_habilitada_id' => $this->create_inscripcion[$i]['categoria_habilitada_id'],
+
                 'mesa_id' => $this->create_inscripcion[$i]['mesa_id'],
                 'datos' => $this->create_inscripcion[$i]['datos'],
                 'monto_pagado_bs' => $this->create_inscripcion[$i]['monto_pagado_bs'],

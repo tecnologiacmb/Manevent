@@ -22,16 +22,12 @@
 
 <body class="font-sans antialiased">
 
-    <div class="min-h-screen w-full h-full " style="background-color: #d181123b;">
+    <div class=" w-full h-full bg-slate-100">
         <dh-component>
-
-            <div class="flex flex-no-wrap">
-
-                <div class="min-h-screen w-64 absolute sm:relative shadow md:h-full flex-col justify-between hidden sm:flex"
-                    style="background-color: #ca872a45;">
-
+            <div class="flex flex-no-wrap ">
+                <div
+                    class="min-h-screen w-64 absolute sm:relative shadow xl:h-full flex-col justify-between hidden sm:flex bg-slate-200">
                     <div class="px-8">
-
                         <div class="h-16 w-full flex items-center text-black text-xl">
                             LOGO
                         </div>
@@ -46,10 +42,8 @@
                                                 :active="request() - > routeIs('dashboard')" class="ml-2"
                                                 wire:navigate>Home</a>
                                         </h1>
-
                                     </div>
                                 </div>
-
                             </li>
                             <li class="flex w-full justify-between text-black cursor-pointer items-center mb-6">
                                 <div
@@ -60,14 +54,11 @@
                                             <a href="{{ route('evento') }}" :active="request() - > routeIs('evento')"
                                                 class="ml-2" wire:navigate>Eventos</a>
                                         </h1>
-
                                     </div>
                                 </div>
-
                             </li>
                             <li
                                 class=" w-full justify-between text-gray-400 hover:text-gray-300 cursor-pointer items-center mb-6 ">
-
                                 <div class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-black text-black hover:text-white "
                                     onclick="dropdown1()">
                                     <i class="bi bi-gear-fill"></i>
@@ -81,7 +72,6 @@
                                     </div>
                                 </div>
                                 <div class="text-left text-sm mt-2 w-4/5 mx-auto text-black font-bold" id="submenu1">
-
                                     <h1 class="cursor-pointer p-2 hover:bg-black rounded-md mt-1 hover:text-white">
                                         <i class="bi bi-bank2"></i>
                                         <a href="{{ route('banco') }}" :active="request() - > routeIs('banco')"
@@ -104,13 +94,9 @@
                                             :active="request() - > routeIs('grupo')" class="ml-2"
                                             wire:navigate>Grupo</a>
                                     </h1>
-
                                 </div>
-
                             </li>
-                            <li
-                                class=" w-full justify-between text-gray-400 hover:text-gray-300 cursor-pointer items-center mb-6 ">
-
+                            <li class=" w-full justify-between text-gray-400 hover:text-gray-300 cursor-pointer items-center mb-6 ">
                                 <div class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-black text-black hover:text-white"
                                     onclick="dropdown2()">
                                     <i class="bi bi-pencil-square"></i>
@@ -135,9 +121,7 @@
                                         <a href="{{ route('caminata') }}" :active="request() - > routeIs('caminata')"
                                             class="ml-2" wire:navigate>Caminata</a>
                                     </h1>
-                                    <h1
-                                        class="flex cursor-pointer p-2 rounded-md mt-1 hover:bg-black hover:text-white
-                                    ">
+                                    <h1 class="flex cursor-pointer p-2 rounded-md mt-1 hover:bg-black hover:text-white">
                                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                                             xmlns="http://www.w3.org/2000/svg">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -147,20 +131,13 @@
                                         <a href="{{ route('carrera') }}" :active="request() - > routeIs('carrera')"
                                             class="ml-2" wire:navigate>Carrera</a>
                                     </h1>
-
                                 </div>
-
                             </li>
-
-                            <li
-                                class="flex w-full justify-between text-black hover:text-black text-xl cursor-pointer items-center mb-6">
-
-                                <div
-                                    class="p-2.5 mt-0 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-black text-black
+                            <li class="flex w-full justify-between text-black hover:text-black text-xl cursor-pointer items-center mb-6">
+                                <div class="p-2.5 mt-0 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-black text-black
                                 hover:text-white">
                                     <i class="bi bi-currency-dollar"></i>
                                     <div class="flex justify-between w-full items-center">
-
                                         <h1 class="cursor-pointer px-2 text-xl rounded-md mt-1 hover:text-white">
                                             <a href="{{ route('tasaDolar') }}"
                                                 :active="request() - > routeIs('tasaDolar')" wire:navigate>Tasa del
@@ -168,13 +145,9 @@
                                         </h1>
                                     </div>
                                 </div>
-
                             </li>
-                            <li
-                                class="flex w-full justify-between text-black hover:text-black text-xl cursor-pointer items-center mb-6">
-
-                                <div
-                                    class="p-2.5 mt-0 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-black text-black hover:text-white">
+                            <li class="flex w-full justify-between text-black hover:text-black text-xl cursor-pointer items-center mb-6">
+                                <div class="p-2.5 mt-0 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-black text-black hover:text-white">
                                     <svg class="h-8 w-8 text-black hover:text-white" width="24" height="24"
                                         viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
                                         stroke-linecap="round" stroke-linejoin="round">
@@ -201,16 +174,16 @@
 
 
 
-                <div class="py-0 h-64 md:w-4/5 xl:w-full mx-auto px-0  ">
+                <div class="py-0 md:w-4/5 xl:w-full xl:h-full mx-auto px-0" style="height: 100%;">
 
                     @if (isset($header))
-                        <header class="shadow" style="background-color: #ca872a45;">
-                            <div class="max-w-7xl mx-full py-6 px-4 sm:px-6 lg:px-8">
+                        <header class="shadow">
+                            <div class="bg-slate-200 max-w-7xl mx-full py-6 px-4 sm:px-6 lg:px-8">
                                 {{ $header }}
                             </div>
                         </header>
                     @endif
-                    <main>
+                    <main style="height: 100%;">
                         {{ $slot }}
                     </main>
                 </div>

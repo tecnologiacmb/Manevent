@@ -1,5 +1,5 @@
 <div>
-    <div class="bg-white shadow rounded-lg p-2 mb-4 flex items-center justify-between">
+    <div class="bg-white shadow rounded-lg p-4 pl-12 pr-12 mb-4 flex items-center justify-between ">
         <h1 class="font-black text-2xl text-gray-800 leading-tight text-normal">
             Eventos Registrados
         </h1>

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Caminata_controller;
+use App\Http\Controllers\Carrera_controller;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -47,9 +48,9 @@ Route::middleware([
         return view('caminata');
     })->name('caminata');
  */
-    Route::get('/carrera', function () {
+  /*   Route::get('/carrera', function () {
         return view('carrera');
-    })->name('carrera');
+    })->name('carrera'); */
 
     Route::get('/tasaDolar', function () {
         return view('tasaDolar');
@@ -71,6 +72,13 @@ Route::middleware([
         Route::group(['prefix' => 'caminata',], function () {
             Route::get('',  "index")->name('caminata');
             Route::get('/inscripcion/{id}',  "create")->name('caminata/inscripcion/{id}');
+            Route::get('/editar/{id}', "edit")->name('inmobiliaria/editar/{id}');
+        });
+    });
+    Route::controller(Carrera_controller::class)->group(function () {
+        Route::group(['prefix' => 'carrera',], function () {
+            Route::get('',  "index")->name('carrera');
+            Route::get('/inscripcion/{id}',  "create")->name('carrera/inscripcion/{id}');
             Route::get('/editar/{id}', "edit")->name('inmobiliaria/editar/{id}');
         });
     });

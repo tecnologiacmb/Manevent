@@ -12,21 +12,26 @@ class InscripCarrera extends Component
     public $grupos;
     public $dolars;
     public $recorrido;
-
     public function mount()
     {
 
-        $this->grupos = grupo::all();
+        $this->grupos = grupo::where('estado', true)->get();
         $this->dolars = dolar::all();
         $this->recorrido = recorrido::all();
     }
-    public function calculo($num){
+    public function calculo($num)
+    {
         $total = 0;
-        $ultimoDolar = $this->dolars->last();
+        if ($this->dolars->last() == true) {
+            $ultimoDolar = $this->dolars->last();
 
-        $total = $num * $ultimoDolar->valor;
+            $total = $num * $ultimoDolar->precio;
 
-        return $total;
+            return $total;
+        } else {
+
+            return $total;
+        }
     }
 
     public function render()

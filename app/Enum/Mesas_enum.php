@@ -43,7 +43,24 @@ enum Mesas_enum:int
      * @var integer
      */
     case Mesa_5 = 5;
-
+    /**
+     * mesa_6
+     *
+     * @var integer
+     */
+    case Mesa_6 = 6;
+    /**
+     * mesa_7
+     *
+     * @var integer
+     */
+    case Mesa_7 = 7;
+    /**
+     * mesa_8
+     *
+     * @var integer
+     */
+    case Mesa_8 = 8;
 
 
 }

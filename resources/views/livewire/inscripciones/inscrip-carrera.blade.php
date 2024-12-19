@@ -1,7 +1,7 @@
 <div>
     <div class="bg-white shadow rounded-lg p-4 mb-4">
         <h1 class="font-black text-xl text-gray-800 leading-tight text-normal">
-            Selecione un Grupo para la Carrera
+            Selecione un Grupo para la carrera
         </h1>
 
     </div>
@@ -43,51 +43,54 @@
                         <p
                             class="block font-sans text-sm antialiased font-normal leading-none text-blue-gray-900 opacity-70">
                         </p>
+
                     </th>
                 </tr>
             </thead>
 
-
             <tbody>
 
-                @foreach ($grupos as $post)
-                    @foreach ($recorrido as $record)
-                        @if ($post->recorrido_id == 2)
-                            <tr>
-                                <td class="p-4 border-b border-blue-gray-50">
-                                    <p
-                                        class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-                                        {{ $post->id }}
-                                    </p>
-                                </td>
-                                <td class="p-4 border-b border-blue-gray-50">
-                                    <p
-                                        class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-                                        {{ $post->nombre }}
-                                    </p>
-                                </td>
-                                <td class="p-4 border-b border-blue-gray-50">
-                                    <p
-                                        class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-                                        {{ $post->precio }} $
-                                    </p>
-                                </td>
-                                <td class="p-4 border-b border-blue-gray-50">
-                                    <p
-                                        class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-                                        {{ $this->calculo($post->precio) }} Bs
-                                    </p>
-                                </td>
-                                <td class="p-4 border-b border-blue-gray-50">
-                                    <a href="/inscripcion" target="_blank"
-                                        class="block font-sans text-sm antialiased font-medium leading-normal text-blue-gray-900"
-                                        wire:navigate.hover>
-                                        Edit
-                                    </a>
-                                </td>
-                            </tr>
-                        @endif
-                    @endforeach
+                @foreach ($grupos as $grupo)
+                    @if ($grupo->recorrido_id == 2)
+                        <tr>
+                            <td class="p-4 border-b border-blue-gray-50">
+                                <p
+                                    class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
+                                    {{ $grupo->id }}
+                                </p>
+                            </td>
+                            <td class="p-4 border-b border-blue-gray-50">
+                                <p
+                                    class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
+                                    {{ $grupo->nombre }}
+                                </p>
+                            </td>
+                            <td class="p-4 border-b border-blue-gray-50">
+                                <p
+                                    class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
+                                    {{ $grupo->precio }} $
+                                </p>
+                            </td>
+                            <td class="p-4 border-b border-blue-gray-50">
+                                <p
+                                    class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
+                                    {{ $this->calculo($grupo->precio) }} Bs
+                                </p>
+                            </td>
+                            <td class="p-4 border-b border-blue-gray-50">
+                                <a href="#"
+                                    class="block font-sans text-sm antialiased font-medium leading-normal text-blue-gray-900">
+                                    Edit
+                                </a>
+                            </td>
+                            <td class="p-4 border-b border-blue-gray-50">
+                                <a href="/carrera/inscripcion/{{ $grupo->id }} "
+                                    class="block font-sans text-sm antialiased font-medium leading-normal text-blue-gray-900">
+                                    Seleccionar
+                                </a>
+                            </td>
+                        </tr>
+                    @endif
                 @endforeach
             </tbody>
         </table>
