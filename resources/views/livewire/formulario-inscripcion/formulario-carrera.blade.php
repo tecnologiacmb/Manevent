@@ -43,32 +43,50 @@
                     <div class="mb-4">
                         <x-label for="">Cedula </x-label>
                         <x-input class="w-full" wire:model="create_participante.{{ $i }}.cedula" />
+                        @error("create_participante.$i.cedula")
+                            <span class="error text-red-500">{{ $message }}</span>
+                        @enderror
                     </div>
 
                     <div class="mb-4">
                         <x-label for="">Nombre</x-label>
                         <x-input class="w-full" wire:model="create_participante.{{ $i }}.nombre" />
+                        @error("create_participante.$i.nombre")
+                            <span class="error text-red-500">{{ $message }}</span>
+                        @enderror
                     </div>
 
                     <div class="mb-4">
                         <x-label for="">Apellido</x-label>
                         <x-input class="w-full" wire:model="create_participante.{{ $i }}.apellido" />
+                        @error("create_participante.$i.apellido")
+                            <span class="error text-red-500">{{ $message }}</span>
+                        @enderror
                     </div>
 
                     <div class="mb-4">
                         <x-label for="">Telefono</x-label>
                         <x-input class="w-full" wire:model="create_participante.{{ $i }}.telefono" />
+                        @error("create_participante.$i.telefono")
+                            <span class="error text-red-500">{{ $message }}</span>
+                        @enderror
                     </div>
                     <div class="mb-4">
                         <x-label for="">Fecha de nacimiento</x-label>
-                        <x-input class="w-full" type="date"
+                        <x-input class="w-full" type="date" max="{{ $this->fecha_nacimiento_maxima }}"
                             wire:model="create_participante.{{ $i }}.fecha_nacimiento"
                             wire:click="edad(value.fecha_nacimiento)" />
+                        @error("create_participante.$i.fecha_nacimiento")
+                            <span class="error text-red-500">{{ $message }}</span>
+                        @enderror
                     </div>
                     <div class="mb-4">
                         <x-label for="">Correo</x-label>
                         <x-input class="w-full" type="email"
                             wire:model="create_participante.{{ $i }}.correo" />
+                        @error("create_participante.$i.correo")
+                            <span class="error text-red-500">{{ $message }}</span>
+                        @enderror
                     </div>
                     <div class="mb-4">
                         <x-label for="">Estado</x-label>
@@ -90,10 +108,16 @@
                             @endif
 
                         </x-select>
+                        @error("create_participante.$i.ciudad_id")
+                            <span class="error text-red-500">{{ $message }}</span>
+                        @enderror
                     </div>
                     <div class="mb-4">
                         <x-label for="">Direccion</x-label>
                         <x-input class="w-full" wire:model="create_participante.{{ $i }}.direccion" />
+                        @error("create_participante.$i.direccion")
+                            <span class="error text-red-500">{{ $message }}</span>
+                        @enderror
                     </div>
                     <div class="mb-4">
                         <x-label for="">Metodo realizado </x-label>
@@ -131,6 +155,9 @@
                                         </option>
                                     @endforeach
                                 </x-select>
+                                @error("create_inscripcion.$i.metodo_pago_id")
+                                    <span class="error text-red-500">{{ $message }}</span>
+                                @enderror
                             </div>
                         </div>
                         <div class="grid grid-cols-3 gap-4">
@@ -138,38 +165,58 @@
                             @if ($this->create_inscripcion[$i]['bolivar'] == '1')
                                 <div class="mb-4">
                                     <x-label for="">Fecha del pago</x-label>
-                                    <x-input type="date" class="w-full"
+                                    <x-input type="date" class="w-full" max="{{ $this->fecha_actual }}"
                                         wire:model="create_inscripcion.{{ $i }}.fecha" />
+                                    @error("create_inscripcion.$i.fecha")
+                                        <span class="error text-red-500">{{ $message }}</span>
+                                    @enderror
                                 </div>
                                 <div class="mb-4">
                                     <x-label for="">N° Referencia</x-label>
-                                    <x-input class="w-full"
+                                    <x-input class="w-full" min="6" max="6"
+                                        placeholder="ultimos 6 digitos"
                                         wire:model="create_inscripcion.{{ $i }}.referencia" />
+                                    @error("create_inscripcion.$i.referencia")
+                                        <span class="error text-red-500">{{ $message }}</span>
+                                    @enderror
                                 </div>
                                 <div>
                                     <div class="mb-4">
                                         <x-label for="">Monto pagado Bs</x-label>
-                                        <x-input type="number" class="w-full"
+                                        <x-input type="number" step="0.01" class="w-full"
                                             wire:model="create_inscripcion.{{ $i }}.monto" />
+                                        @error("create_inscripcion.$i.monto")
+                                            <span class="error text-red-500">{{ $message }}</span>
+                                        @enderror
                                     </div>
                                 </div>
                                 {{-- si pago en bs --}}
                             @elseif($this->create_inscripcion[$i]['dolar'] == '2')
                                 <div class="mb-4">
                                     <x-label for="">Fecha del pago</x-label>
-                                    <x-input type="date" class="w-full"
+                                    <x-input type="date" class="w-full" max="{{ $this->fecha_actual }}"
                                         wire:model="create_inscripcion.{{ $i }}.fecha" />
+                                    @error("create_inscripcion.$i.fecha")
+                                        <span class="error text-red-500">{{ $message }}</span>
+                                    @enderror
                                 </div>
                                 <div class="mb-4">
                                     <x-label for="">N° Referencia</x-label>
-                                    <x-input class="w-full"
+                                    <x-input class="w-full" min="6" max="6"
+                                        placeholder="ultimos 6 digitos"
                                         wire:model="create_inscripcion.{{ $i }}.referencia" />
+                                    @error("create_inscripcion.$i.referencia")
+                                        <span class="error text-red-500">{{ $message }}</span>
+                                    @enderror
                                 </div>
                                 <div>
                                     <div class="mb-4">
                                         <x-label for="">Monto pagado $</x-label>
-                                        <x-input type="number" class="w-full"
+                                        <x-input type="number" step="0.01" class="w-full"
                                             wire:model="create_inscripcion.{{ $i }}.monto" />
+                                        @error("create_inscripcion.$i.monto")
+                                            <span class="error text-red-500">{{ $message }}</span>
+                                        @enderror
                                     </div>
                                 </div>
                             @endif
@@ -182,7 +229,8 @@
                 @if (isset($this->create_inscripcion[$i]) && $this->create_inscripcion[$i]['mixto'] == '2')
                     {{-- cuando el pago es mixto --}}
                     <div>
-                        <h1 class="font-semibold text-gray-700 leading-tight text-normal normal-case">Reporte del pago N° 1 </h1>
+                        <h1 class="font-semibold text-gray-700 leading-tight text-normal normal-case">Reporte del pago
+                            N° 1 </h1>
                         <hr class="border-gray-300"><br>
                         <div class="grid grid-cols-2 gap-4">
                             <div>
@@ -205,6 +253,9 @@
                                         </option>
                                     @endforeach
                                 </x-select>
+                                @error("create_inscripcion.$i.cuenta_mixto_1")
+                                <span class="error text-red-500 ">{{ $message }}</span>
+                            @enderror
                             </div>
                         </div>
                         <div class="grid grid-cols-3 gap-4">
@@ -212,43 +263,64 @@
                             @if ($this->create_inscripcion[$i]['bolivar'] == '1')
                                 <div class="mb-4">
                                     <x-label for="">Fecha del pago</x-label>
-                                    <x-input type="date" class="w-full"
+                                    <x-input type="date" class="w-full" max="{{ $this->fecha_actual }}"
                                         wire:model="create_inscripcion.{{ $i }}.fecha" />
+                                    @error("create_inscripcion.$i.fecha")
+                                        <span class="error text-red-500">{{ $message }}</span>
+                                    @enderror
                                 </div>
                                 <div class="mb-4">
                                     <x-label for="">N° Referencia</x-label>
-                                    <x-input class="w-full"
+                                    <x-input class="w-full" min="6" max="6"
+                                        placeholder="ultimos 6 digitos"
                                         wire:model="create_inscripcion.{{ $i }}.referencia" />
+                                    @error("create_inscripcion.$i.referencia")
+                                        <span class="error text-red-500 ">{{ $message }}</span>
+                                    @enderror
                                 </div>
                                 <div>
                                     <div class="mb-4">
                                         <x-label for="">Monto pagado Bs</x-label>
-                                        <x-input type="number" class="w-full"
+                                        <x-input type="number" step="0.01" class="w-full"
                                             wire:model="create_inscripcion.{{ $i }}.monto" />
+                                        @error("create_inscripcion.$i.monto")
+                                            <span class="error text-red-500">{{ $message }}</span>
+                                        @enderror
                                     </div>
                                 </div>
                                 {{-- si pago en bs --}}
                             @elseif($this->create_inscripcion[$i]['dolar'] == '2')
                                 <div class="mb-4">
                                     <x-label for="">Fecha del pago</x-label>
-                                    <x-input type="date" class="w-full"
+                                    <x-input type="date" class="w-full" max="{{ $this->fecha_actual }}"
                                         wire:model="create_inscripcion.{{ $i }}.fecha" />
+                                    @error("create_inscripcion.$i.fecha")
+                                        <span class="error text-red-500">{{ $message }}</span>
+                                    @enderror
                                 </div>
                                 <div class="mb-4">
                                     <x-label for="">N° Referencia</x-label>
-                                    <x-input class="w-full"
+                                    <x-input class="w-full" min="6" max="6"
+                                        placeholder="ultimos 6 digitos"
                                         wire:model="create_inscripcion.{{ $i }}.referencia" />
+                                    @error("create_inscripcion.$i.referencia")
+                                        <span class="error text-red-500">{{ $message }}</span>
+                                    @enderror
                                 </div>
                                 <div>
                                     <div class="mb-4">
                                         <x-label for="">Monto pagado $</x-label>
-                                        <x-input type="number" class="w-full"
+                                        <x-input type="number" step="0.01" class="w-full"
                                             wire:model="create_inscripcion.{{ $i }}.monto" />
+                                        @error("create_inscripcion.$i.monto")
+                                            <span class="error text-red-500">{{ $message }}</span>
+                                        @enderror
                                     </div>
                                 </div>
                             @endif
                         </div>
-                        <h1 class="font-semibold text-gray-700 leading-tight text-normal normal-case">Reporte del pago N° 2 </h1>
+                        <h1 class="font-semibold text-gray-700 leading-tight text-normal normal-case">Reporte del pago
+                            N° 2 </h1>
                         <hr class="border-gray-300"><br>
                         <div class="grid grid-cols-2 gap-4">
                             <div>
@@ -271,45 +343,68 @@
                                         </option>
                                     @endforeach
                                 </x-select>
+                                @error("create_inscripcion.$i.cuenta_mixto_2")
+                                    <span class="error text-red-500">{{ $message }}</span>
+                                @enderror
                             </div>
                             {{-- si pago en $ --}}
                         </div>
                         <div class="grid grid-cols-3 gap-4">
                             @if ($this->create_inscripcion[$i]['bolivar_mixto'] == '1')
-                            <div class="mb-4">
-                                <x-label for="">Fecha del pago</x-label>
-                                <x-input type="date" class="w-full"
-                                    wire:model="create_inscripcion.{{ $i }}.fecha_mixto" />
-                            </div>
-                            <div class="mb-4">
-                                <x-label for="">N° Referencia</x-label>
-                                <x-input class="w-full"
-                                    wire:model="create_inscripcion.{{ $i }}.referencia_mixto" />
-                            </div>
+                                <div class="mb-4">
+                                    <x-label for="">Fecha del pago</x-label>
+                                    <x-input type="date" class="w-full" max="{{ $this->fecha_actual }}"
+                                        wire:model="create_inscripcion.{{ $i }}.fecha_mixto" />
+                                    @error("create_inscripcion.$i.fecha_mixto")
+                                        <span class="error text-red-500">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                                <div class="mb-4">
+                                    <x-label for="">N° Referencia</x-label>
+                                    <x-input class="w-full" min="6" max="6"
+                                        placeholder="ultimos 6 digitos"
+                                        wire:model="create_inscripcion.{{ $i }}.referencia_mixto" />
+                                    @error("create_inscripcion.$i.referencia_mixto")
+                                        <span class="error text-red-500">{{ $message }}</span>
+                                    @enderror
+                                </div>
                                 <div>
                                     <div class="mb-4">
                                         <x-label for="">Monto pagado Bs</x-label>
-                                        <x-input type="number" class="w-full"
+                                        <x-input type="number" step="0.01" class="w-full"
                                             wire:model="create_inscripcion.{{ $i }}.monto_mixto" />
+                                        @error("create_inscripcion.$i.monto_mixto")
+                                            <span class="error text-red-500">{{ $message }}</span>
+                                        @enderror
                                     </div>
                                 </div>
                                 {{-- si pago en bs --}}
                             @elseif($this->create_inscripcion[$i]['dolar_mixto'] == '2')
-                            <div class="mb-4">
-                                <x-label for="">Fecha del pago</x-label>
-                                <x-input type="date" class="w-full"
-                                    wire:model="create_inscripcion.{{ $i }}.fecha_mixto" />
-                            </div>
-                            <div class="mb-4">
-                                <x-label for="">N° Referencia</x-label>
-                                <x-input class="w-full"
-                                    wire:model="create_inscripcion.{{ $i }}.referencia_mixto" />
-                            </div>
+                                <div class="mb-4">
+                                    <x-label for="">Fecha del pago</x-label>
+                                    <x-input type="date" class="w-full" max="{{ $this->fecha_actual }}"
+                                        wire:model="create_inscripcion.{{ $i }}.fecha_mixto" />
+                                    @error("create_inscripcion.$i.fecha_mixto")
+                                        <span class="error text-red-500">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                                <div class="mb-4">
+                                    <x-label for="">N° Referencia</x-label>
+                                    <x-input class="w-full" min="6" max="6"
+                                        placeholder="ultimos 6 digitos"
+                                        wire:model="create_inscripcion.{{ $i }}.referencia_mixto" />
+                                    @error("create_inscripcion.$i.referencia_mixto")
+                                        <span class="error text-red-500">{{ $message }}</span>
+                                    @enderror
+                                </div>
                                 <div>
                                     <div class="mb-4">
                                         <x-label for="">Monto pagado $</x-label>
-                                        <x-input type="number" class="w-full"
+                                        <x-input type="number" step="0.01" class="w-full"
                                             wire:model="create_inscripcion.{{ $i }}.monto_mixto" />
+                                        @error("create_inscripcion.$i.monto_mixto")
+                                            <span class="error text-red-500">{{ $message }}</span>
+                                        @enderror
                                     </div>
                                 </div>
                             @endif

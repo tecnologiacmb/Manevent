@@ -31,7 +31,7 @@ class FormularioCarrera extends Component
     public $participante_id;
     public $banco;
     public $tipo_pago;
-
+    public $fecha_nacimiento_maxima;
     public $cantidad;
     public $opcion2 = null;
     public $opcion0 = null;
@@ -56,6 +56,7 @@ class FormularioCarrera extends Component
     public $dolar_mixto = null;
     public $unico_valor = null;
     public $mixto_valor = null;
+    public $fecha_actual = null;
 
     public $selectedEstado = null;
     public $datos_json = [];
@@ -110,10 +111,11 @@ class FormularioCarrera extends Component
     {
         if (!is_null($id)) {
 
+            $this->fecha_actual = Carbon::now()->format('Y-m-d');
 
+            $this->evento = evento::select('id', 'nombre', 'fecha_evento')->where('estado', true)->orderBy('id', 'desc')->first();
 
-
-            $this->evento = evento::select('id', 'nombre')->where('estado', true)->orderBy('id', 'desc')->first();
+            $this->subtractYears();
 
 
 
@@ -126,7 +128,7 @@ class FormularioCarrera extends Component
                 $this->dolars = dolar::latest()->first();
             }
 
-
+            /* $this->create_participante[$i]['fecha_nacimiento'] */
 
             $this->numeros = numero::all();
             $this->estados = estado::all();
@@ -147,11 +149,9 @@ class FormularioCarrera extends Component
                     'fecha_nacimiento' => "",
                 ];
 
-
                 $this->create_inscripcion[$i] = [
 
                     'evento_id' => $this->evento->id,
-                    'cedula' => "",
                     'participante_id' => null,
                     'metodo_pago_id' => null,
                     'grupo_id' => $id,
@@ -173,8 +173,8 @@ class FormularioCarrera extends Component
                     'dolar_mixto' => null,
                     'monto' => null,
                     'monto_mixto' => null,
-                    'fecha' => null,
-                    'fecha_mixto' => null,
+                    'fecha' => $this->fecha_actual,
+                    'fecha_mixto' => $this->fecha_actual,
                     'referencia' => null,
                     'referencia_mixto' => null,
                     'cuenta_mixto_1' => null,
@@ -188,12 +188,13 @@ class FormularioCarrera extends Component
 
             $this->metodo_pago = DB::table('metodo_pagos')->join('tipo_pagos', 'metodo_pagos.tipo_pago_id', '=', 'tipo_pagos.id')->join('bancos', 'metodo_pagos.banco_id', '=', 'bancos.id')->select('metodo_pagos.*', 'tipo_pagos.nombre as tipo_pago_nombre', 'bancos.nombre as banco_nombre')->get();
         }
+    }
 
-        //$this->create_inscripcion['metodo_pago_id'] = $this->metodo_pago->id;
+    public function subtractYears()
+    {
+        $this->evento->fecha_evento = Carbon::parse($this->evento->fecha_evento)->subYears(15)->format('Y-m-d');
 
-
-
-
+        $this->fecha_nacimiento_maxima = $this->evento->fecha_evento;
     }
 
     public function updatedCreateParticipante($value, $name)
@@ -203,7 +204,6 @@ class FormularioCarrera extends Component
         $field = $parts[1];
         if ($field === 'estado_id') {
             $this->create_participante[$index]['ciudades'] = ciudad::where('estado_id', $value)->get();
-            /*  return dd($this->create_participante[$index]['ciudades']); */
         }
     }
 
@@ -226,6 +226,9 @@ class FormularioCarrera extends Component
         } elseif ($option === '2') {
             $this->create_inscripcion[$index]['unico'] = null;
             $this->create_inscripcion[$index]['mixto'] = '2';
+        } elseif ($option === ''){
+            $this->create_inscripcion[$index]['unico'] = null;
+            $this->create_inscripcion[$index]['mixto'] = null;
         }
     }
 
@@ -238,6 +241,9 @@ class FormularioCarrera extends Component
         } elseif ($option === '2') {
             $this->create_inscripcion[$index]['bolivar'] = null;
             $this->create_inscripcion[$index]['dolar'] = '2';
+        } elseif ($option === '') {
+            $this->create_inscripcion[$index]['bolivar'] = null;
+            $this->create_inscripcion[$index]['dolar'] = null;
         }
     }
     public function update_pago_mixto($index, $option)
@@ -249,6 +255,10 @@ class FormularioCarrera extends Component
         } elseif ($option === '2') {
             $this->create_inscripcion[$index]['bolivar_mixto'] = null;
             $this->create_inscripcion[$index]['dolar_mixto'] = '2';
+        }
+        elseif ($option === '') {
+            $this->create_inscripcion[$index]['bolivar_mixto'] = null;
+            $this->create_inscripcion[$index]['dolar_mixto'] = null;
         }
     }
 
@@ -285,65 +295,223 @@ class FormularioCarrera extends Component
             $numero_id = numero::select('id')->where('disponible', true)->where('estado', true)->whereBetween('id', [1, 100])->orderBy('id', 'asc')->first();
 
             /* logica asignacion de numeros y mesa*/
-            $this->inscripcion->numero_id = $numero_id->id;
-            $this->inscripcion->mesa_id = Mesas_enum::Mesa_1;
-            $this->inscripcion->save();
-            /* update numero asignado */
-            $this->numero = numero::find($numero_id->id);
-            $this->numero->disponible = false;
-            $this->numero->save();
+
+            if (!is_null($numero_id)) {
+                $this->inscripcion->numero_id = $numero_id->id;
+                $this->inscripcion->mesa_id = Mesas_enum::Mesa_1;
+                $this->inscripcion->save();
+                /* update numero asignado */
+                $this->numero = numero::find($numero_id->id);
+                $this->numero->disponible = false;
+                $this->numero->save();
+            } else {
+                $numero_id = numero::select('id')->where('disponible', true)->where('estado', true)->whereBetween('id', [501, 700])->orderBy('id', 'asc')->first();
+                $this->inscripcion->numero_id = $numero_id->id;
+                $this->inscripcion->mesa_id = Mesas_enum::Mesa_8;
+                $this->inscripcion->save();
+                /* update numero asignado */
+                $this->numero = numero::find($numero_id->id);
+                $this->numero->disponible = false;
+                $this->numero->save();
+            }
         } else if ($ultimo_digito == '2' || $ultimo_digito == '3') {
             $numero_id = numero::select('id')->where('disponible', true)->where('estado', true)->whereBetween('id', [101, 200])->orderBy('id', 'asc')->first();
 
             /* logica asignacion de numeros y mesa*/
-            $this->inscripcion->numero_id = $numero_id->id;
-            $this->inscripcion->mesa_id = Mesas_enum::Mesa_2;
-            $this->inscripcion->save();
-            /* update numero asignado */
-            $this->numero = numero::find($numero_id->id);
-            $this->numero->disponible = false;
-            $this->numero->save();
+            if (!is_null($numero_id)) {
+                $this->inscripcion->numero_id = $numero_id->id;
+                $this->inscripcion->mesa_id = Mesas_enum::Mesa_2;
+                $this->inscripcion->save();
+                /* update numero asignado */
+                $this->numero = numero::find($numero_id->id);
+                $this->numero->disponible = false;
+                $this->numero->save();
+            } else {
+                $numero_id = numero::select('id')->where('disponible', true)->where('estado', true)->whereBetween('id', [501, 700])->orderBy('id', 'asc')->first();
+                $this->inscripcion->numero_id = $numero_id->id;
+                $this->inscripcion->mesa_id = Mesas_enum::Mesa_8;
+                $this->inscripcion->save();
+                /* update numero asignado */
+                $this->numero = numero::find($numero_id->id);
+                $this->numero->disponible = false;
+                $this->numero->save();
+            }
         } else if ($ultimo_digito == '4' || $ultimo_digito == '5') {
             $numero_id = numero::select('id')->where('disponible', true)->where('estado', true)->whereBetween('id', [201, 300])->orderBy('id', 'asc')->first();
 
+            if (!is_null($numero_id)) {
+                $this->inscripcion->numero_id = $numero_id->id;
+                $this->inscripcion->mesa_id = Mesas_enum::Mesa_3;
+                $this->inscripcion->save();
+                /* update numero asignado */
+                $this->numero = numero::find($numero_id->id);
+                $this->numero->disponible = false;
+                $this->numero->save();
+            } else {
+                $numero_id = numero::select('id')->where('disponible', true)->where('estado', true)->whereBetween('id', [501, 700])->orderBy('id', 'asc')->first();
+                $this->inscripcion->numero_id = $numero_id->id;
+                $this->inscripcion->mesa_id = Mesas_enum::Mesa_8;
+                $this->inscripcion->save();
+                /* update numero asignado */
+                $this->numero = numero::find($numero_id->id);
+                $this->numero->disponible = false;
+                $this->numero->save();
+            }
             /* logica asignacion de numeros y mesa*/
-            $this->inscripcion->numero_id = $numero_id->id;
-            $this->inscripcion->mesa_id = Mesas_enum::Mesa_3;
-            $this->inscripcion->save();
-            /* update numero asignado */
-            $this->numero = numero::find($numero_id->id);
-            $this->numero->disponible = false;
-            $this->numero->save();
         } else if ($ultimo_digito == '6' || $ultimo_digito == '7') {
             $numero_id = numero::select('id')->where('disponible', true)->where('estado', true)->whereBetween('id', [301, 400])->orderBy('id', 'asc')->first();
 
             /* logica asignacion de numeros y mesa*/
-            $this->inscripcion->numero_id = $numero_id->id;
-            $this->inscripcion->mesa_id = Mesas_enum::Mesa_4;
-            $this->inscripcion->save();
-            /* update numero asignado */
-            $this->numero = numero::find($numero_id->id);
-            $this->numero->disponible = false;
-            $this->numero->save();
+            if (!is_null($numero_id)) {
+                $this->inscripcion->numero_id = $numero_id->id;
+                $this->inscripcion->mesa_id = Mesas_enum::Mesa_4;
+                $this->inscripcion->save();
+                /* update numero asignado */
+                $this->numero = numero::find($numero_id->id);
+                $this->numero->disponible = false;
+                $this->numero->save();
+            } else {
+                $numero_id = numero::select('id')->where('disponible', true)->where('estado', true)->whereBetween('id', [501, 700])->orderBy('id', 'asc')->first();
+                $this->inscripcion->numero_id = $numero_id->id;
+                $this->inscripcion->mesa_id = Mesas_enum::Mesa_8;
+                $this->inscripcion->save();
+                /* update numero asignado */
+                $this->numero = numero::find($numero_id->id);
+                $this->numero->disponible = false;
+                $this->numero->save();
+            }
         } else if ($ultimo_digito == '8' || $ultimo_digito == '9') {
             $numero_id = numero::select('id')->where('disponible', true)->where('estado', true)->whereBetween('id', [401, 500])->orderBy('id', 'asc')->first();
 
             /* logica asignacion de numeros y mesa*/
-            $this->inscripcion->numero_id = $numero_id->id;
-            $this->inscripcion->mesa_id = Mesas_enum::Mesa_5;
-            $this->inscripcion->save();
-            /* update numero asignado */
-            $this->numero = numero::find($numero_id->id);
-            $this->numero->disponible = false;
-            $this->numero->save();
+            if (!is_null($numero_id)) {
+                $this->inscripcion->numero_id = $numero_id->id;
+                $this->inscripcion->mesa_id = Mesas_enum::Mesa_5;
+                $this->inscripcion->save();
+                /* update numero asignado */
+                $this->numero = numero::find($numero_id->id);
+                $this->numero->disponible = false;
+                $this->numero->save();
+            } else {
+                $numero_id = numero::select('id')->where('disponible', true)->where('estado', true)->whereBetween('id', [501, 700])->orderBy('id', 'asc')->first();
+                $this->inscripcion->numero_id = $numero_id->id;
+                $this->inscripcion->mesa_id = Mesas_enum::Mesa_8;
+                $this->inscripcion->save();
+                /* update numero asignado */
+                $this->numero = numero::find($numero_id->id);
+                $this->numero->disponible = false;
+                $this->numero->save();
+            }
         }
     }
 
+    public function rules(): array
+    {
+        $rules = [];
+        for ($i = 0; $i <= $this->grupo->cantidad - 1; $i++) {
+            $rules["create_participante.$i.ciudad_id"] = 'required|string|max:3';
+            $rules["create_participante.$i.cedula"] = 'required|string|max:8|regex:/^[0-9]+$/';
+            $rules["create_participante.$i.nombre"] = 'required|string|max:25|regex:/^[a-zA-Z\s]+$/';
+            $rules["create_participante.$i.apellido"] = 'required|string|max:25|regex:/^[a-zA-Z\s]+$/';
+            $rules["create_participante.$i.telefono"] = 'required|string|max:11|regex:/^[0-9]+$/';
+            $rules["create_participante.$i.correo"] = 'required|email|max:60';
+            $rules["create_participante.$i.direccion"] = 'required|string|max:60|regex:/^[a-zA-Z0-9\s]+$/';
+            $rules["create_participante.$i.fecha_nacimiento"] = 'required|date|before_or_equal:' . $this->fecha_nacimiento_maxima;
+
+
+
+            if ( !is_null($this->create_inscripcion[$i]['unico'])) {
+
+                $rules["create_inscripcion.$i.metodo_pago_id"] = 'required|integer|max:3';
+                $rules["create_inscripcion.$i.monto"] = 'required|numeric';
+                $rules["create_inscripcion.$i.fecha"] = 'required|date|before_or_equal:' . $this->fecha_actual;
+                $rules["create_inscripcion.$i.referencia"] = 'required|numeric|digits:6';
+            }else {
+
+                $rules["create_inscripcion.$i.monto"] = 'required|numeric';
+                $rules["create_inscripcion.$i.fecha"] = 'required|date|before_or_equal:' . $this->fecha_actual;
+                $rules["create_inscripcion.$i.referencia"] = 'required|numeric|digits:6';
+                $rules["create_inscripcion.$i.monto_mixto"] = 'required|numeric';
+                $rules["create_inscripcion.$i.fecha_mixto"] = 'required|date|before_or_equal:' . $this->fecha_actual;
+                $rules["create_inscripcion.$i.referencia_mixto"] = 'required|numeric|min:6|max:6';
+                $rules["create_inscripcion.$i.cuenta_mixto_1"] = 'required|string';
+                $rules["create_inscripcion.$i.cuenta_mixto_2"] = 'required|string';
+            }
+
+
+        }
+        return $rules;
+    }
+    public function messages(): array
+    {
+        $messages = [];
+        for ($i = 0; $i <= $this->grupo->cantidad - 1; $i++) {
+            $messages["create_participante.$i.ciudad_id.required"] = __('El campo ciudad es obligatorio.');
+            $messages["create_participante.$i.cedula.required"] = __('El campo cedula es obligatorio.');
+            $messages["create_participante.$i.cedula.string"] = __('El campo cedula debe ser una cadena de texto numerico.');
+            $messages["create_participante.$i.cedula.max"] = __('El campo cedula no debe ser mayor a 8 caracteres.');
+            $messages["create_participante.$i.cedula.regex"] = __('El campo cedula solo acepta numeros.');
+            $messages["create_participante.$i.nombre.required"] = __('El campo nombre es obligatorio.');
+            $messages["create_participante.$i.nombre.string"] = __('El campo nombre debe ser una cadena de texto.');
+            $messages["create_participante.$i.nombre.max"] = __('El campo nombre no debe ser mayor a 25 caracteres.');
+            $messages["create_participante.$i.nombre.regex"] = __('El campo nombre no acepta caracteres especiales.');
+            $messages["create_participante.$i.apellido.required"] = __('El campo apellido es obligatorio.');
+            $messages["create_participante.$i.apellido.string"] = __('El campo apellido debe ser una cadena de texto.');
+            $messages["create_participante.$i.apellido.max"] = __('El campo apellido no debe ser mayor a 25 caracteres.');
+            $messages["create_participante.$i.apellido.regex"] = __('El campo apellido no acepta caracteres especiales.');
+            $messages["create_participante.$i.telefono.required"] = __('El campo telefono es obligatorio.');
+            $messages["create_participante.$i.telefono.string"] = __('El campo telefono debe ser una cadena de texto.');
+            $messages["create_participante.$i.telefono.max"] = __('El campo telefono no debe ser mayor a 10 caracteres.');
+            $messages["create_participante.$i.telefono.regex"] = __('El campo telefono solo acepta numeros.');
+            $messages["create_participante.$i.correo.required"] = __('El campo correo es obligatorio.');
+            $messages["create_participante.$i.correo.email"] = __('El campo correo debe tener la sintaxis correcta.');
+            $messages["create_participante.$i.correo.max"] = __('El campo correo no debe ser mayor a 60 caracteres.');
+            $messages["create_participante.$i.direccion.required"] = __('El campo direccion es obligatorio.');
+            $messages["create_participante.$i.direccion.string"] = __('El campo direccion debe ser una cadena de texto.');
+            $messages["create_participante.$i.direccion.max"] = __('El campo direccion no debe ser mayor a 60 caracteres.');
+            $messages["create_participante.$i.direccion.regex"] = __('El campo direccion no acepta caracteres especiales.');
+            $messages["create_participante.$i.fecha_nacimiento.required"] = __('El campo fecha de nacimiento es obligatorio.');
+            $messages["create_participante.$i.fecha_nacimiento.date"] = __('El campo fecha de nacimiento debe ser de tipo fecha');
+            $messages["create_participante.$i.fecha_nacimiento.before_or_equal"] = __('El campo fecha de nacimiento debe ser menor o igual a ' . $this->fecha_nacimiento_maxima = Carbon::parse($this->evento->fecha_evento)->format('d-m-Y'));
+
+            $messages["create_inscripcion.$i.metodo_pago_id.required"] = __('El campo cuentas es obligatorio.');
+            $messages["create_inscripcion.$i.metodo_pago_id.integer"] = __('El campo cuentas debe ser un entero.');
+            $messages["create_inscripcion.$i.metodo_pago_id.max"] = __('El campo cuentas no debe ser mayor a 3 caracteres ');
+            $messages["create_inscripcion.$i.monto.required"] = __('El campo monto es obligatorio.');
+            $messages["create_inscripcion.$i.monto.numeric"] = __('El campo monto solo permite numeros.');
+            $messages["create_inscripcion.$i.fecha.required"] = __('El campo fecha de pago es obligatorio.');
+            $messages["create_inscripcion.$i.fecha.date"] = __('El campo fecha de pago debe tener la sintaxis correcta.');
+            $messages["create_inscripcion.$i.fecha.before_or_equal"] = __('El campo fecha de pago debe ser menor o igual a ' . $this->fecha_nacimiento_maxima = Carbon::parse($this->fecha_actual)->format('d-m-Y'));
+            $messages["create_inscripcion.$i.referencia.required"] = __('El campo referencia es obligatorio.');
+            $messages["create_inscripcion.$i.referencia.numeric"] = __('El campo referencia solo permite numeros.');
+            $messages["create_inscripcion.$i.referencia.digits"] = __('El campo referencia solo admite 6 digitos');
+
+
+            $messages["create_inscripcion.$i.monto_mixto.required"] = __('El campo monto es obligatorio.');
+            $messages["create_inscripcion.$i.monto_mixto.numeric"] = __('El campo monto solo permite numeros.');
+            $messages["create_inscripcion.$i.fecha_mixto.required"] = __('El campo fecha de pago es obligatorio.');
+            $messages["create_inscripcion.$i.fecha_mixto.date"] = __('El campo fecha de pago debe tener la sintaxis correcta.');
+            $messages["create_inscripcion.$i.fecha_mixto.before_or_equal"] = __('El campo fecha de pago debe ser menor o igual a ' . $this->fecha_nacimiento_maxima = Carbon::parse($this->fecha_actual)->format('d-m-Y'));
+
+            $messages["create_inscripcion.$i.referencia_mixto.required"] = __('El campo referencia es obligatorio.');
+            $messages["create_inscripcion.$i.referencia_mixto.numeric"] = __('El campo referencia solo permite numeros.');
+            $messages["create_inscripcion.$i.referencia_mixto.digits"] = __('El campo referencia solo admite los ultimos 6 digitos');
+
+
+            $messages["create_inscripcion.$i.cuenta_mixto_1.required"] = __('El campo cuenta es obligatorio.');
+            $messages["create_inscripcion.$i.cuenta_mixto_1.string"] = __('El campo cuenta debe ser una cadena de texto. ');
+            $messages["create_inscripcion.$i.cuenta_mixto_2.required"] = __('El campo cuenta es obligatorio.');
+            $messages["create_inscripcion.$i.cuenta_mixto_2.string"] = __('El campo cuenta debe ser una cadena de texto. ');
+        }
+        return $messages;
+    }
 
     public function save()
     {
         /* return dd( $this->create_participante[0]['ciudad_id'],$this->create_participante[1]['ciudad_id']); */
+        $this->validate();
         for ($i = 0; $i <= $this->grupo->cantidad - 1; $i++) {
+
             $participante = participante::create([
                 'ciudad_id' => $this->create_participante[$i]['ciudad_id'],
                 'cedula' => $this->create_participante[$i]['cedula'],
@@ -386,7 +554,7 @@ class FormularioCarrera extends Component
             $this->create_inscripcion[$i]['categoria_habilitada_id'] = $categoria_id;
 
             if (is_null($this->create_inscripcion[$i]['metodo_pago_id'])) {
-                $this->create_inscripcion[$i]['metodo_pago_id']=3;
+                $this->create_inscripcion[$i]['metodo_pago_id'] = 3;
             }
 
 
@@ -420,6 +588,3 @@ class FormularioCarrera extends Component
         return view('livewire.formulario-inscripcion.formulario-carrera');
     }
 }
-
-
-
