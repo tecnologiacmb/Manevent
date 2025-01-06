@@ -66,7 +66,8 @@ class AdminMetodo extends Component
         ]);
 
         $this->reset(['postCreate']);
-        $this->nameMetodo = metodo_pago::all();
+        $this->dispatch('alert');
+        $this->open = false;
     }
 
     public function render()

@@ -50,7 +50,8 @@ class AdminEvento extends Component
 
         ]);
         $this->reset(['post_create']);
-        $this->evento = evento::all();
+        $this->dispatch('alert');
+        $this->open = false;
     }
 
     public function render()

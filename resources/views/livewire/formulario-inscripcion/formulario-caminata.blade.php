@@ -254,8 +254,8 @@
                                     @endforeach
                                 </x-select>
                                 @error("create_inscripcion.$i.cuenta_mixto_1")
-                                <span class="error text-red-500 ">{{ $message }}</span>
-                            @enderror
+                                    <span class="error text-red-500 ">{{ $message }}</span>
+                                @enderror
                             </div>
                         </div>
                         <div class="grid grid-cols-3 gap-4">
@@ -422,7 +422,18 @@
             </x-button>
         </div>
     </form>
-
+    @push('js')
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script>
+            Livewire.on('alert', function() {
+                Swal.fire({
+                    title: "Éxito!",
+                    text: "El registro ha sido exitoso!",
+                    icon: "success"
+                });
+            })
+        </script>
+    @endpush
     <script>
         function showOnChange(e, posicion) {
             console.log('entre a la funcion')

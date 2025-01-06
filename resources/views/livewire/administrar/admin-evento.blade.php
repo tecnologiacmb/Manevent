@@ -163,5 +163,16 @@
                 </x-slot>
             </x-dialog-modal>
         </form>
-
+        @push('js')
+            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+            <script>
+                Livewire.on('alert', function() {
+                    Swal.fire({
+                        title: "Éxito!",
+                        text: "El registro ha sido exitoso!",
+                        icon: "success"
+                    });
+                })
+            </script>
+        @endpush
     </div>

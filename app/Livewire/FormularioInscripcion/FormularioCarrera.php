@@ -508,7 +508,7 @@ class FormularioCarrera extends Component
 
     public function save()
     {
-        /* return dd( $this->create_participante[0]['ciudad_id'],$this->create_participante[1]['ciudad_id']); */
+
         $this->validate();
         for ($i = 0; $i <= $this->grupo->cantidad - 1; $i++) {
 
@@ -581,6 +581,7 @@ class FormularioCarrera extends Component
 
         $this->create_participante = [];
         $this->create_inscripcion = [];
+        $this->dispatch('alert');
     }
 
     public function render()

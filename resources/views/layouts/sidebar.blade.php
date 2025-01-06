@@ -15,9 +15,14 @@
 
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+
     <script src="{{ asset('js/app.js') }}" defer></script>
     <!-- Styles -->
+
+
     @livewireStyles
+
 </head>
 
 <body class="font-sans antialiased">
@@ -186,12 +191,19 @@
                     <main style="height: 100%;">
                         {{ $slot }}
                     </main>
+
                 </div>
             </div>
         </dh-component>
     </div>
+    @stack('modals')
+
+    @livewireScripts
+
+    @stack('js')
 
 </body>
+
 <script>
     var sideBar = document.getElementById("mobile-nav");
     var openSidebar = document.getElementById("openSideBar");

@@ -11,32 +11,75 @@ class AdminBanco extends Component
 {
     use WithPagination;
 
-    public $nameBanco;
+    public $nameBanco, $post_edit_id;
     public $open = false;
-    public $postCreate = [
+    public $open_edit = false;
+    public $post_create = [
         'nombre' => null,
         'codigo' => null,
-        'estado' => false,
-
+        'estado' => null,
     ];
 
-    public function agg()
+    public $post_update = [
+        'nombre' => "",
+        'codigo' => "",
+        'estado' =>  "",
+    ];
+    protected $listeners = ['delete'];
+
+    public function crear()
     {
         $this->open = true;
     }
+    public function edit($edit_id)
+    {
+        $this->open_edit = true;
+        $this->post_edit_id = $edit_id;
+        $post = banco::find($edit_id);
+
+        $this->post_update["nombre"] = $post->nombre;
+        $this->post_update["codigo"] = $post->codigo;
+        $this->post_update["estado"] = $post->estado;
+    }
     public function seve()
     {
-
         $posts = banco::create([
-            'nombre' => $this->postCreate['nombre'],
-            'codigo' => $this->postCreate['codigo'],
-            'estado' => $this->postCreate['estado'],
+            'nombre' => $this->post_create['nombre'],
+            'codigo' => $this->post_create['codigo'],
+            'estado' => $this->post_create['estado'],
 
         ]);
+        $this->reset(['post_create']);
+        $this->dispatch('alert');
 
-        $this->reset(['postCreate']);
-        $this->nameBanco = banco::all();
+
+        $this->open = false;
     }
+
+    public function update()
+    {
+        $posts = banco::find($this->post_edit_id);
+        $posts->update([
+            'nombre' => $this->post_update['nombre'],
+            'codigo' => $this->post_update['codigo'],
+            'estado' => $this->post_update['estado'],
+
+        ]);
+        $this->reset(['post_update', 'post_edit_id', 'open_edit']);
+        $this->dispatch('alert_update');
+    }
+    public function confirm_delete($delete_id)
+    {
+    $this->dispatch('alert_delete',$delete_id);
+
+    }
+    public function delete($delete_id)
+    {
+        $post = banco::find($delete_id);
+        $post->delete();
+
+    }
+
 
     public function mount()
     {
@@ -44,7 +87,7 @@ class AdminBanco extends Component
     }
     public function render()
     {
-        $nameBanco = banco::orderBy('nombre', 'desc')->paginate(9);
+        $nameBanco = banco::orderBy('id', 'desc')->paginate(8);
 
         return view('livewire.administrar.admin-banco', [
             'posts' => $nameBanco

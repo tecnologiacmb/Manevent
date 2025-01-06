@@ -274,20 +274,6 @@ class FormularioCaminata extends Component
         return $total;
     }
 
-    /*   public function edad($fecha_nacimiento)
-    {
-        $fecha_nacimiento = Carbon::parse($fecha_nacimiento);
-        $ahora = Carbon::now();
-        $edad = $ahora->diffInYears($fecha_nacimiento);
-
-        foreach ($this->categoria_habilitada as $categoria_habilitadas) {
-            if ($edad >= $categoria_habilitadas->edad_min && $edad <= $categoria_habilitadas->edad_max) {
-                return $categoria_habilitadas->id;
-            }
-        }
-        return null;
-    } */
-
     public function asignar_num_mesa($inscripcion_id, $cedula)
     {
         $ultimo_digito = substr($cedula, -1);
@@ -519,6 +505,8 @@ class FormularioCaminata extends Component
 
         $this->create_participante = [];
         $this->create_inscripcion = [];
+        $this->dispatch('alert');
+
     }
 
     public function render()

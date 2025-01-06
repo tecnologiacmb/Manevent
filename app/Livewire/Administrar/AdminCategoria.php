@@ -41,6 +41,8 @@ class AdminCategoria extends Component
 
 
         $this->reset(['postCreate']);
+        $this->dispatch('alert');
+        $this->open = false;
     }
     public function render()
     {

@@ -66,7 +66,8 @@ class AdminGrupo extends Component
 
 
         $this->reset(['postCreate']);
-        $this->grupos = grupo::all();
+        $this->dispatch('alert');
+        $this->open = false;
     }
 
     public function render()
