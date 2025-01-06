@@ -240,15 +240,44 @@
     </form>
 </div>
 @push('js')
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script>
-        Livewire.on('alert', function() {
-            Swal.fire({
-                title: "Éxito!",
-                text: "El registro ha sido exitoso!",
-                icon: "success"
-            });
-        })
-    </script>
-@endpush
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script>
+            Livewire.on('alert', function() {
+                Swal.fire({
+                    title: "Éxito!",
+                    text: "El registro ha sido exitoso!",
+                    icon: "success"
+                });
+            })
+            Livewire.on('alert_update', function() {
+                Swal.fire({
+                    title: "Éxito!",
+                    text: "Los datos han sido actualizados!",
+                    icon: "success"
+                });
+            })
+            Livewire.on('alert_delete', post_id => {
+                Swal.fire({
+                    title: "¿Estas seguro?",
+                    text: "¡No podras revertir esto!",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "¿Si, eliminalo!"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+
+                        Livewire.dispatch('delete',post_id)
+                        Swal.fire({
+                            title: "Borrado!",
+                            text: "Eliminacion exitosa.",
+                            icon: "success"
+                        });
+                    }
+                });
+
+            })
+        </script>
+    @endpush
 </div>
