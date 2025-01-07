@@ -17,6 +17,7 @@ return new class extends Migration
             $table->integer("edad_min");
             $table->integer("edad_max");
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

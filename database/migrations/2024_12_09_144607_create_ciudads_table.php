@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('ciudads', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('estado_id')->constrained()->onDelete('cascade');
+            $table->foreignId('estado_id')->constrained();
             $table->string('ciudad',90);
             $table->timestamps();
-
+            $table->softDeletes();
         });
     }
 

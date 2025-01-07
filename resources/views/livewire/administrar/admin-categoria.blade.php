@@ -97,17 +97,26 @@
                 <div class="mb-4">
                     <x-label for="">Nombre</x-label>
                     <x-input class="w-full" wire:model="post_create.nombre" />
+                    @error('post_create.nombre')
+                        <span class="error text-red-500">{{ $message }}</span>
+                    @enderror
                 </div>
 
                 <div class="h-28 grid grid-cols-3 gap-4 content-start ">
                     <div class="mb-4">
                         <x-label for="">Edad Minima</x-label>
                         <x-input type="number" class="w-full" wire:model="post_create.edad_min" />
+                        @error('post_create.edad_min')
+                            <span class="error text-red-500">{{ $message }}</span>
+                        @enderror
                     </div>
 
                     <div class="mb-4">
                         <x-label for="">Edad Maxima</x-label>
                         <x-input type="number" class="w-full" wire:model="post_create.edad_max" />
+                        @error('post_create.edad_max')
+                            <span class="error text-red-500">{{ $message }}</span>
+                        @enderror
                     </div>
                 </div>
 
@@ -137,6 +146,7 @@
                 <div class="mb-4">
                     <x-label for="">Nombre</x-label>
                     <x-input class="w-full" wire:model="post_update.nombre" />
+
                 </div>
 
                 <div class="h-28 grid grid-cols-3 gap-4 content-start ">
@@ -169,44 +179,44 @@
 
 </div>
 @push('js')
-        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-        <script>
-            Livewire.on('alert', function() {
-                Swal.fire({
-                    title: "Éxito!",
-                    text: "El registro ha sido exitoso!",
-                    icon: "success"
-                });
-            })
-            Livewire.on('alert_update', function() {
-                Swal.fire({
-                    title: "Éxito!",
-                    text: "Los datos han sido actualizados!",
-                    icon: "success"
-                });
-            })
-            Livewire.on('alert_delete', post_id => {
-                Swal.fire({
-                    title: "¿Estas seguro?",
-                    text: "¡No podras revertir esto!",
-                    icon: "warning",
-                    showCancelButton: true,
-                    confirmButtonColor: "#3085d6",
-                    cancelButtonColor: "#d33",
-                    confirmButtonText: "¿Si, eliminalo!"
-                }).then((result) => {
-                    if (result.isConfirmed) {
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        Livewire.on('alert', function() {
+            Swal.fire({
+                title: "Éxito!",
+                text: "El registro ha sido exitoso!",
+                icon: "success"
+            });
+        })
+        Livewire.on('alert_update', function() {
+            Swal.fire({
+                title: "Éxito!",
+                text: "Los datos han sido actualizados!",
+                icon: "success"
+            });
+        })
+        Livewire.on('alert_delete', post_id => {
+            Swal.fire({
+                title: "¿Estas seguro?",
+                text: "¡No podras revertir esto!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "¿Si, eliminalo!"
+            }).then((result) => {
+                if (result.isConfirmed) {
 
-                        Livewire.dispatch('delete',post_id)
-                        Swal.fire({
-                            title: "Borrado!",
-                            text: "Eliminacion exitosa.",
-                            icon: "success"
-                        });
-                    }
-                });
+                    Livewire.dispatch('delete', post_id)
+                    Swal.fire({
+                        title: "Borrado!",
+                        text: "Eliminacion exitosa.",
+                        icon: "success"
+                    });
+                }
+            });
 
-            })
-        </script>
-    @endpush
+        })
+    </script>
+@endpush
 </div>

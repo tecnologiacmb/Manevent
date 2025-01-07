@@ -6,9 +6,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\estado;
 use App\Models\participante;
+use Illuminate\Database\Eloquent\SoftDeletes;
+
 class ciudad extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
+
 
     protected $fillable=[
         'estado_id',

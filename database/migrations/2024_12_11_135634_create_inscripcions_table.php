@@ -13,19 +13,20 @@ return new class extends Migration
     {
         Schema::create('inscripcions', function (Blueprint $table) {
             $table->id();
-            $table->foreignId("evento_id")->nullable()->constrained()->onDelete("cascade");
-            $table->foreignId("participante_id")->nullable()->constrained()->onDelete("cascade");
-            $table->foreignId("metodo_pago_id")->nullable()->constrained()->onDelete("cascade");
-            $table->foreignId("grupo_id")->constrained()->onDelete("cascade");
-            $table->foreignId("dolar_id")->constrained()->onDelete("cascade");
-            $table->foreignId("numero_id")->nullable()->constrained()->onDelete("cascade");
-            $table->foreignId("categoria_habilitada_id")->nullable()->constrained()->onDelete("cascade");
-            $table->foreignId("mesa_id")->nullable()->constrained()->onDelete("cascade");
+            $table->foreignId("evento_id")->nullable()->constrained();
+            $table->foreignId("participante_id")->nullable()->constrained();
+            $table->foreignId("metodo_pago_id")->nullable()->constrained();
+            $table->foreignId("grupo_id")->constrained();
+            $table->foreignId("dolar_id")->constrained();
+            $table->foreignId("numero_id")->nullable()->constrained();
+            $table->foreignId("categoria_habilitada_id")->nullable()->constrained();
+            $table->foreignId("mesa_id")->nullable()->constrained();
             $table->json("datos")->nullable();
             $table->double("monto_pagado_bs")->nullable();
             $table->string("ip", 30)->nullable();
             $table->string("nomenclatura", 20)->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

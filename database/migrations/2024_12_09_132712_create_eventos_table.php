@@ -20,6 +20,7 @@ return new class extends Migration
             $table->date("fecha_evento");
             $table->boolean("estado");
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

@@ -5,11 +5,13 @@ namespace App\Livewire\Administrar;
 use App\Models\categoriaHabilitada;
 use Livewire\Component;
 use Livewire\WithPagination;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class AdminCategoria extends Component
 {
     use WithPagination;
-    public $categoria,$post_edit_id;
+
+    public $categoria, $post_edit_id;
     public $open;
     protected $listeners = ['delete'];
     public $open_edit = false;
@@ -36,7 +38,6 @@ class AdminCategoria extends Component
         $this->post_update["edad_min"] = $post->edad_min;
         $this->post_update["edad_max"] = $post->edad_max;
     }
-
     public function mount()
     {
         $this->categoria = categoriaHabilitada::all();
@@ -48,6 +49,7 @@ class AdminCategoria extends Component
     }
     public function save()
     {
+        $this->validate();
         $post = categoriaHabilitada::create([
 
             'nombre' => $this->post_create['nombre'],
@@ -59,7 +61,6 @@ class AdminCategoria extends Component
         $this->dispatch('alert');
         $this->open = false;
     }
-
     public function update()
     {
         $posts = categoriaHabilitada::find($this->post_edit_id);
@@ -72,16 +73,41 @@ class AdminCategoria extends Component
         $this->reset(['post_update', 'post_edit_id', 'open_edit']);
         $this->dispatch('alert_update');
     }
+
     public function confirm_delete($delete_id)
     {
-    $this->dispatch('alert_delete',$delete_id);
-
+        $this->dispatch('alert_delete', $delete_id);
     }
     public function delete($delete_id)
     {
         $post = categoriaHabilitada::find($delete_id);
         $post->delete();
+    }
 
+    public function rules():array{
+
+        $rules["post_create.nombre"] = 'required|string|max:25|regex:/^[a-zA-Z\s]+$/';
+        $rules["post_create.edad_min"] = 'required|string|max:2|regex:/^[0-9]+$/';
+        $rules["post_create.edad_max"] = 'required|string|max:2|regex:/^[0-9]+$/';
+        return $rules;
+    }
+    public function messages():array
+    {
+
+        $messages["post_create.nombre.required"] = __('El campo nombre es obligatorio.');
+        $messages["post_create.nombre.string"] = __('El campo nombre debe ser una cadena de texto .');
+        $messages["post_create.nombre.max"] = __('El campo nombre no debe ser mayor a 25 letras.');
+        $messages["post_create.nombre.regex"] = __('El campo nombre solo acepta letras.');
+        $messages["post_create.edad_min.required"] = __('El campo edad minima es obligatorio.');
+        $messages["post_create.edad_min.string"] = __('El campo edad minima debe ser una cadena de texto .');
+        $messages["post_create.edad_min.max"] = __('El campo edad minima no debe ser mayor a 2 digitos.');
+        $messages["post_create.edad_min.regex"] = __('El campo edad minima solo acepta numeros.');
+        $messages["post_create.edad_max.required"] = __('El campo edad maxima es obligatorio.');
+        $messages["post_create.edad_max.string"] = __('El campo edad maxima debe ser una cadena de texto .');
+        $messages["post_create.edad_max.max"] = __('El campo edad maxima no debe ser mayor a 2 digitos.');
+        $messages["post_create.edad_max.regex"] = __('El campo edad maxima solo acepta numeros.');
+
+        return $messages;
     }
     public function render()
     {

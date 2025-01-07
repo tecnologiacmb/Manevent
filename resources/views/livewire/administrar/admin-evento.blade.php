@@ -3,7 +3,7 @@
         <h1 class="font-black text-2xl text-gray-800 leading-tight text-normal">
             Eventos Registrados
         </h1>
-        <x-button class="shadow" wire:click="agg">
+        <x-button class="shadow" wire:click="crear">
             Agregar
         </x-button>
     </div>
@@ -55,17 +55,17 @@
 
             <tbody>
                 <tr>
-                    @foreach ($evento as $post)
+                    @foreach ($posts as $eventos)
                         <td class="p-4 border-b border-blue-gray-50">
                             <p
                                 class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-                                {{ $post->id }}
+                                {{ $eventos->id }}
                             </p>
                         </td>
                         <td class="p-4 border-b border-blue-gray-50">
                             <p
                                 class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-                                {{ $post->nombre }}
+                                {{ $eventos->nombre }}
                             </p>
                         </td>
 
@@ -73,27 +73,29 @@
                         <td class="p-4 border-b border-blue-gray-50">
                             <p
                                 class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-                                {{ $post->fecha_inicio }}
+                                {{ $eventos->fecha_inicio }}
                             </p>
                         </td>
                         <td class="p-4 border-b border-blue-gray-50">
                             <p
                                 class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-                                {{ $post->fecha_finalizacion }}
+                                {{ $eventos->fecha_finalizacion }}
                             </p>
                         </td>
                         <td class="p-4 border-b border-blue-gray-50">
                             <p
                                 class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-                                {{ $post->estado }}
+                                {{ $eventos->estado }}
                             </p>
                         </td>
-                        <td class="p-4 border-b border-blue-gray-50">
-                            <a href="#"
-                                class="block font-sans text-sm antialiased font-medium leading-normal text-blue-gray-900">
-                                Edit
-                            </a>
+                        <td class="p-4 border-b border-blue-gray-50 space-x-8">
+                            <x-button class="bg-blue-500" wire:click="edit({{ $eventos->id }})">
+                                <i class="bi bi-pencil-square"></i>
+                            </x-button>
 
+                            <x-danger-button wire:click="confirm_delete({{ $eventos->id }})">
+                                <i class="bi bi-trash-fill"></i>
+                            </x-danger-button>
                         </td>
                     @endforeach
                 </tr>
@@ -102,6 +104,9 @@
 
         </table>
 
+        <div>
+            {{ $posts->links() }}
+        </div>
 
         <form wire:submit="seve">
             <x-dialog-modal wire:model="open">
@@ -114,6 +119,9 @@
                     <div class="mb-4">
                         <x-label for="">Nombre del Evento</x-label>
                         <x-input class="w-full" wire:model="post_create.nombre" />
+                        @error('post_create.nombre')
+                            <span class="error text-red-500">{{ $message }}</span>
+                        @enderror
                     </div>
                     <div class="grid grid-cols-2 gap-4">
 
@@ -121,15 +129,24 @@
                         <div class="mb-4">
                             <x-label for="">Lugar</x-label>
                             <x-input class="w-full" wire:model="post_create.lugar_evento" />
+                            @error('post_create.lugar_evento')
+                            <span class="error text-red-500">{{ $message }}</span>
+                        @enderror
                         </div>
                         <div class="mb-4">
                             <x-label for="">Inicia</x-label>
                             <x-input type="date" class="w-full" wire:model="post_create.fecha_inicio" />
+                            @error('post_create.fecha_inicio')
+                            <span class="error text-red-500">{{ $message }}</span>
+                        @enderror
                         </div>
 
                         <div class="mb-4">
                             <x-label for="">Finaliza</x-label>
                             <x-input type="date" class="w-full" wire:model="post_create.fecha_finalizacion" />
+                            @error('post_create.fecha_finalizacion')
+                            <span class="error text-red-500">{{ $message }}</span>
+                        @enderror
                         </div>
 
 
@@ -137,6 +154,9 @@
                         <div class="mb-4">
                             <x-label for="">Fecha de Realización</x-label>
                             <x-input type="date" class="w-full" wire:model="post_create.fecha_evento" />
+                            @error('post_create.fecha_evento')
+                            <span class="error text-red-500">{{ $message }}</span>
+                        @enderror
                         </div>
 
                         <div class="mb-4">
@@ -146,6 +166,9 @@
                                 <option value="0">Deshabilitado</option>
                                 <option value="1">Habilitado</option>
                             </x-select>
+                            @error('post_create.estado')
+                            <span class="error text-red-500">{{ $message }}</span>
+                        @enderror
                         </div>
                     </div>
                 </x-slot>
@@ -163,6 +186,68 @@
                 </x-slot>
             </x-dialog-modal>
         </form>
+
+        <form wire:submit="update">
+            <x-dialog-modal wire:model="open_edit">
+                <x-slot name="title">
+                    Actualizar Post
+                </x-slot>
+
+                <x-slot name="content">
+
+                    <div class="mb-4">
+                        <x-label for="">Nombre del Evento</x-label>
+                        <x-input class="w-full" wire:model="post_update.nombre" />
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+
+
+                        <div class="mb-4">
+                            <x-label for="">Lugar</x-label>
+                            <x-input class="w-full" wire:model="post_update.lugar_evento" />
+                        </div>
+                        <div class="mb-4">
+                            <x-label for="">Inicia</x-label>
+                            <x-input type="date" class="w-full" wire:model="post_update.fecha_inicio" />
+                        </div>
+
+                        <div class="mb-4">
+                            <x-label for="">Finaliza</x-label>
+                            <x-input type="date" class="w-full" wire:model="post_update.fecha_finalizacion" />
+                        </div>
+
+
+
+                        <div class="mb-4">
+                            <x-label for="">Fecha de Realización</x-label>
+                            <x-input type="date" class="w-full" wire:model="post_update.fecha_evento" />
+                        </div>
+
+                        <div class="mb-4">
+                            <x-label for="">Estado</x-label>
+                            <x-select class="w-full" wire:model="post_update.estado">
+                                <option value="" disabled>Seleccione un Estado</option>
+                                <option value="0">Deshabilitado</option>
+                                <option value="1">Habilitado</option>
+                            </x-select>
+                        </div>
+                    </div>
+                </x-slot>
+
+                <x-slot name="footer">
+                    <div class="flex justify-end">
+                        <x-danger-button class="mr-2" wire:click="$set('open_edit',false)">
+                            Cancelar
+                        </x-danger-button>
+
+                        <x-button>
+                            Actualizar
+                        </x-button>
+                    </div>
+                </x-slot>
+            </x-dialog-modal>
+        </form>
+
         @push('js')
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <script>

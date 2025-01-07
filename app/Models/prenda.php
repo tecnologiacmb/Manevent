@@ -7,10 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\prenda_category;
 use App\Models\prenda_talla;
 use App\Models\evento;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class prenda extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
+
     protected $fillable = [
         'evento_id',
         'prenda_category_id',

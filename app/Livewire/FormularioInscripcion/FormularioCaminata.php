@@ -16,10 +16,13 @@ use App\Models\ciudad;
 use App\Models\categoriaHabilitada;
 use App\Models\mesa;
 use App\Enum\Mesas_enum;
-use SebastianBergmann\Environment\Console;
+
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class FormularioCaminata extends Component
 {
+
+
     public $evento = null;
     public $participante;
     public $metodo_pago;
@@ -342,8 +345,6 @@ class FormularioCaminata extends Component
             $rules["create_participante.$i.direccion"] = 'required|string|max:60|regex:/^[a-zA-Z0-9\s]+$/';
             $rules["create_participante.$i.fecha_nacimiento"] = 'required|date|before_or_equal:' . $this->fecha_nacimiento_maxima;
 
-
-
             if ( !is_null($this->create_inscripcion[$i]['unico'])) {
 
                 $rules["create_inscripcion.$i.metodo_pago_id"] = 'required|integer|max:3';
@@ -357,12 +358,10 @@ class FormularioCaminata extends Component
                 $rules["create_inscripcion.$i.referencia"] = 'required|numeric|digits:6';
                 $rules["create_inscripcion.$i.monto_mixto"] = 'required|numeric';
                 $rules["create_inscripcion.$i.fecha_mixto"] = 'required|date|before_or_equal:' . $this->fecha_actual;
-                $rules["create_inscripcion.$i.referencia_mixto"] = 'required|numeric|min:6|max:6';
+                $rules["create_inscripcion.$i.referencia_mixto"] = 'required|numeric|digits:6';
                 $rules["create_inscripcion.$i.cuenta_mixto_1"] = 'required|string';
                 $rules["create_inscripcion.$i.cuenta_mixto_2"] = 'required|string';
             }
-
-
         }
         return $rules;
     }

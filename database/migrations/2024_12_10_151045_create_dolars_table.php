@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->double("precio");
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

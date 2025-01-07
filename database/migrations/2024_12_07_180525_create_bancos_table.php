@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string("codigo", 20);
             $table->boolean("estado");
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

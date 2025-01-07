@@ -7,13 +7,16 @@ use Livewire\Component;
 use Livewire\WithPagination;
 
 
+
 class AdminBanco extends Component
 {
     use WithPagination;
 
+
     public $nameBanco, $post_edit_id;
     public $open = false;
     public $open_edit = false;
+    protected $listeners = ['delete'];
     public $post_create = [
         'nombre' => null,
         'codigo' => null,
@@ -25,8 +28,11 @@ class AdminBanco extends Component
         'codigo' => "",
         'estado' =>  "",
     ];
-    protected $listeners = ['delete'];
 
+    public function mount()
+    {
+        $this->nameBanco = banco::all();
+    }
     public function crear()
     {
         $this->open = true;
@@ -43,6 +49,8 @@ class AdminBanco extends Component
     }
     public function seve()
     {
+        $this->validate();
+
         $posts = banco::create([
             'nombre' => $this->post_create['nombre'],
             'codigo' => $this->post_create['codigo'],
@@ -51,8 +59,6 @@ class AdminBanco extends Component
         ]);
         $this->reset(['post_create']);
         $this->dispatch('alert');
-
-
         $this->open = false;
     }
 
@@ -80,11 +86,29 @@ class AdminBanco extends Component
 
     }
 
+    public function rules():array{
 
-    public function mount()
-    {
-        $this->nameBanco = banco::all();
+        $rules["post_create.nombre"] = 'required|string|max:25|regex:/^[a-zA-Z\s]+$/';
+        $rules["post_create.codigo"] = 'required|string|max:8|regex:/^[0-9]+$/';
+        $rules["post_create.estado"] = 'required';
+        return $rules;
     }
+    public function messages():array
+    {
+
+        $messages["post_create.nombre.required"] = __('El campo nombre es obligatorio.');
+        $messages["post_create.nombre.string"] = __('El campo nombre debe ser una cadena de texto .');
+        $messages["post_create.nombre.max"] = __('El campo nombre no debe ser mayor a 25 letras.');
+        $messages["post_create.nombre.max"] = __('El campo nombre solo acepta letras.');
+        $messages["post_create.codigo.required"] = __('El campo codigo es obligatorio.');
+        $messages["post_create.codigo.string"] = __('El campo codigo debe ser una cadena de texto .');
+        $messages["post_create.codigo.max"] = __('El campo codigo no debe ser mayor a 8 digitos.');
+        $messages["post_create.codigo.regex"] = __('El campo codigo solo acepta numeros.');
+        $messages["post_create.estado.required"] = __('El campo estado es obligatorio.');
+        return $messages;
+    }
+
+
     public function render()
     {
         $nameBanco = banco::orderBy('id', 'desc')->paginate(8);

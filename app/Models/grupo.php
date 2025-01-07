@@ -6,11 +6,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\recorrido;
 use App\Models\inscripcion;
-
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class grupo extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
+
 
     protected $fillable = [
         'recorrido_id',

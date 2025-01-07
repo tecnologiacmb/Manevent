@@ -12,10 +12,12 @@ use App\Models\dolar;
 use App\Models\numero;
 use App\Models\mesa;
 use App\Models\categoriaHabilitada;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class inscripcion extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
+
 
     protected $fillable=[
 

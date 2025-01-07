@@ -77,17 +77,14 @@
                                     {{ $this->calculo($grupo->precio) }} Bs
                                 </p>
                             </td>
+
                             <td class="p-4 border-b border-blue-gray-50">
-                                <a href="#"
-                                    class="block font-sans text-sm antialiased font-medium leading-normal text-blue-gray-900">
-                                    Edit
-                                </a>
-                            </td>
-                            <td class="p-4 border-b border-blue-gray-50">
-                                <a href="/carrera/inscripcion/{{ $grupo->id }} "
-                                    class="block font-sans text-sm antialiased font-medium leading-normal text-blue-gray-900">
-                                    Seleccionar
-                                </a>
+
+                             <x-button><a href="/carrera/inscripcion/{{ $grupo->id }} "
+                                class="block font-sans text-sm antialiased font-medium leading-normal text-blue-gray-900">
+                                Seleccionar
+                            </a></x-button>
+
                             </td>
                         </tr>
                     @endif

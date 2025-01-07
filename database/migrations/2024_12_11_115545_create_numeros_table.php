@@ -17,6 +17,7 @@ return new class extends Migration
             $table->boolean("estado");
             $table->boolean("disponible");
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

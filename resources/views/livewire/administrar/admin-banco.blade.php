@@ -105,10 +105,16 @@
                     <div class="mb-4">
                         <x-label for="">Banco</x-label>
                         <x-input class="w-full" wire:model="post_create.nombre" />
+                        @error('post_create.nombre')
+                            <span class="error text-red-500">{{ $message }}</span>
+                        @enderror
                     </div>
                     <div class="mb-4">
                         <x-label for="">Codigo</x-label>
                         <x-input type="number" class="w-full" wire:model="post_create.codigo" />
+                        @error('post_create.codigo')
+                            <span class="error text-red-500">{{ $message }}</span>
+                        @enderror
                     </div>
                     <div class="mb-4">
                         <x-label for="">Estado</x-label>
@@ -117,6 +123,9 @@
                             <option value="0">Deshabilitado</option>
                             <option value="1">Habilitado</option>
                         </x-select>
+                        @error('post_create.estado')
+                            <span class="error text-red-500">{{ $message }}</span>
+                        @enderror
                     </div>
                 </x-slot>
 
@@ -203,7 +212,7 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
 
-                        Livewire.dispatch('delete',post_id)
+                        Livewire.dispatch('delete', post_id)
                         Swal.fire({
                             title: "Borrado!",
                             text: "Eliminacion exitosa.",

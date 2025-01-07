@@ -7,10 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\tipo_pago;
 use App\Models\banco;
 use App\Models\inscripcion;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class metodo_pago extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
+
     protected $fillable = [
         'tipo_pago_id',
         'banco_id',

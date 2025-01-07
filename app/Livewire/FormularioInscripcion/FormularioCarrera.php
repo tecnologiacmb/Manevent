@@ -16,10 +16,12 @@ use App\Models\ciudad;
 use App\Models\categoriaHabilitada;
 use App\Models\mesa;
 use App\Enum\Mesas_enum;
-use SebastianBergmann\Environment\Console;
+
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class FormularioCarrera extends Component
 {
+
     public $evento = null;
     public $participante;
     public $metodo_pago;
@@ -433,7 +435,7 @@ class FormularioCarrera extends Component
                 $rules["create_inscripcion.$i.referencia"] = 'required|numeric|digits:6';
                 $rules["create_inscripcion.$i.monto_mixto"] = 'required|numeric';
                 $rules["create_inscripcion.$i.fecha_mixto"] = 'required|date|before_or_equal:' . $this->fecha_actual;
-                $rules["create_inscripcion.$i.referencia_mixto"] = 'required|numeric|min:6|max:6';
+                $rules["create_inscripcion.$i.referencia_mixto"] = 'required|numeric|digits:6';
                 $rules["create_inscripcion.$i.cuenta_mixto_1"] = 'required|string';
                 $rules["create_inscripcion.$i.cuenta_mixto_2"] = 'required|string';
             }
@@ -547,7 +549,7 @@ class FormularioCarrera extends Component
             $datos_json = json_encode($datos_json);
 
             $this->create_inscripcion[$i]['datos'] = $datos_json;
-            // return dd($this->create_inscripcion[$i]['datos']);
+             /* return dd($this->create_inscripcion[$i]['datos']); */
 
             $categoria_id = $this->edad($ultimoParticipante->fecha_nacimiento);
 
@@ -564,9 +566,9 @@ class FormularioCarrera extends Component
                 'metodo_pago_id' => $this->create_inscripcion[$i]['metodo_pago_id'],
                 'grupo_id' => $this->create_inscripcion[$i]['grupo_id'],
                 'dolar_id' => $this->create_inscripcion[$i]['dolar_id'],
-                'numero_id' => $this->create_inscripcion[$i]['numero_id'],
-                'categoria_habilitada_id' => $this->create_inscripcion[$i]['categoria_habilitada_id'],
-                'mesa_id' => $this->create_inscripcion[$i]['mesa_id'],
+                'numero_id' => $this->create_inscripcion[$i]['numero_id']?? null,
+                'categoria_habilitada_id' => $this->create_inscripcion[$i]['categoria_habilitada_id']?? null,
+                'mesa_id' => $this->create_inscripcion[$i]['mesa_id']?? null,
                 'datos' => $this->create_inscripcion[$i]['datos'],
                 'monto_pagado_bs' => $this->create_inscripcion[$i]['monto_pagado_bs'],
                 'ip' => $this->create_inscripcion[$i]['ip'],
@@ -577,11 +579,12 @@ class FormularioCarrera extends Component
             $ultima_inscripcion_id = inscripcion::latest('id')->first()->id;
 
             $this->asignar_num_mesa($ultima_inscripcion_id, $this->create_participante[$i]['cedula']);
+
         }
 
         $this->create_participante = [];
         $this->create_inscripcion = [];
-        $this->dispatch('alert');
+    $this->dispatch('alert');
     }
 
     public function render()

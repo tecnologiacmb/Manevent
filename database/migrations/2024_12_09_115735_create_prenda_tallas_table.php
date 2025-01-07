@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string("talla", 25);
             $table->boolean("estado");
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

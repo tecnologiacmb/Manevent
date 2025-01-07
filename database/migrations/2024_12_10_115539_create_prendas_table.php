@@ -13,13 +13,14 @@ return new class extends Migration
     {
         Schema::create('prendas', function (Blueprint $table) {
             $table->id();
-            $table->foreignId("evento_id")->constrained()->onDelete("cascade");
-            $table->foreignId("prenda_category_id")->constrained()->onDelete("cascade");
-            $table->foreignId("prenda_talla_id")->constrained()->onDelete("cascade");
+            $table->foreignId("evento_id")->constrained();
+            $table->foreignId("prenda_category_id")->constrained();
+            $table->foreignId("prenda_talla_id")->constrained();
             $table->integer("cantidad",);
             $table->string("sexo", 25);
             $table->boolean("estado");
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

@@ -6,10 +6,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\prenda;
 use App\Models\inscripcion;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class evento extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
+
 
     protected $fillable = [
 

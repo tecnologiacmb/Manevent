@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('estado');
             $table->string('iso_3166-2');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

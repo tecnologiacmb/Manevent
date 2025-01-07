@@ -14,13 +14,13 @@ return new class extends Migration
         Schema::create('grupos', function (Blueprint $table) {
             $table->id();
             $table->foreignId('recorrido_id')->references('id')->on('recorridos')
-                ->constrained()
-                ->onDelete('cascade');
+                ->constrained();
             $table->string('nombre', 50);
             $table->double('precio');
             $table->string('cantidad', 20);
             $table->boolean('estado');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

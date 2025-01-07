@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('metodo_pagos', function (Blueprint $table) {
             $table->id();
 
-            $table->foreignId("tipo_pago_id")->constrained()->onDelete("cascade");
-            $table->foreignId("banco_id")->constrained()->onDelete("cascade");
+            $table->foreignId("tipo_pago_id")->constrained();
+            $table->foreignId("banco_id")->constrained();
             $table->string("n°_cuenta")->nullable();
             $table->string("cedula", 20)->nullable();
             $table->string("telefono", 20)->nullable();
@@ -25,6 +25,7 @@ return new class extends Migration
             $table->string("correo", 30)->nullable();
             $table->boolean("estado");
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

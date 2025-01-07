@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('participantes', function (Blueprint $table) {
             $table->id();
-            $table->foreignId("ciudad_id")->constrained()->OnDelete("cascade");
+            $table->foreignId("ciudad_id")->constrained();
             $table->string("cedula", 25);
             $table->string("nombre", 25);
             $table->string("apellido", 25);
@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string("direccion", 50);
             $table->date("fecha_nacimiento");
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

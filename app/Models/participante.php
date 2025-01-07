@@ -6,9 +6,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\ciudad;
 use App\Models\inscripcion;
+use Illuminate\Database\Eloquent\SoftDeletes;
+
 class participante extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
+
     protected $fillable = [
         'ciudad_id',
         'cedula',
