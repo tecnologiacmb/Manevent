@@ -30,7 +30,7 @@ class InscripCarrera extends Component
             return $total;
         } else {
 
-            return $total="sin valor";
+            return $total;
         }
     }
 

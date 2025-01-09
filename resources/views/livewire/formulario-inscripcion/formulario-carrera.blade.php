@@ -1,4 +1,5 @@
 <div>
+
     <form wire:submit.prevent="save">
 
         <div class=" bg-white shadow rounded-lg p-4 mb-4">
@@ -42,7 +43,8 @@
 
                     <div class="mb-4">
                         <x-label for="">Cedula </x-label>
-                        <x-input class="w-full" wire:model="create_participante.{{ $i }}.cedula" />
+                        <x-input class="w-full" wire:model.change="create_participante.{{ $i }}.cedula"
+                            wire:change="buscarCedula" />
                         @error("create_participante.$i.cedula")
                             <span class="error text-red-500">{{ $message }}</span>
                         @enderror
@@ -73,7 +75,7 @@
                     </div>
                     <div class="mb-4">
                         <x-label for="">Fecha de nacimiento</x-label>
-                        <x-input class="w-full" type="date" max="{{ $this->fecha_nacimiento_maxima }}"
+                        <x-input class="w-full" type="date" max="{{ $this->fecha_evento }}"
                             wire:model="create_participante.{{ $i }}.fecha_nacimiento"
                             wire:click="edad(value.fecha_nacimiento)" />
                         @error("create_participante.$i.fecha_nacimiento")
@@ -98,20 +100,21 @@
                         </x-select>
                     </div>
                     <div class="mb-4">
+
                         <x-label for="">Ciudad </x-label>
                         <x-select class="w-full" wire:model="create_participante.{{ $i }}.ciudad_id">
                             <option value="">Seleccione la ciudad</option>
                             @if (!empty($create_participante[$i]['ciudades']))
                                 @foreach ($create_participante[$i]['ciudades'] as $ciudad)
-                                    <option value="{{ $ciudad->id }}">{{ $ciudad->ciudad }}</option>
+                                    <option value="{{ $ciudad->id}}" {{ $ciudad->id == $this->participante->ciudad_id ? 'selected' : '' }} >{{ $ciudad->ciudad }}</option>
                                 @endforeach
                             @endif
-
                         </x-select>
                         @error("create_participante.$i.ciudad_id")
                             <span class="error text-red-500">{{ $message }}</span>
                         @enderror
                     </div>
+
                     <div class="mb-4">
                         <x-label for="">Direccion</x-label>
                         <x-input class="w-full" wire:model="create_participante.{{ $i }}.direccion" />
@@ -423,7 +426,7 @@
         </div>
     </form>
 
- {{--    @push('js')
+    @push('js')
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <script>
             Livewire.on('alert', function() {
@@ -434,7 +437,7 @@
                 });
             })
         </script>
-    @endpush --}}
+    @endpush
     <script>
         function showOnChange(e, posicion) {
             console.log('entre a la funcion')

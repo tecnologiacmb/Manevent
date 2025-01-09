@@ -42,7 +42,8 @@
 
                     <div class="mb-4">
                         <x-label for="">Cedula </x-label>
-                        <x-input class="w-full" wire:model="create_participante.{{ $i }}.cedula" />
+                        <x-input class="w-full" wire:model.change="create_participante.{{ $i }}.cedula"
+                            wire:change="buscarCedula" />
                         @error("create_participante.$i.cedula")
                             <span class="error text-red-500">{{ $message }}</span>
                         @enderror
@@ -73,9 +74,8 @@
                     </div>
                     <div class="mb-4">
                         <x-label for="">Fecha de nacimiento</x-label>
-                        <x-input class="w-full" type="date" max="{{ $this->fecha_nacimiento_maxima }}"
-                            wire:model="create_participante.{{ $i }}.fecha_nacimiento"
-                            wire:click="edad(value.fecha_nacimiento)" />
+                        <x-input class="w-full" type="date" max="{{ $this->fecha_evento }}"
+                            wire:model="create_participante.{{ $i }}.fecha_nacimiento" />
                         @error("create_participante.$i.fecha_nacimiento")
                             <span class="error text-red-500">{{ $message }}</span>
                         @enderror
@@ -102,9 +102,17 @@
                         <x-select class="w-full" wire:model="create_participante.{{ $i }}.ciudad_id">
                             <option value="">Seleccione la ciudad</option>
                             @if (!empty($create_participante[$i]['ciudades']))
-                                @foreach ($create_participante[$i]['ciudades'] as $ciudad)
-                                    <option value="{{ $ciudad->id }}">{{ $ciudad->ciudad }}</option>
-                                @endforeach
+                                @if (!is_null($this->participante))
+                                    @foreach ($create_participante[$i]['ciudades'] as $ciudad)
+                                        <option value="{{ $ciudad->id }}"
+                                            {{ $ciudad->id == $this->participante->ciudad_id ? 'selected' : '' }}>
+                                            {{ $ciudad->ciudad }}</option>
+                                    @endforeach
+                                @else
+                                    @foreach ($create_participante[$i]['ciudades'] as $ciudad)
+                                        <option value="{{ $ciudad->id }}">{{ $ciudad->ciudad }}</option>
+                                    @endforeach
+                                @endif
                             @endif
 
                         </x-select>
@@ -430,6 +438,13 @@
                     title: "Éxito!",
                     text: "El registro ha sido exitoso!",
                     icon: "success"
+                });
+            })
+            Livewire.on('existe', function() {
+                Swal.fire({
+                    title: "Advertencia!",
+                    text: "El participante ya se encuentra inscrito!",
+                    icon: "warning"
                 });
             })
         </script>

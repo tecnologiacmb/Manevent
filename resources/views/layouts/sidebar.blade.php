@@ -45,7 +45,7 @@
                                         <h1 class="cursor-pointer px-3 text-xl rounded-md mt-1 hover:text-white">
                                             <a href="{{ route('dashboard') }}"
                                                 :active="request() - > routeIs('dashboard')" class="ml-2"
-                                                wire:navigate>Home</a>
+                                                >Home</a>
                                         </h1>
                                     </div>
                                 </div>
@@ -57,7 +57,7 @@
                                     <div class="flex justify-between w-full items-center">
                                         <h1 class="cursor-pointer px-3 text-xl rounded-md mt-1 hover:text-white">
                                             <a href="{{ route('evento') }}" :active="request() - > routeIs('evento')"
-                                                class="ml-2" wire:navigate>Eventos</a>
+                                                class="ml-2" >Eventos</a>
                                         </h1>
                                     </div>
                                 </div>
@@ -80,24 +80,24 @@
                                     <h1 class="cursor-pointer p-2 hover:bg-black rounded-md mt-1 hover:text-white">
                                         <i class="bi bi-bank2"></i>
                                         <a href="{{ route('banco') }}" :active="request() - > routeIs('banco')"
-                                            class="ml-2" wire:navigate>Banco</a>
+                                            class="ml-2" >Banco</a>
                                     </h1>
                                     <h1 class="cursor-pointer p-2 hover:bg-black rounded-md mt-1 hover:text-white">
                                         <i class="bi bi-cash-coin"></i>
                                         <a href="{{ route('metodo-pago') }}"
                                             :active="request() - > routeIs('metodo-pago')" class="ml-2"
-                                            wire:navigate>Metodo
+                                            >Metodo
                                             Pago</a>
                                     </h1>
                                     <h1 class="cursor-pointer p-2 hover:bg-black rounded-md mt-1 hover:text-white">
                                         <i class="bi bi-tags-fill"></i><a href="{{ route('categoria') }}"
                                             :active="request() - > routeIs('categoria')" class="ml-2"
-                                            wire:navigate>Categoria</a>
+                                            >Categoria</a>
                                     </h1>
                                     <h1 class="cursor-pointer p-2 hover:bg-black rounded-md mt-1 hover:text-white">
                                         <i class="bi bi-collection-fill"></i> <a href="{{ route('grupo') }}"
                                             :active="request() - > routeIs('grupo')" class="ml-2"
-                                            wire:navigate>Grupo</a>
+                                            >Grupo</a>
                                     </h1>
                                 </div>
                             </li>
@@ -124,7 +124,7 @@
                                                 d="M6.25 11.745v-1.418l1.204 1.375.261.524a.8.8 0 0 1-.12.231l-2.5 3.25a.75.75 0 1 1-1.19-.914zm4.22-4.215-.494-.494.205-1.843.006-.067 1.124 1.124h1.44a.75.75 0 0 1 0 1.5H11a.75.75 0 0 1-.531-.22Z" />
                                         </svg>
                                         <a href="{{ route('caminata') }}" :active="request() - > routeIs('caminata')"
-                                            class="ml-2" wire:navigate>Caminata</a>
+                                            class="ml-2" >Caminata</a>
                                     </h1>
                                     <h1 class="flex cursor-pointer p-2 rounded-md mt-1 hover:bg-black hover:text-white">
                                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
@@ -134,7 +134,7 @@
                                             </path>
                                         </svg>
                                         <a href="{{ route('carrera') }}" :active="request() - > routeIs('carrera')"
-                                            class="ml-2" wire:navigate>Carrera</a>
+                                            class="ml-2" >Carrera</a>
                                     </h1>
                                 </div>
                             </li>
@@ -145,7 +145,7 @@
                                     <div class="flex justify-between w-full items-center">
                                         <h1 class="cursor-pointer px-2 text-xl rounded-md mt-1 hover:text-white">
                                             <a href="{{ route('tasaDolar') }}"
-                                                :active="request() - > routeIs('tasaDolar')" wire:navigate>Tasa del
+                                                :active="request() - > routeIs('tasaDolar')">Tasa del
                                                 Dolar</a></span>
                                         </h1>
                                     </div>
@@ -165,7 +165,7 @@
                                         <h1 class="cursor-pointer px-2 text-xl rounded-md mt-1 hover:text-white">
                                             <a href="{{ route('franelas') }}"
                                                 :active="request() - > routeIs('franelas')"
-                                                wire:navigate>Franelas</a></span>
+                                                >Franelas</a></span>
                                         </h1>
                                     </div>
                                 </div>
