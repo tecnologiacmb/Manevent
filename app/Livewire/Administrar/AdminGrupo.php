@@ -49,7 +49,7 @@ class AdminGrupo extends Component
         }
         $this->post_create['dolar_id'] = $this->dolars ? $this->dolars->id : null;
         $this->recorridos = recorrido::all();
-    }
+      }
     public function crear()
     {
         $this->open = true;

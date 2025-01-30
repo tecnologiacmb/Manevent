@@ -25,6 +25,7 @@ return new class extends Migration
             $table->double("monto_pagado_bs")->nullable();
             $table->string("ip", 30)->nullable();
             $table->string("nomenclatura", 20)->nullable();
+            $table->foreignId("recorrido_id")->nullable()->constrained();
             $table->timestamps();
             $table->softDeletes();
         });

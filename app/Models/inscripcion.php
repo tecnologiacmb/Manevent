@@ -33,6 +33,9 @@ class inscripcion extends Model
         'monto_pagado_bs',
         'ip',
         'nomenclatura',
+        'recorrido_id',
+
+
     ];
 
     public function evento(){

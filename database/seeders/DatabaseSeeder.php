@@ -6,6 +6,8 @@ namespace Database\Seeders;
 
 use App\Models\categoriaHabilitada;
 use App\Models\recorrido;
+use App\Models\User;
+
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -21,5 +23,7 @@ class DatabaseSeeder extends Seeder
         $this->call(banco_seeder::class);
         $this->call(mesa_seeder::class);
         $this->call(categoria_habilitada_seeder::class);
+        $this->call(User_seeder::class);
+
     }
 }

@@ -15,25 +15,25 @@ use App\Models\estado;
 use App\Models\ciudad;
 use App\Models\categoriaHabilitada;
 use App\Models\mesa;
+
+
 use App\Enum\Mesas_enum;
 
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class FormularioCarrera extends Component
 {
-
     public $evento = null;
-    public $participante;
+    public $inscripcion_validate_global = [];
     public $metodo_pago;
     public $grupo;
     public $dolars;
     public $numero;
     public $estados;
     public $ciudad;
-    public $participante_id;
+    public $participantes_ids = [];
     public $banco;
     public $tipo_pago;
-    public $fecha_nacimiento_maxima;
     public $cantidad;
     public $opcion2 = null;
     public $opcion0 = null;
@@ -41,12 +41,13 @@ class FormularioCarrera extends Component
     public $opcion3 = null;
     public $opcion4 = null;
     public $groupId = null;
-    public $value = null;
+
     public $ultimoParticipante;
     public $categoria_habilitada;
     public $inscripcion;
     public $numeros;
     public $mesa;
+    public $fecha_evento;
     public $metodo = null;
     public $metodos = [];
     public $ciudades = [];
@@ -59,8 +60,6 @@ class FormularioCarrera extends Component
     public $unico_valor = null;
     public $mixto_valor = null;
     public $fecha_actual = null;
-    public $fecha_evento;
-
     public $selectedEstado = null;
     public $datos_json = [];
     public $create_participante = [
@@ -75,10 +74,9 @@ class FormularioCarrera extends Component
         'direccion' => "",
         'fecha_nacimiento' => "",
     ];
-
-
-    public $create_inscripcion = [
-
+    public $participante = [];
+    public $create_inscripcion =
+    [
         'evento_id' => null,
         'cedula' => "",
         'participante_id' => null,
@@ -86,7 +84,6 @@ class FormularioCarrera extends Component
         'grupo_id' => null,
         'dolar_id' => null,
         'numero_id' => null,
-        'categoria_habilitada_id' => null,
         'mesa_id' => null,
         'datos' => null,
         'monto_pagado_bs' => "",
@@ -108,17 +105,25 @@ class FormularioCarrera extends Component
         'referencia_mixto' => null,
         'cuenta_mixto_1' => null,
         'cuenta_mixto_2' => null,
-    ];
+        'recorrido_id'=>null,
 
+    ];
+    public $cedula = null;
+    public $nomenclatura;
+    public $nuevoNumeroOrden=null;
+    public $userIp;
 
     public function mount($id = null)
     {
         if (!is_null($id)) {
+            $this->userIp = request()->ip();
 
             $this->fecha_actual = Carbon::now()->format('Y-m-d');
             $this->evento = evento::select('id', 'nombre', 'fecha_evento')->where('estado', true)->orderBy('id', 'desc')->first();
+
             $this->subtractYears();
-            $this->participante = participante::all();
+
+
             $this->categoria_habilitada = categoriaHabilitada::all();
 
             $this->grupo = grupo::find($id);
@@ -126,15 +131,10 @@ class FormularioCarrera extends Component
             if (!$this->dolars) {
                 $this->dolars = dolar::latest()->first();
             }
-
-            /* $this->create_participante[$i]['fecha_nacimiento'] */
-
             $this->numeros = numero::all();
             $this->estados = estado::all();
             $this->cantidad = $this->grupo->cantidad;
-
             for ($i = 0; $i <= $this->cantidad - 1; $i++) {
-
                 $this->create_participante[$i] = [
                     'ciudad_id' => null,
                     'estado_id' => null,
@@ -147,16 +147,15 @@ class FormularioCarrera extends Component
                     'direccion' => "",
                     'fecha_nacimiento' => "",
                 ];
-
+                $this->participante[$i] = [];
                 $this->create_inscripcion[$i] = [
-
                     'evento_id' => $this->evento->id,
+                    'cedula' => "",
                     'participante_id' => null,
                     'metodo_pago_id' => null,
                     'grupo_id' => $id,
                     'dolar_id' => $this->dolars->id,
                     'numero_id' => null,
-                    'categoria_habilitada_id' => null,
                     'mesa_id' => null,
                     'datos' => null,
                     'monto_pagado_bs' =>  $this->calculo($this->grupo->precio),
@@ -172,19 +171,18 @@ class FormularioCarrera extends Component
                     'dolar_mixto' => null,
                     'monto' => null,
                     'monto_mixto' => null,
-                    'fecha' => $this->fecha_actual,
-                    'fecha_mixto' => $this->fecha_actual,
+                    'fecha' => null,
+                    'fecha_mixto' => null,
                     'referencia' => null,
                     'referencia_mixto' => null,
                     'cuenta_mixto_1' => null,
                     'cuenta_mixto_2' => null,
+                    'recorrido_id'=>null,
                 ];
             }
 
             $this->ciudad = ciudad::all();
             $this->mesa = mesa::all();
-
-
             $this->metodo_pago = DB::table('metodo_pagos')->join('tipo_pagos', 'metodo_pagos.tipo_pago_id', '=', 'tipo_pagos.id')->join('bancos', 'metodo_pagos.banco_id', '=', 'bancos.id')->select('metodo_pagos.*', 'tipo_pagos.nombre as tipo_pago_nombre', 'bancos.nombre as banco_nombre')->get();
         }
     }
@@ -405,7 +403,7 @@ class FormularioCarrera extends Component
     {
         $rules = [];
         for ($i = 0; $i <= $this->grupo->cantidad - 1; $i++) {
-            $rules["create_participante.$i.ciudad_id"] = 'required|string|max:3';
+            $rules["create_participante.$i.ciudad_id"] = 'required';
             $rules["create_participante.$i.cedula"] = 'required|string|max:8|regex:/^[0-9]+$/';
             $rules["create_participante.$i.nombre"] = 'required|string|max:25|regex:/^[a-zA-Z\s]+$/';
             $rules["create_participante.$i.apellido"] = 'required|string|max:25|regex:/^[a-zA-Z\s]+$/';
@@ -498,90 +496,188 @@ class FormularioCarrera extends Component
 
     public function buscarCedula()
     {
-        for ($i = 0; $i <= $this->grupo->cantidad - 1; $i++) {
-            $this->participante = participante::select('participantes.*', 'estados.id as estado_id')->where('cedula', $this->create_participante[$i]["cedula"])->join('ciudads', 'participantes.ciudad_id', '=', 'ciudads.id')->join('estados', 'ciudads.estado_id', '=', 'estados.id')->first();
+        for ($i = 0; $i <= $this->cantidad - 1; $i++) {
+            $this->participante[$i] = participante::select('participantes.*', 'estados.id as estado_id')->where('cedula', $this->create_participante[$i]["cedula"])->join('ciudads', 'participantes.ciudad_id', '=', 'ciudads.id')->join('estados', 'ciudads.estado_id', '=', 'estados.id')->first();
 
-            if (isset($this->participante)) {
-                $this->create_participante[$i]['ciudades'] = ciudad::where('estado_id', $this->participante->estado_id)->get();
-                $this->create_participante[$i]["ciudad_id"] = $this->participante->ciudad_id;
-                $this->create_participante[$i]["cedula"] = $this->participante->cedula;
-                $this->create_participante[$i]["estado_id"] = $this->participante->estado_id;
-                $this->create_participante[$i]["nombre"] = $this->participante->nombre;
-                $this->create_participante[$i]["apellido"] = $this->participante->apellido;
-                $this->create_participante[$i]["telefono"] = $this->participante->telefono;
-                $this->create_participante[$i]["correo"] = $this->participante->correo;
-                $this->create_participante[$i]["direccion"] = $this->participante->direccion;
-                $this->create_participante[$i]["fecha_nacimiento"] = $this->participante->fecha_nacimiento;
+            if (isset($this->participante[$i])) {
+                $this->create_participante[$i]["estado_id"] = $this->participante[$i]->estado_id;
+
+                $this->create_participante[$i]['ciudades'] = ciudad::where('estado_id', $this->participante[$i]->estado_id)->get();
+                $this->create_participante[$i]["ciudad_id"] = $this->participante[$i]->ciudad_id;
+                $this->create_participante[$i]["cedula"] = $this->participante[$i]->cedula;
+                $this->create_participante[$i]["nombre"] = $this->participante[$i]->nombre;
+                $this->create_participante[$i]["apellido"] = $this->participante[$i]->apellido;
+                $this->create_participante[$i]["telefono"] = $this->participante[$i]->telefono;
+                $this->create_participante[$i]["correo"] = $this->participante[$i]->correo;
+                $this->create_participante[$i]["direccion"] = $this->participante[$i]->direccion;
+                $this->create_participante[$i]["fecha_nacimiento"] = $this->participante[$i]->fecha_nacimiento;
             } else {
-                $cedula= $this->create_participante[$i]["cedula"];
-                $this->create_participante[$i] = [];
-                $this->create_participante[$i]["cedula"]= $cedula;
+                $this->participante[$i] = null;
             }
         }
     }
     public function save()
     {
-
         $this->validate();
+        $evento = evento::select('id', 'nombre', 'fecha_evento')->where('estado', true)->orderBy('id', 'desc')->first();
+        $ultimoNumeroOrden = Inscripcion::max('id');
+        $this->nuevoNumeroOrden = $ultimoNumeroOrden ? $ultimoNumeroOrden + 1 : 1;
+
+        $this->nomenclatura = 'GRCR'.'-'.$this->grupo->cantidad.$this->nuevoNumeroOrden;
+
         for ($i = 0; $i <= $this->grupo->cantidad - 1; $i++) {
-            $participante = participante::create([
-                'ciudad_id' => $this->create_participante[$i]['ciudad_id'],
-                'cedula' => $this->create_participante[$i]['cedula'],
-                'nombre' => $this->create_participante[$i]['nombre'],
-                'apellido' => $this->create_participante[$i]['apellido'],
-                'telefono' => $this->create_participante[$i]['telefono'],
-                'correo' => $this->create_participante[$i]['correo'],
-                'direccion' => $this->create_participante[$i]['direccion'],
-                'fecha_nacimiento' => $this->create_participante[$i]['fecha_nacimiento'],
-            ]);
-            $latestId = participante::latest('id')->first()->id;
-            $this->create_inscripcion[$i]['participante_id'] = $latestId;
-            $ultimoParticipante = participante::find($latestId);
-
-            $datos_json = [
-                'monto' => $this->create_inscripcion[$i]['monto'],
-                'fecha' => $this->create_inscripcion[$i]['fecha'],
-                'referencia' => $this->create_inscripcion[$i]['referencia']
-            ];
-            if (!is_null($this->create_inscripcion[$i]['monto_mixto'])) {
-                $datos_json += [
-                    'monto_mixto' => $this->create_inscripcion[$i]['monto_mixto'],
-                    'fecha_mixto' => $this->create_inscripcion[$i]['fecha_mixto'],
-                    'referencia_mixto' => $this->create_inscripcion[$i]['referencia_mixto'],
-                    'cuenta_mixto_1' => $this->create_inscripcion[$i]['cuenta_mixto_1'],
-                    'cuenta_mixto_2' => $this->create_inscripcion[$i]['cuenta_mixto_2']
-                ];
+            if (!empty($this->participante[$i]) && !is_null($this->participante[$i])) {
+                if (isset($this->participante[$i]->id)) {
+                    $this->participantes_ids[] = $this->participante[$i]->id;
+                }
             }
-            $datos_json = json_encode($datos_json);
-            $this->create_inscripcion[$i]['datos'] = $datos_json;
-
-            $categoria_id = $this->edad($ultimoParticipante->fecha_nacimiento);
-            $this->create_inscripcion[$i]['categoria_habilitada_id'] = $categoria_id;
-            if (is_null($this->create_inscripcion[$i]['metodo_pago_id'])) {
-                $this->create_inscripcion[$i]['metodo_pago_id'] = 3;
-            }
-            $inscripciones = inscripcion::create([
-                'evento_id' => $this->create_inscripcion[$i]['evento_id'],
-                'participante_id' => $this->create_inscripcion[$i]['participante_id'],
-                'metodo_pago_id' => $this->create_inscripcion[$i]['metodo_pago_id'],
-                'grupo_id' => $this->create_inscripcion[$i]['grupo_id'],
-                'dolar_id' => $this->create_inscripcion[$i]['dolar_id'],
-                'numero_id' => $this->create_inscripcion[$i]['numero_id'] ?? null,
-                'categoria_habilitada_id' => $this->create_inscripcion[$i]['categoria_habilitada_id'] ?? null,
-                'mesa_id' => $this->create_inscripcion[$i]['mesa_id'] ?? null,
-                'datos' => $this->create_inscripcion[$i]['datos'],
-                'monto_pagado_bs' => $this->create_inscripcion[$i]['monto_pagado_bs'],
-                'ip' => $this->create_inscripcion[$i]['ip'],
-                'nomenclatura' => $this->create_inscripcion[$i]['nomenclatura'],
-
-            ]);
-            $ultima_inscripcion_id = inscripcion::latest('id')->first()->id;
-            $this->asignar_num_mesa($ultima_inscripcion_id, $this->create_participante[$i]['cedula']);
         }
+
+        $this->inscripcion_validate_global = inscripcion::whereIn('participante_id', $this->participantes_ids)->join('participantes', 'participantes.id', '=', 'inscripcions.participante_id')->join('eventos', 'inscripcions.evento_id', '=', 'eventos.id')->where('eventos.estado', true)->get()->toArray();
+
+        for ($i = 0; $i <= $this->grupo->cantidad - 1; $i++) {
+
+            //Validar si alguno de los enviados ya se encuentra registrado en el evento actual
+            if (!empty($this->inscripcion_validate_global)) {
+
+                $this->cedula = $this->inscripcion_validate_global[$i]['cedula'];
+                $nombre_inscripcion_validate_global = $this->inscripcion_validate_global[$i]['nombre'];
+                $apellido_inscripcion_validate_global = $this->inscripcion_validate_global[$i]['apellido'];
+                $this->inscripcion_validate_global = [];
+
+                $this->participantes_ids = [];
+
+                return $this->dispatch('existe', ['valor' => $this->cedula]);
+                //Retornar mensaje de validacion con datos del participante que se repite
+
+            } elseif (empty($this->inscripcion_validate_global) && isset($this->participante[$i]) && !is_null($this->participante[$i])) {
+
+                $latestId = $this->participante[$i]->id;
+                $this->create_inscripcion[$i]['participante_id'] = $latestId;
+                $ultimoParticipante = participante::find($latestId);
+                $datos_json = [
+                    'monto' => $this->create_inscripcion[$i]['monto'],
+                    'fecha' => $this->create_inscripcion[$i]['fecha'],
+                    'referencia' => $this->create_inscripcion[$i]['referencia']
+                ];
+
+                if (!is_null($this->create_inscripcion[$i]['monto_mixto'])) {
+                    $datos_json += [
+                        'monto_mixto' => $this->create_inscripcion[$i]['monto_mixto'],
+                        'fecha_mixto' => $this->create_inscripcion[$i]['fecha_mixto'],
+                        'referencia_mixto' => $this->create_inscripcion[$i]['referencia_mixto'],
+                        'cuenta_mixto_1' => $this->create_inscripcion[$i]['cuenta_mixto_1'],
+                        'cuenta_mixto_2' => $this->create_inscripcion[$i]['cuenta_mixto_2']
+                    ];
+                }
+                $datos_json = json_encode($datos_json);
+                $this->create_inscripcion[$i]['datos'] = $datos_json;
+                $categoria_id = $this->edad($ultimoParticipante->fecha_nacimiento);
+                $this->create_inscripcion[$i]['categoria_habilitada_id'] = $categoria_id;
+
+                if (is_null($this->create_inscripcion[$i]['metodo_pago_id'])) {
+                    $this->create_inscripcion[$i]['metodo_pago_id'] = 3;
+                }
+                if (is_null($this->create_inscripcion[$i]['recorrido_id'])) {
+                    $this->create_inscripcion[$i]['recorrido_id'] = $this->grupo->recorrido_id;
+                }
+
+                $this->create_inscripcion[$i]['nomenclatura'] = $this->nomenclatura;
+                $this->create_inscripcion[$i]['ip'] = $this->userIp;
+
+                $inscripciones = inscripcion::create([
+                    'evento_id' => $this->create_inscripcion[$i]['evento_id'],
+                    'participante_id' => $this->create_inscripcion[$i]['participante_id'],
+                    'metodo_pago_id' => $this->create_inscripcion[$i]['metodo_pago_id'],
+                    'grupo_id' => $this->create_inscripcion[$i]['grupo_id'],
+                    'dolar_id' => $this->create_inscripcion[$i]['dolar_id'],
+                    'numero_id' => $this->create_inscripcion[$i]['numero_id'] ?? null,
+                    'categoria_habilitada_id' => $this->create_inscripcion[$i]['categoria_habilitada_id'] ?? null,
+                    'mesa_id' => $this->create_inscripcion[$i]['mesa_id'] ?? null,
+                    'datos' => $this->create_inscripcion[$i]['datos'],
+                    'monto_pagado_bs' => $this->create_inscripcion[$i]['monto_pagado_bs'],
+                    'ip' => $this->create_inscripcion[$i]['ip'],
+                    'nomenclatura' => $this->create_inscripcion[$i]['nomenclatura'],
+                    'recorrido_id' => $this->create_inscripcion[$i]['recorrido_id'],
+
+                ]);
+                $ultima_inscripcion_id = inscripcion::latest('id')->first()->id;
+                $this->asignar_num_mesa($ultima_inscripcion_id, $this->create_participante[$i]['cedula']);
+            } else {
+
+                $participante = participante::create([
+                    'ciudad_id' => $this->create_participante[$i]['ciudad_id'],
+                    'cedula' => $this->create_participante[$i]['cedula'],
+                    'nombre' => $this->create_participante[$i]['nombre'],
+                    'apellido' => $this->create_participante[$i]['apellido'],
+                    'telefono' => $this->create_participante[$i]['telefono'],
+                    'correo' => $this->create_participante[$i]['correo'],
+                    'direccion' => $this->create_participante[$i]['direccion'],
+                    'fecha_nacimiento' => $this->create_participante[$i]['fecha_nacimiento'],
+                ]);
+                $latestId = participante::latest('id')->first()->id;
+                $this->create_inscripcion[$i]['participante_id'] = $latestId;
+                $ultimoParticipante = participante::find($latestId);
+
+                $datos_json = [
+                    'monto' => $this->create_inscripcion[$i]['monto'],
+                    'fecha' => $this->create_inscripcion[$i]['fecha'],
+                    'referencia' => $this->create_inscripcion[$i]['referencia']
+                ];
+
+                if (!is_null($this->create_inscripcion[$i]['monto_mixto'])) {
+                    $datos_json += [
+                        'monto_mixto' => $this->create_inscripcion[$i]['monto_mixto'],
+                        'fecha_mixto' => $this->create_inscripcion[$i]['fecha_mixto'],
+                        'referencia_mixto' => $this->create_inscripcion[$i]['referencia_mixto'],
+                        'cuenta_mixto_1' => $this->create_inscripcion[$i]['cuenta_mixto_1'],
+                        'cuenta_mixto_2' => $this->create_inscripcion[$i]['cuenta_mixto_2']
+                    ];
+                }
+                $datos_json = json_encode($datos_json);
+                $this->create_inscripcion[$i]['datos'] = $datos_json;
+                $categoria_id = $this->edad($ultimoParticipante->fecha_nacimiento);
+                $this->create_inscripcion[$i]['categoria_habilitada_id'] = $categoria_id;
+
+                if (is_null($this->create_inscripcion[$i]['metodo_pago_id'])) {
+                    $this->create_inscripcion[$i]['metodo_pago_id'] = 3;
+                }
+                if (is_null($this->create_inscripcion[$i]['recorrido_id'])) {
+                    $this->create_inscripcion[$i]['recorrido_id'] = $this->grupo->recorrido_id;
+                }
+
+                $this->create_inscripcion[$i]['nomenclatura'] = $this->nomenclatura;
+                $this->create_inscripcion[$i]['ip'] = $this->userIp;
+
+                $inscripciones = inscripcion::create([
+                    'evento_id' => $this->create_inscripcion[$i]['evento_id'],
+                    'participante_id' => $this->create_inscripcion[$i]['participante_id'],
+                    'metodo_pago_id' => $this->create_inscripcion[$i]['metodo_pago_id'],
+                    'grupo_id' => $this->create_inscripcion[$i]['grupo_id'],
+                    'dolar_id' => $this->create_inscripcion[$i]['dolar_id'],
+                    'numero_id' => $this->create_inscripcion[$i]['numero_id'],
+
+                    'mesa_id' => $this->create_inscripcion[$i]['mesa_id'],
+                    'datos' => $this->create_inscripcion[$i]['datos'],
+                    'monto_pagado_bs' => $this->create_inscripcion[$i]['monto_pagado_bs'],
+                    'ip' => $this->create_inscripcion[$i]['ip'],
+                    'nomenclatura' => $this->create_inscripcion[$i]['nomenclatura'],
+                    'recorrido_id' => $this->create_inscripcion[$i]['recorrido_id'],
+
+                ]);
+                $ultima_inscripcion_id = inscripcion::latest('id')->first()->id;
+                $this->asignar_num_mesa($ultima_inscripcion_id, $this->create_participante[$i]['cedula']);
+                /* $this->dispatch('alert');
+                $this->create_participante = [];
+                $this->create_inscripcion = []; */
+            }
+        }
+        $this->dispatch('alert');
         $this->create_participante = [];
         $this->create_inscripcion = [];
-        $this->dispatch('alert');
     }
+
+
 
     public function render()
     {

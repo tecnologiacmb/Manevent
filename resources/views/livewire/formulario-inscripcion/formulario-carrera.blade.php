@@ -37,7 +37,7 @@
 
 
 
-        @for ($i = 0; $i <= $grupo->cantidad - 1; $i++)
+        @for ($i = 0; $i <= $cantidad - 1; $i++)
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 bg-white rounded-lg p-4 shadow">
                 <div class="grid grid-cols-2 gap-4">
 
@@ -100,14 +100,19 @@
                         </x-select>
                     </div>
                     <div class="mb-4">
-
                         <x-label for="">Ciudad </x-label>
                         <x-select class="w-full" wire:model="create_participante.{{ $i }}.ciudad_id">
                             <option value="">Seleccione la ciudad</option>
                             @if (!empty($create_participante[$i]['ciudades']))
                                 @foreach ($create_participante[$i]['ciudades'] as $ciudad)
-                                    <option value="{{ $ciudad->id}}" {{ $ciudad->id == $this->participante->ciudad_id ? 'selected' : '' }} >{{ $ciudad->ciudad }}</option>
+                                    <option value="{{ $ciudad->id }}">{{ $ciudad->ciudad }}</option>
                                 @endforeach
+                            {{-- @elseif(isset($this->participante[$i]) && !is_null($this->participante[$i]))
+                                @foreach ($this->create_participante[$i]['ciudades'] as $ciudad)
+                                    <option value="{{ $ciudad->id }}"
+                                        {{ $ciudad->id == $this->participante->ciudad_id ? 'selected' : '' }}>
+                                        {{ $ciudad->ciudad }}</option>
+                                @endforeach --}}
                             @endif
                         </x-select>
                         @error("create_participante.$i.ciudad_id")
@@ -429,6 +434,16 @@
     @push('js')
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <script>
+            Livewire.on('existe', (event) => {
+                const cedula = event[0].valor;
+                console.log('Evento existe disparado:', cedula);
+                Swal.fire({
+                    title: "Advertencia!",
+                    text: `El participante con cédula ${cedula} ya se encuentra inscrito!`,
+                    icon: "warning"
+                });
+            })
+
             Livewire.on('alert', function() {
                 Swal.fire({
                     title: "Éxito!",
@@ -436,47 +451,46 @@
                     icon: "success"
                 });
             })
-        </script>
-    @endpush
-    <script>
-        function showOnChange(e, posicion) {
-            console.log('entre a la funcion')
-            document.getElementById('unico_' + posicion).style.display = "none";
-            document.getElementById('mixto_' + posicion).style.display = "none";
-            var elem = document.getElementById("metodo_pagos_" + posicion);
-            var value = elem.options[elem.selectedIndex].value;
-            let valor_posicion = value + '_' + posicion
 
-            if (valor_posicion == "unico_" + posicion) {
-                document.getElementById('unico_' + posicion).style.display = "block";
-                document.getElementById('mixto_' + posicion).style.display = "none";
-
-            } else if (valor_posicion == "mixto_" + posicion) {
+            function showOnChange(e, posicion) {
+                console.log('entre a la funcion')
                 document.getElementById('unico_' + posicion).style.display = "none";
-                document.getElementById('mixto_' + posicion).style.display = "block";
+                document.getElementById('mixto_' + posicion).style.display = "none";
+                var elem = document.getElementById("metodo_pagos_" + posicion);
+                var value = elem.options[elem.selectedIndex].value;
+                let valor_posicion = value + '_' + posicion
+
+                if (valor_posicion == "unico_" + posicion) {
+                    document.getElementById('unico_' + posicion).style.display = "block";
+                    document.getElementById('mixto_' + posicion).style.display = "none";
+
+                } else if (valor_posicion == "mixto_" + posicion) {
+                    document.getElementById('unico_' + posicion).style.display = "none";
+                    document.getElementById('mixto_' + posicion).style.display = "block";
+
+                }
 
             }
 
-        }
-
-        function tipo_pago(e, posicion) {
-            document.getElementById('bolivar_' + posicion).style.display = "block";
-            document.getElementById('dolar_' + posicion).style.display = "none";
-            var elem = document.getElementById("tipo_pago_" + posicion);
-            var value = elem.options[elem.selectedIndex].value;
-            let valor_posicion = value + '_' + posicion
-
-            if (valor_posicion == "bolivar_" + posicion) {
+            function tipo_pago(e, posicion) {
                 document.getElementById('bolivar_' + posicion).style.display = "block";
                 document.getElementById('dolar_' + posicion).style.display = "none";
+                var elem = document.getElementById("tipo_pago_" + posicion);
+                var value = elem.options[elem.selectedIndex].value;
+                let valor_posicion = value + '_' + posicion
 
-            } else if (valor_posicion == "dolar_" + posicion) {
-                document.getElementById('bolivar_' + posicion).style.display = "none";
-                document.getElementById('dolar_' + posicion).style.display = "block";
+                if (valor_posicion == "bolivar_" + posicion) {
+                    document.getElementById('bolivar_' + posicion).style.display = "block";
+                    document.getElementById('dolar_' + posicion).style.display = "none";
+
+                } else if (valor_posicion == "dolar_" + posicion) {
+                    document.getElementById('bolivar_' + posicion).style.display = "none";
+                    document.getElementById('dolar_' + posicion).style.display = "block";
+
+                }
 
             }
-
-        }
-    </script>
+        </script>
+    @endpush
 
 </div>

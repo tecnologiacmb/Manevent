@@ -2,18 +2,14 @@
 
 use App\Http\Controllers\Caminata_controller;
 use App\Http\Controllers\Carrera_controller;
+use App\Http\Controllers\Mixto_controller;
+use App\Http\Controllers\Banco_Controller;
+use App\Http\Controllers\Categoria_Controller;
+use App\Http\Controllers\Grupo_Controller;
+use App\Http\Controllers\Metodo_pago_Controller;
 use Illuminate\Support\Facades\Route;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
-*/
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -28,29 +24,22 @@ Route::middleware([
         return view('dashboard');
     })->name('dashboard');
 
-    Route::get('/banco', function () {
+    /*  Route::get('/banco', function () {
         return view('banco');
-    })->name('banco');
+    })->name('banco'); */
 
-    Route::get('/metodo-pago', function () {
+    /* Route::get('/metodo-pago', function () {
         return view('metodo-pago');
-    })->name('metodo-pago');
+    })->name('metodo-pago'); */
 
-    Route::get('/grupo', function () {
+   /*  Route::get('/grupo', function () {
         return view('grupo');
     })->name('grupo');
-
-    Route::get('/categoria', function () {
-        return view('categoria');
-    })->name('categoria');
-
-/*     Route::get('/caminata', function () {
-        return view('caminata');
-    })->name('caminata');
  */
-  /*   Route::get('/carrera', function () {
-        return view('carrera');
-    })->name('carrera'); */
+/*     Route::get('/categoria', function () {
+        return view('categoria');
+    })->name('categoria'); */
+
 
     Route::get('/tasaDolar', function () {
         return view('tasaDolar');
@@ -64,10 +53,27 @@ Route::middleware([
         return view('evento');
     })->name('evento');
 
-   /*  Route::get('/caminata-inscripcion', function () {
-        return view('caminata-inscripcion');
-    })->name('caminata-inscripcion');
- */
+    Route::controller(Banco_Controller::class)->group(function () {
+        Route::group(['prefix' => 'banco',], function () {
+            Route::get('',  "index")->name('banco');
+        });
+    });
+    Route::controller(Categoria_Controller::class)->group(function () {
+        Route::group(['prefix' => 'categoria',], function () {
+            Route::get('',  "index")->name('categoria');
+        });
+    });
+    Route::controller(Metodo_pago_Controller::class)->group(function () {
+        Route::group(['prefix' => 'metodo-pago',], function () {
+            Route::get('',  "index")->name('metodo-pago');
+        });
+    });
+    Route::controller(Grupo_Controller::class)->group(function () {
+        Route::group(['prefix' => 'grupo',], function () {
+            Route::get('',  "index")->name('grupo');
+        });
+    });
+
     Route::controller(Caminata_controller::class)->group(function () {
         Route::group(['prefix' => 'caminata',], function () {
             Route::get('',  "index")->name('caminata');
@@ -79,6 +85,13 @@ Route::middleware([
         Route::group(['prefix' => 'carrera',], function () {
             Route::get('',  "index")->name('carrera');
             Route::get('/inscripcion/{id}',  "create")->name('carrera/inscripcion/{id}');
+            Route::get('/editar/{id}', "edit")->name('inmobiliaria/editar/{id}');
+        });
+    });
+    Route::controller(Mixto_controller::class)->group(function () {
+        Route::group(['prefix' => 'mixto',], function () {
+            Route::get('',  "index")->name('mixto');
+            Route::get('/inscripcion/{id}/carrera/{cantidad_carrera}/caminata/{cantidad_caminata}',  "create")->name('mixto/inscripcion/{id}/carrera/{cantidad_carrera}/caminata/{cantidad_caminata}');
             Route::get('/editar/{id}', "edit")->name('inmobiliaria/editar/{id}');
         });
     });

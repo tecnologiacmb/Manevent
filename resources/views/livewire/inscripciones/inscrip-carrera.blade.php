@@ -23,7 +23,13 @@
                     <th class="p-4 border-b border-blue-gray-100 bg-blue-gray-50">
                         <p
                             class="block font-sans text-sm antialiased font-normal leading-none text-blue-gray-900 opacity-70">
-                            Name
+                            Nombre
+                        </p>
+                    </th>
+                    <th class="p-4 border-b border-blue-gray-100 bg-blue-gray-50">
+                        <p
+                            class="block font-sans text-sm antialiased font-normal leading-none text-blue-gray-900 opacity-70">
+                            Participantes
                         </p>
                     </th>
                     <th class="p-4 border-b border-blue-gray-100 bg-blue-gray-50">
@@ -68,6 +74,12 @@
                             <td class="p-4 border-b border-blue-gray-50">
                                 <p
                                     class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
+                                    {{ $grupo->cantidad }}
+                                </p>
+                            </td>
+                            <td class="p-4 border-b border-blue-gray-50">
+                                <p
+                                    class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
                                     {{ $grupo->precio }} $
                                 </p>
                             </td>
@@ -79,7 +91,7 @@
                             </td>
 
                             <td class="p-4 border-b border-blue-gray-50">
-                                <x-button>
+                                <x-button class="bg-blue-500">
                                     <a href="/carrera/inscripcion/{{ $grupo->id }} "
                                         class="block font-sans text-sm antialiased font-medium leading-normal text-blue-gray-900">
                                         Seleccionar

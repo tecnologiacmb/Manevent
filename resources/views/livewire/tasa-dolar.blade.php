@@ -67,11 +67,15 @@
                              Fecha
                          </p>
                      </th>
-                     <th class="p-4 border-b border-blue-gray-100 bg-blue-gray-50">
-                         <p
-                             class="block font-sans text-sm antialiased font-normal leading-none text-blue-gray-900 opacity-70">
-                         </p>
-                     </th>
+                     @can('ver-admin')
+                         <th class="p-4 border-b border-blue-gray-100 bg-blue-gray-50">
+                             <p
+                                 class="block font-sans text-sm antialiased font-normal leading-none text-blue-gray-900 opacity-70">
+                                 Acciones
+                             </p>
+                         </th>
+                     @endcan
+
                  </tr>
              </thead>
 
@@ -97,23 +101,25 @@
                                  {{ $post->created_at }}
                              </p>
                          </td>
+                         @can('ver-admin')
+                             <td class="p-4 border-b border-blue-gray-50 space-x-8">
+                                 <x-button class="bg-blue-500" wire:click="edit({{ $post->id }})">
+                                     <i class="bi bi-pencil-square"></i>
+                                 </x-button>
 
-                         <td class="p-4 border-b border-blue-gray-50 space-x-8">
-                            <x-button class="bg-blue-500" wire:click="edit({{ $post->id }})">
-                                <i class="bi bi-pencil-square"></i>
-                            </x-button>
 
-                            <x-danger-button wire:click="confirm_delete({{ $post->id }})">
-                                <i class="bi bi-trash-fill"></i>
-                            </x-danger-button>
-                        </td>
+                                 <x-danger-button wire:click="confirm_delete({{ $post->id }})">
+                                     <i class="bi bi-trash-fill"></i>
+                                 </x-danger-button>
+
+                             </td>
+                         @endcan
                  </tr>
                  @endforeach
-
              </tbody>
          </table>
-
      </div>
+
      <div>
          {{ $posts->links() }}
      </div>

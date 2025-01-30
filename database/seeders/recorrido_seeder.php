@@ -19,6 +19,8 @@ class recorrido_seeder extends Seeder
         $recorrido = [
             ["nombre" => "Caminata", "estado" => 1],
             ["nombre" => "Carrera", "estado" => 1],
+            ["nombre" => "Mixto", "estado" => 1],
+
 
         ];
 

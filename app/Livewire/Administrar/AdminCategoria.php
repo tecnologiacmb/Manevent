@@ -51,7 +51,6 @@ class AdminCategoria extends Component
     {
         $this->validate();
         $post = categoriaHabilitada::create([
-
             'nombre' => $this->post_create['nombre'],
             'edad_min' => $this->post_create['edad_min'],
             'edad_max' => $this->post_create['edad_max'],

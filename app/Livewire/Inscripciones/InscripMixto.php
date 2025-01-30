@@ -2,25 +2,36 @@
 
 namespace App\Livewire\Inscripciones;
 
-use App\models\dolar;
-use App\models\grupo;
-use App\models\recorrido;
-
+use App\Models\grupo;
 use Livewire\Component;
+use App\models\dolar;
+use App\models\recorrido;
 use Livewire\WithPagination;
 
-class InscripCaminata extends Component
+
+class InscripMixto extends Component
 {
     use WithPagination;
     public $grupos;
     public $dolars;
-    public $recorrido;
+    public $open=false;
+    public $recorridos;
+    public $cantidad_carrera;
+    public $cantidad_caminata;
+
+
     public function mount()
     {
+
         $this->grupos = grupo::where('estado', true)->get();
         $this->dolars = dolar::all();
-        $this->recorrido = recorrido::all();
-
+        $this->recorridos = recorrido::select('recorridos.*' )->whereBetween('id',[1,2])->first();
+        $this->cantidad_carrera;
+        $this->cantidad_caminata;
+    }
+    public function crear()
+    {
+        $this->open = true;
     }
     public function calculo($num)
     {
@@ -36,9 +47,8 @@ class InscripCaminata extends Component
             return $total;
         }
     }
-
     public function render()
     {
-        return view('livewire.Inscripciones.inscrip-caminata');
+        return view('livewire.inscripciones.inscrip-mixto');
     }
 }
