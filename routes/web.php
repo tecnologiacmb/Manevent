@@ -7,6 +7,7 @@ use App\Http\Controllers\Banco_Controller;
 use App\Http\Controllers\Categoria_Controller;
 use App\Http\Controllers\Grupo_Controller;
 use App\Http\Controllers\Metodo_pago_Controller;
+use App\Http\Controllers\Usuarios_Controller;
 use Illuminate\Support\Facades\Route;
 
 
@@ -56,6 +57,11 @@ Route::middleware([
     Route::controller(Banco_Controller::class)->group(function () {
         Route::group(['prefix' => 'banco',], function () {
             Route::get('',  "index")->name('banco');
+        });
+    });
+    Route::controller(Usuarios_Controller::class)->group(function () {
+        Route::group(['prefix' => 'vista_usuarios',], function () {
+            Route::get('',  "index")->name('usuarios');
         });
     });
     Route::controller(Categoria_Controller::class)->group(function () {

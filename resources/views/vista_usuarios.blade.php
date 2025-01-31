@@ -5,10 +5,10 @@
         </h2>
     </x-slot>
 
-    <div class="py-0 bg-gray-500">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+    <div class="py-12 ">
+        <div class="max-w-7xl mx-auto sm:px-4 lg:px-4">
 
-
+            @livewire('lista-usuarios')
         </div>
     </div>
 </x-sidebar-layout>

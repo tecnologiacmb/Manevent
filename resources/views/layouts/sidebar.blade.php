@@ -100,7 +100,8 @@
                                     </div>
                                 </li>
                             @endcan
-                            <li class=" w-full justify-between text-gray-400 hover:text-gray-300 cursor-pointer items-center mb-6 ">
+                            <li
+                                class=" w-full justify-between text-gray-400 hover:text-gray-300 cursor-pointer items-center mb-6 ">
                                 <div class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-black text-black hover:text-white"
                                     onclick="dropdown2()">
                                     <i class="bi bi-pencil-square"></i>
@@ -182,6 +183,20 @@
                                     </div>
                                 </div>
 
+                            </li>
+                            <li
+                                class="flex w-full justify-between text-black hover:text-black text-xl cursor-pointer items-center mb-6">
+                                <div
+                                    class="p-2.5 mt-0 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-black text-black
+                                hover:text-white">
+                                    <i class="bi bi-currency-dollar"></i>
+                                    <div class="flex justify-between w-full items-center">
+                                        <h1 class="cursor-pointer px-2 text-xl rounded-md mt-1 hover:text-white">
+                                            <a href="{{ route('usuarios') }}"
+                                                :active="request() - > routeIs('usuarios')">Participantes</a></span>
+                                        </h1>
+                                    </div>
+                                </div>
                             </li>
                             <li>
                                 <div class="ms-3 relative">
