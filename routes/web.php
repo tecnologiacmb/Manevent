@@ -6,6 +6,7 @@ use App\Http\Controllers\Mixto_controller;
 use App\Http\Controllers\Banco_Controller;
 use App\Http\Controllers\Categoria_Controller;
 use App\Http\Controllers\Grupo_Controller;
+use App\Http\Controllers\Inscrippcion_Controller;
 use App\Http\Controllers\Metodo_pago_Controller;
 use App\Http\Controllers\Usuarios_Controller;
 use Illuminate\Support\Facades\Route;
@@ -61,7 +62,13 @@ Route::middleware([
     });
     Route::controller(Usuarios_Controller::class)->group(function () {
         Route::group(['prefix' => 'vista_usuarios',], function () {
-            Route::get('',  "index")->name('usuarios');
+            Route::get('',  "index")->name('vista_usuarios');
+            Route::get('/detalle/{id}',  "create")->name('vista_usuarios/detalle/{id}');
+        });
+    });
+    Route::controller(Inscrippcion_Controller::class)->group(function () {
+        Route::group(['prefix' => 'inscripcion',], function () {
+            Route::get('',  "index")->name('incripcion');
         });
     });
     Route::controller(Categoria_Controller::class)->group(function () {

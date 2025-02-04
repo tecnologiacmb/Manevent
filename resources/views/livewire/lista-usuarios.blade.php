@@ -34,77 +34,94 @@
                      <th class="p-4 border-b border-blue-gray-100 bg-blue-gray-50">
                          <p
                              class="block font-sans text-sm antialiased font-normal leading-none text-blue-gray-900 opacity-70">
-                             Telefono
+                             Estado
                          </p>
                      </th>
                      <th class="p-4 border-b border-blue-gray-100 bg-blue-gray-50">
                          <p
                              class="block font-sans text-sm antialiased font-normal leading-none text-blue-gray-900 opacity-70">
-                             localidad
+                             Ciudad
                          </p>
                      </th>
                      <th class="p-4 border-b border-blue-gray-100 bg-blue-gray-50">
-                        <p
-                            class="block font-sans text-sm antialiased font-normal leading-none text-blue-gray-900 opacity-70">
-                            Fecha de nacimiento
-                        </p>
-                    </th>
-
+                         <p
+                             class="block font-sans text-sm antialiased font-normal leading-none text-blue-gray-900 opacity-70">
+                             Fecha de nacimiento
+                         </p>
+                     </th>
                      <th class="p-4 border-b border-blue-gray-100 bg-blue-gray-50">
                          <p
-                             class="block font-sans text-sm antialiased font-normal leading-none text-blue-gray-900 opacity-70">asdasd
+                             class="block font-sans text-sm antialiased font-normal leading-none text-blue-gray-900 opacity-70">
+                             Detalles
                          </p>
-
                      </th>
                  </tr>
              </thead>
 
              <tbody>
-                @foreach ( $participantes as $participante )
-                 <tr>
-                     <td class="p-4 border-b border-blue-gray-50">
-                         <p class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-                             {{$participante->cedula}}
-                         </p>
-                     </td>
-                     <td class="p-4 border-b border-blue-gray-50">
-                         <p class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-                             {{$participante->nombre}}
-                         </p>
-                     </td>
-                     <td class="p-4 border-b border-blue-gray-50">
-                         <p class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-                             {{$participante->apellido}}
-                         </p>
-                     </td>
-                     <td class="p-4 border-b border-blue-gray-50">
-                         <p class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-                            {{$participante->telefono}}
-                         </p>
-                     </td>
-                     <td class="p-4 border-b border-blue-gray-50">
-                         <p class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-                            {{$participante->estado_nombre}} - {{$participante->ciudad_nombre}}
+                 @foreach ($participantes as $participante)
+                     <tr>
+                         <td class="p-4 border-b border-blue-gray-50">
+                             <p
+                                 class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
+                                 {{ $participante->cedula }}
+                             </p>
+                         </td>
+                         <td class="p-4 border-b border-blue-gray-50">
+                             <p
+                                 class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
+                                 {{ $participante->nombre }}
+                             </p>
+                         </td>
+                         <td class="p-4 border-b border-blue-gray-50">
+                             <p
+                                 class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
+                                 {{ $participante->apellido }}
+                             </p>
+                         </td>
 
-                         </p>
-                     </td>
+                         <td class="p-4 border-b border-blue-gray-50">
+                             <p
+                                 class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
+                                 {{ $participante->estado_nombre }}
+                             </p>
+                         </td>
+                         <td class="p-4 border-b border-blue-gray-50">
+                             <p
+                                 class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
+                                 {{ $participante->ciudad_nombre }}
 
-                     <td class="p-4 border-b border-blue-gray-50">
-                        <p class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-                            {{$participante->fecha_nacimiento}}
-                        </p>
-                    </td>
-                     <td class="p-4 border-b border-blue-gray-50">
+                             </p>
+                         </td>
+                         <td class="p-4 border-b border-blue-gray-50">
+                             <p
+                                 class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
+                                 {{ $participante->fecha_nacimiento }}
+                             </p>
+                         </td>
+                         <td class="p-4 border-b border-blue-gray-50">
+                             <x-button class="bg-blue-500"><a
+                                     href="/vista_usuarios/detalle/{{ $participante->id }}">
+                                     <i class="bi bi-eye-fill"></i>
+                                 </a>
+                             </x-button>
+
+                         </td>
+                         {{--   <td class="p-4 border-b border-blue-gray-50">
                         <x-button class="bg-blue-500"><a href="#"
                                 class="block font-sans text-sm antialiased font-medium leading-normal text-blue-gray-900">
-                                Seleccionar
+                                <i class="bi bi-pencil-square"></i>
                             </a></x-button>
-                    </td>
-                 </tr>
+                            <x-danger-button class="bg-blue-500"><a href="#"
+                                class="block font-sans text-sm antialiased font-medium leading-normal text-blue-gray-900">
+                                <i class="bi bi-trash-fill"></i>
+                            </a></x-danger-button>
+                    </td> --}}
+                     </tr>
                  @endforeach
-
              </tbody>
          </table>
      </div>
+
 
  </div>

@@ -47,6 +47,18 @@ class AdminBanco extends Component
         $this->post_update["codigo"] = $post->codigo;
         $this->post_update["estado"] = $post->estado;
     }
+    public function update()
+    {
+        $posts = banco::find($this->post_edit_id);
+        $posts->update([
+            'nombre' => $this->post_update['nombre'],
+            'codigo' => $this->post_update['codigo'],
+            'estado' => $this->post_update['estado'],
+
+        ]);
+        $this->reset(['post_update', 'post_edit_id', 'open_edit']);
+        $this->dispatch('alert_update');
+    }
     public function seve()
     {
         $this->validate();
@@ -62,18 +74,6 @@ class AdminBanco extends Component
         $this->open = false;
     }
 
-    public function update()
-    {
-        $posts = banco::find($this->post_edit_id);
-        $posts->update([
-            'nombre' => $this->post_update['nombre'],
-            'codigo' => $this->post_update['codigo'],
-            'estado' => $this->post_update['estado'],
-
-        ]);
-        $this->reset(['post_update', 'post_edit_id', 'open_edit']);
-        $this->dispatch('alert_update');
-    }
     public function confirm_delete($delete_id)
     {
     $this->dispatch('alert_delete',$delete_id);

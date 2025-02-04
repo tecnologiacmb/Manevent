@@ -98,7 +98,7 @@
         <form wire:submit="seve">
             <x-dialog-modal wire:model="open">
                 <x-slot name="title">
-                    Actualizar Post
+                    Actualizar Datos
                 </x-slot>
 
                 <x-slot name="content">

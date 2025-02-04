@@ -30,6 +30,7 @@
     <div class=" w-full h-full bg-slate-100">
         <dh-component>
             <div class="flex flex-no-wrap ">
+
                 <div
                     class="min-h-screen w-64 absolute sm:relative shadow xl:h-full flex-col justify-between hidden sm:flex bg-slate-200">
                     <div class="px-8">
@@ -189,15 +190,29 @@
                                 <div
                                     class="p-2.5 mt-0 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-black text-black
                                 hover:text-white">
-                                    <i class="bi bi-currency-dollar"></i>
+                                    <i class="bi bi-person-lines-fill"></i>
                                     <div class="flex justify-between w-full items-center">
                                         <h1 class="cursor-pointer px-2 text-xl rounded-md mt-1 hover:text-white">
-                                            <a href="{{ route('usuarios') }}"
-                                                :active="request() - > routeIs('usuarios')">Participantes</a></span>
+                                            <a href="{{ route('vista_usuarios') }}"
+                                                :active="request() - > routeIs('vista_usuarios')">Participantes</a></span>
                                         </h1>
                                     </div>
                                 </div>
                             </li>
+                            <li
+                            class="flex w-full justify-between text-black hover:text-black text-xl cursor-pointer items-center mb-6">
+                            <div
+                                class="p-2.5 mt-0 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-black text-black
+                            hover:text-white">
+                                <i class="bi bi-person-lines-fill"></i>
+                                <div class="flex justify-between w-full items-center">
+                                    <h1 class="cursor-pointer px-2 text-xl rounded-md mt-1 hover:text-white">
+                                        <a href="{{ route('incripcion') }}"
+                                            :active="request() - > routeIs('incripcion')">Inscripcion</a></span>
+                                    </h1>
+                                </div>
+                            </div>
+                        </li>
                             <li>
                                 <div class="ms-3 relative">
                                     <x-dropdown align="right" width="48">
@@ -259,26 +274,20 @@
                                 </div>
                             </li>
                         </ul>
-
                     </div>
-
                 </div>
 
-
-
-                <div class="py-0 md:w-4/5 xl:w-full xl:h-full mx-auto px-0" style="height: 100%;">
-
+                <div class="flex-1 overflow-y-auto">
                     @if (isset($header))
-                        <header class="shadow">
-                            <div class="bg-slate-200 max-w-7xl mx-full py-6 px-4 sm:px-6 lg:px-8">
+                        <header class="shadow bg-slate-200">
+                            <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
                                 {{ $header }}
                             </div>
                         </header>
                     @endif
-                    <main style="height: 100%;">
+                    <main>
                         {{ $slot }}
                     </main>
-
                 </div>
             </div>
         </dh-component>
@@ -316,6 +325,9 @@
     }
     dropdown1();
 
+    function openSidebar() {
+        document.querySelector(".sidebar").classList.toggle("hidden");
+    }
 
     function dropdown2() {
         document.querySelector("#submenu2").classList.toggle("hidden");
