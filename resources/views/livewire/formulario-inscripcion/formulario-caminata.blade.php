@@ -436,10 +436,12 @@
         <script>
             Livewire.on('existe', (event) => {
                 const cedula = event[0].valor;
+                const nombre = event[1].nombre;
+
                 console.log('Evento existe disparado:', cedula);
                 Swal.fire({
                     title: "Advertencia!",
-                    text: `El participante con cédula ${cedula} ya se encuentra inscrito!`,
+                    text: `El participante ${nombre} con cédula ${cedula} ya se encuentra inscrito!`,
                     icon: "warning"
                 });
             })

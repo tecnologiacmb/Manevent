@@ -16,12 +16,6 @@ class CreateNewUser implements CreatesNewUsers
     use PasswordValidationRules;
     use HasRoles;
 
-    /**
-     * Validate and create a newly registered user.
-     *
-     * @param  array<string, string>  $input
-     */
-
     public function create(array $input): User
     {
         Validator::make($input, [

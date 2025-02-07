@@ -11,9 +11,6 @@ use App\Models\User;
 
 class User_seeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
         Permission::create(['name'=>'ver-admin']);
@@ -24,14 +21,12 @@ class User_seeder extends Seeder
         Permission::create(['name'=>'crear-usuario']);
         Permission::create(['name'=>'actualizar-usuario']);
         Permission::create(['name'=>'eliminar-usuario']);
-
         $admin_usuario = User::query()->create([
             'name'=>'admin',
             'email'=>'admin@admin.com',
             'password'=>bcrypt('123456'),
             'email_verified_at'=>now()
         ]);
-
         $role_admin=Role::create(['name'=>'super-admin']);
         $admin_usuario->assignRole($role_admin);
         $permission_admin=Permission::query()->pluck('name');
@@ -39,10 +34,5 @@ class User_seeder extends Seeder
 
         $role_usuario=Role::create(['name'=>'usuario']);
         $role_usuario->syncPermissions('ver-usuario','crear-usuario','actualizar-usuario','eliminar-usuario');
-
-
-
-
-
     }
 }

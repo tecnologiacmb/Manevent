@@ -109,6 +109,8 @@ class FormularioCaminata extends Component
         'recorrido_id' => null,
     ];
     public $cedula = null;
+    public $nombre = null;
+
     public $userIp;
     public $recorrido;
 
@@ -465,21 +467,21 @@ class FormularioCaminata extends Component
             }
         }
 
-        $this->inscripcion_validate_global = inscripcion::whereIn('participante_id', $this->participantes_ids)->join('participantes', 'participantes.id', '=', 'inscripcions.participante_id')->join('eventos', 'inscripcions.evento_id', '=', 'eventos.id')->where('eventos.estado', true)->get()->toArray();
+        $this->inscripcion_validate_global = inscripcion::whereIn('participante_id', $this->participantes_ids)->join('participantes', 'participantes.id', '=', 'inscripcions.participante_id')->join('eventos', 'inscripcions.evento_id', '=', 'eventos.id')->where('eventos.estado', true)->select('eventos.id','participantes.nombre as nombre','participantes.cedula as cedula')->get()->toArray();
 
         for ($i = 0; $i <= $this->grupo->cantidad - 1; $i++) {
 
             //Validar si alguno de los enviados ya se encuentra registrado en el evento actual
             if (!empty($this->inscripcion_validate_global)) {
-
+                $this->cedula='';
+                $this->nombre='';
                 $this->cedula = $this->inscripcion_validate_global[$i]['cedula'];
-                $nombre_inscripcion_validate_global = $this->inscripcion_validate_global[$i]['nombre'];
-                $apellido_inscripcion_validate_global = $this->inscripcion_validate_global[$i]['apellido'];
+                $this->nombre = $this->inscripcion_validate_global[$i]['nombre'];
                 $this->inscripcion_validate_global = [];
 
                 $this->participantes_ids = [];
 
-                return $this->dispatch('existe', ['valor' => $this->cedula]);
+                return $this->dispatch('existe', ['valor' => $this->cedula],['nombre' =>  $this->nombre]);
                 //Retornar mensaje de validacion con datos del participante que se repite
 
             } elseif (empty($this->inscripcion_validate_global) && isset($this->participante[$i]) && !is_null($this->participante[$i])) {
