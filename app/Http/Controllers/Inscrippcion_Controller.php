@@ -17,4 +17,16 @@ class Inscrippcion_Controller extends Controller
             return response()->json(['message' => $th->getMessage()], 500);
         }
     }
+
+    public function create(Request $request, $id)
+    {
+
+        try {
+            $inscripcion = inscripcion::findOrFail($id);
+
+            return view('vista_inscripcion', ['incripcion' => $inscripcion, 'id' => $id,]);
+        } catch (\Throwable $th) {
+            return response()->json(['message' => $th->getMessage()], 500);
+        }
+    }
 }

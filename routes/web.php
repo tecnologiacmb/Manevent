@@ -67,8 +67,10 @@ Route::middleware([
         });
     });
     Route::controller(Inscrippcion_Controller::class)->group(function () {
-        Route::group(['prefix' => 'inscripcion',], function () {
+        Route::group(['prefix' => 'incripcion',], function () {
             Route::get('',  "index")->name('incripcion');
+            Route::get('/vista_inscripcion/{id}',  "create")->name('incripcion/vista_inscripcion/{id}');
+
         });
     });
     Route::controller(Categoria_Controller::class)->group(function () {

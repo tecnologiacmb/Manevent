@@ -9,8 +9,9 @@
     <div class="py-12 ">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             @if (isset($id) && !is_null($id))
-                        @livewire('formulario-usuario', ['id' => $id])
+                @livewire('vista-inscripcion', ['id' => $id])
             @endif
+
 
         </div>
     </div>

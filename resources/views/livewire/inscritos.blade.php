@@ -116,11 +116,11 @@
                             </p>
                         </td>
                         <td class="p-4 border-b border-blue-gray-50">
-                            <x-button class="bg-blue-500">
-
+                            <x-button class="bg-blue-500"><a
+                                href="incripcion/vista_inscripcion/{{ $inscripcion->id }}">
                                 <i class="bi bi-eye-fill"></i>
-
-                            </x-button>
+                            </a>
+                        </x-button>
 
                         </td>
                         {{--   <td class="p-4 border-b border-blue-gray-50">
