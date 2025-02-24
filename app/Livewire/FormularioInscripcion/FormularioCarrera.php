@@ -97,20 +97,22 @@ class FormularioCarrera extends Component
         'dolar' => null,
         'bolivar_mixto' => null,
         'dolar_mixto' => null,
-        'monto' => null,
-        'monto_mixto' => null,
+        'monto_Bs' => null,
+        'monto_$' => null,
+        'monto_mixto_Bs' => null,
+        'monto_mixto_$' => null,
         'fecha' => null,
         'fecha_mixto' => null,
         'referencia' => null,
         'referencia_mixto' => null,
         'cuenta_mixto_1' => null,
         'cuenta_mixto_2' => null,
-        'recorrido_id'=>null,
+        'recorrido_id' => null,
 
     ];
     public $cedula = null;
     public $nomenclatura;
-    public $nuevoNumeroOrden=null;
+    public $nuevoNumeroOrden = null;
     public $userIp;
 
     public function mount($id = null)
@@ -169,15 +171,17 @@ class FormularioCarrera extends Component
                     'dolar' => null,
                     'bolivar_mixto' => null,
                     'dolar_mixto' => null,
-                    'monto' => null,
-                    'monto_mixto' => null,
+                    'monto_Bs' => null,
+                    'monto_$' => null,
+                    'monto_mixto_Bs' => null,
+                    'monto_mixto_$' => null,
                     'fecha' => null,
                     'fecha_mixto' => null,
                     'referencia' => null,
                     'referencia_mixto' => null,
                     'cuenta_mixto_1' => null,
                     'cuenta_mixto_2' => null,
-                    'recorrido_id'=>null,
+                    'recorrido_id' => null,
                 ];
             }
 
@@ -414,18 +418,29 @@ class FormularioCarrera extends Component
 
             if (!is_null($this->create_inscripcion[$i]['unico'])) {
                 $rules["create_inscripcion.$i.metodo_pago_id"] = 'required|integer';
-                $rules["create_inscripcion.$i.monto"] = 'required|numeric';
                 $rules["create_inscripcion.$i.fecha"] = 'required|date|before_or_equal:' . $this->fecha_actual;
                 $rules["create_inscripcion.$i.referencia"] = 'required|numeric|digits:6';
+
+                if (!is_null($this->create_inscripcion[$i]['monto_Bs'])) {
+                    $rules["create_inscripcion.$i.monto_Bs"] = 'required|numeric';
+                } else {
+                    $rules["create_inscripcion.$i.monto_$"] = 'required|numeric';
+                }
             } else {
-                $rules["create_inscripcion.$i.monto"] = 'required|numeric';
                 $rules["create_inscripcion.$i.fecha"] = 'required|date|before_or_equal:' . $this->fecha_actual;
                 $rules["create_inscripcion.$i.referencia"] = 'required|numeric|digits:6';
-                $rules["create_inscripcion.$i.monto_mixto"] = 'required|numeric';
                 $rules["create_inscripcion.$i.fecha_mixto"] = 'required|date|before_or_equal:' . $this->fecha_actual;
                 $rules["create_inscripcion.$i.referencia_mixto"] = 'required|numeric|digits:6';
                 $rules["create_inscripcion.$i.cuenta_mixto_1"] = 'required|string';
                 $rules["create_inscripcion.$i.cuenta_mixto_2"] = 'required|string';
+
+                if (!is_null($this->create_inscripcion[$i]['monto_mixto_Bs'])) {
+                    $rules["create_inscripcion.$i.monto_mixto_Bs"] = 'required|numeric';
+
+                } else {
+                    $rules["create_inscripcion.$i.monto_mixto_$"] = 'required|numeric';
+
+                }
             }
         }
         return $rules;
@@ -465,8 +480,11 @@ class FormularioCarrera extends Component
             $messages["create_inscripcion.$i.metodo_pago_id.required"] = __('El campo cuentas es obligatorio.');
             $messages["create_inscripcion.$i.metodo_pago_id.integer"] = __('El campo cuentas debe ser un entero.');
 
-            $messages["create_inscripcion.$i.monto.required"] = __('El campo monto es obligatorio.');
-            $messages["create_inscripcion.$i.monto.numeric"] = __('El campo monto solo permite numeros.');
+            $messages["create_inscripcion.$i.monto_Bs.required"] = __('El campo monto es obligatorio.');
+            $messages["create_inscripcion.$i.monto_Bs.numeric"] = __('El campo monto solo permite numeros.');
+            $messages["create_inscripcion.$i.monto_$.required"] = __('El campo monto es obligatorio.');
+            $messages["create_inscripcion.$i.monto_$.numeric"] = __('El campo monto solo permite numeros.');
+
             $messages["create_inscripcion.$i.fecha.required"] = __('El campo fecha de pago es obligatorio.');
             $messages["create_inscripcion.$i.fecha.date"] = __('El campo fecha de pago debe tener la sintaxis correcta.');
             $messages["create_inscripcion.$i.fecha.before_or_equal"] = __('El campo fecha de pago debe ser menor o igual a ' . Carbon::parse($this->fecha_evento)->format('d-m-Y'));
@@ -475,8 +493,10 @@ class FormularioCarrera extends Component
             $messages["create_inscripcion.$i.referencia.digits"] = __('El campo referencia solo admite 6 digitos');
 
 
-            $messages["create_inscripcion.$i.monto_mixto.required"] = __('El campo monto es obligatorio.');
-            $messages["create_inscripcion.$i.monto_mixto.numeric"] = __('El campo monto solo permite numeros.');
+            $messages["create_inscripcion.$i.monto_mixto_Bs.required"] = __('El campo monto es obligatorio.');
+            $messages["create_inscripcion.$i.monto_mixto_Bs.numeric"] = __('El campo monto solo permite numeros.');
+            $messages["create_inscripcion.$i.monto_mixto_$.required"] = __('El campo monto es obligatorio.');
+            $messages["create_inscripcion.$i.monto_mixto_$.numeric"] = __('El campo monto solo permite numeros.');
             $messages["create_inscripcion.$i.fecha_mixto.required"] = __('El campo fecha de pago es obligatorio.');
             $messages["create_inscripcion.$i.fecha_mixto.date"] = __('El campo fecha de pago debe tener la sintaxis correcta.');
             $messages["create_inscripcion.$i.fecha_mixto.before_or_equal"] = __('El campo fecha de pago debe ser menor o igual a ' . Carbon::parse($this->fecha_actual)->format('d-m-Y'));
@@ -523,7 +543,7 @@ class FormularioCarrera extends Component
         $ultimoNumeroOrden = Inscripcion::max('id');
         $this->nuevoNumeroOrden = $ultimoNumeroOrden ? $ultimoNumeroOrden + 1 : 1;
 
-        $this->nomenclatura = 'GRCR'.'-'.$this->grupo->cantidad.$this->nuevoNumeroOrden;
+        $this->nomenclatura = 'GRCR' . '-' . $this->grupo->cantidad . $this->nuevoNumeroOrden;
 
         for ($i = 0; $i <= $this->grupo->cantidad - 1; $i++) {
             if (!empty($this->participante[$i]) && !is_null($this->participante[$i])) {
@@ -556,19 +576,36 @@ class FormularioCarrera extends Component
                 $this->create_inscripcion[$i]['participante_id'] = $latestId;
                 $ultimoParticipante = participante::find($latestId);
                 $datos_json = [
-                    'monto' => $this->create_inscripcion[$i]['monto'],
                     'fecha' => $this->create_inscripcion[$i]['fecha'],
                     'referencia' => $this->create_inscripcion[$i]['referencia']
-                ];
 
-                if (!is_null($this->create_inscripcion[$i]['monto_mixto'])) {
+                ];
+                if (!is_null($this->create_inscripcion[$i]['monto_Bs'])) {
                     $datos_json += [
-                        'monto_mixto' => $this->create_inscripcion[$i]['monto_mixto'],
+                        'monto_Bs' => $this->create_inscripcion[$i]['monto_Bs'],
+                    ];
+                } else {
+                    $datos_json += [
+                        'monto_$' => $this->create_inscripcion[$i]['monto_$'],
+                    ];
+                }
+
+                if (!is_null($this->create_inscripcion[$i]['monto_mixto_Bs']) || !is_null($this->create_inscripcion[$i]['monto_mixto_$'])) {
+                    $datos_json += [
                         'fecha_mixto' => $this->create_inscripcion[$i]['fecha_mixto'],
                         'referencia_mixto' => $this->create_inscripcion[$i]['referencia_mixto'],
                         'cuenta_mixto_1' => $this->create_inscripcion[$i]['cuenta_mixto_1'],
                         'cuenta_mixto_2' => $this->create_inscripcion[$i]['cuenta_mixto_2']
                     ];
+                    if (!is_null($this->create_inscripcion[$i]['monto_mixto_Bs'])) {
+                        $datos_json += [
+                            'monto_mixto_Bs' => $this->create_inscripcion[$i]['monto_mixto_Bs'],
+                        ];
+                    } else if (!is_null($this->create_inscripcion[$i]['monto_mixto_$'])) {
+                        $datos_json += [
+                            'monto_mixto_$' => $this->create_inscripcion[$i]['monto_mixto_$'],
+                        ];
+                    }
                 }
                 $datos_json = json_encode($datos_json);
                 $this->create_inscripcion[$i]['datos'] = $datos_json;
@@ -620,19 +657,35 @@ class FormularioCarrera extends Component
                 $ultimoParticipante = participante::find($latestId);
 
                 $datos_json = [
-                    'monto' => $this->create_inscripcion[$i]['monto'],
                     'fecha' => $this->create_inscripcion[$i]['fecha'],
                     'referencia' => $this->create_inscripcion[$i]['referencia']
                 ];
-
-                if (!is_null($this->create_inscripcion[$i]['monto_mixto'])) {
+                if (!is_null($this->create_inscripcion[$i]['monto_Bs'])) {
                     $datos_json += [
-                        'monto_mixto' => $this->create_inscripcion[$i]['monto_mixto'],
+                        'monto_Bs' => $this->create_inscripcion[$i]['monto_Bs'],
+                    ];
+                } else {
+                    $datos_json += [
+                        'monto_$' => $this->create_inscripcion[$i]['monto_$'],
+                    ];
+                }
+
+                if (!is_null($this->create_inscripcion[$i]['fecha_mixto'])) {
+                    $datos_json += [
                         'fecha_mixto' => $this->create_inscripcion[$i]['fecha_mixto'],
                         'referencia_mixto' => $this->create_inscripcion[$i]['referencia_mixto'],
                         'cuenta_mixto_1' => $this->create_inscripcion[$i]['cuenta_mixto_1'],
                         'cuenta_mixto_2' => $this->create_inscripcion[$i]['cuenta_mixto_2']
                     ];
+                    if (!is_null($this->create_inscripcion[$i]['monto_mixto_Bs'])) {
+                        $datos_json += [
+                            'monto_mixto_Bs' => $this->create_inscripcion[$i]['monto_mixto_Bs'],
+                        ];
+                    } else {
+                        $datos_json += [
+                            'monto_mixto_$' => $this->create_inscripcion[$i]['monto_mixto_$'],
+                        ];
+                    }
                 }
                 $datos_json = json_encode($datos_json);
                 $this->create_inscripcion[$i]['datos'] = $datos_json;

@@ -18,6 +18,6 @@ class categoriaHabilitada extends Model
     ];
 
     public function inscripcion(){
-        return $this->belongsTo(inscripcion::class);
+        return $this->hasOne(inscripcion::class);
     }
 }

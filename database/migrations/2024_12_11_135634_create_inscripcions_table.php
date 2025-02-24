@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId("evento_id")->nullable()->constrained();
             $table->foreignId("participante_id")->nullable()->constrained();
-            $table->foreignId("metodo_pago_id")->nullable()->constrained();
+            $table->foreignId("metodo_pago_id")->references('id')->on('metodo_pagos');
             $table->foreignId("grupo_id")->constrained();
             $table->foreignId("dolar_id")->constrained();
             $table->foreignId("numero_id")->nullable()->constrained();

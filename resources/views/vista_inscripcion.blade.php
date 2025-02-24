@@ -2,7 +2,7 @@
 
     <x-slot name="header">
         <h2 class="font-black text-2xl text-gray-800 leading-tight">
-            {{ __('Inscripciones/Caminata') }}
+            {{ __('Inscripciones') }}
         </h2>
     </x-slot>
 

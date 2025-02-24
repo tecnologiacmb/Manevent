@@ -35,8 +35,8 @@ class metodo_pago extends Model
         return $this->hasMany(banco::class);
     }
 
-    public function inscripcion()
+    public function inscripcions()
     {
-        return $this->belongsToMany(inscripcion::class);
+        return $this->hasOne(inscripcion::class);
     }
 }

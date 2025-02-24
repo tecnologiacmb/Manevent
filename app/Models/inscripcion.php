@@ -39,29 +39,29 @@ class inscripcion extends Model
     ];
 
     public function evento(){
-        return $this->hasOne(evento::class);
+        return $this->belongsTo(evento::class);
     }
 
     public function participante(){
-        return $this->hasOne(participante::class);
+        return $this->belongsTo(participante::class);
     }
     public function categoriaHabilitada(){
-        return $this->hasOne(categoriaHabilitada::class);
+        return $this->belongsTo(categoriaHabilitada::class);
     }
 
     public function grupo(){
-        return $this->hasOne(grupo::class);
+        return $this->belongsTo(grupo::class);
     }
 
-    public function metodo_pagos(){
-        return $this->hasMany(metodo_pago::class);
+    public function metodo_pago(){
+        return $this->belongsTo(metodo_pago::class);
     }
     public function dolar(){
-        return $this->hasOne(dolar::class);
+        return $this->belongsTo(dolar::class);
     }
 
     public function numero(){
-        return $this->hasOne(numero::class);
+        return $this->belongsTo(numero::class);
     }
 
     public function mesa(){

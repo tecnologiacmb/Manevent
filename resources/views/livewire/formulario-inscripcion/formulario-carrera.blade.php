@@ -192,8 +192,8 @@
                                     <div class="mb-4">
                                         <x-label for="">Monto pagado Bs</x-label>
                                         <x-input type="number" step="0.01" class="w-full"
-                                            wire:model="create_inscripcion.{{ $i }}.monto" />
-                                        @error("create_inscripcion.$i.monto")
+                                            wire:model="create_inscripcion.{{ $i }}.monto_Bs" />
+                                        @error("create_inscripcion.$i.monto_Bs")
                                             <span class="error text-red-500">{{ $message }}</span>
                                         @enderror
                                     </div>
@@ -221,8 +221,8 @@
                                     <div class="mb-4">
                                         <x-label for="">Monto pagado $</x-label>
                                         <x-input type="number" step="0.01" class="w-full"
-                                            wire:model="create_inscripcion.{{ $i }}.monto" />
-                                        @error("create_inscripcion.$i.monto")
+                                            wire:model="create_inscripcion.{{ $i }}.monto_$" />
+                                        @error("create_inscripcion.$i.monto_$")
                                             <span class="error text-red-500">{{ $message }}</span>
                                         @enderror
                                     </div>
@@ -290,8 +290,8 @@
                                     <div class="mb-4">
                                         <x-label for="">Monto pagado Bs</x-label>
                                         <x-input type="number" step="0.01" class="w-full"
-                                            wire:model="create_inscripcion.{{ $i }}.monto" />
-                                        @error("create_inscripcion.$i.monto")
+                                            wire:model="create_inscripcion.{{ $i }}.monto_Bs" />
+                                        @error("create_inscripcion.$i.monto_Bs")
                                             <span class="error text-red-500">{{ $message }}</span>
                                         @enderror
                                     </div>
@@ -319,8 +319,8 @@
                                     <div class="mb-4">
                                         <x-label for="">Monto pagado $</x-label>
                                         <x-input type="number" step="0.01" class="w-full"
-                                            wire:model="create_inscripcion.{{ $i }}.monto" />
-                                        @error("create_inscripcion.$i.monto")
+                                            wire:model="create_inscripcion.{{ $i }}.monto_$" />
+                                        @error("create_inscripcion.$i.monto_$")
                                             <span class="error text-red-500">{{ $message }}</span>
                                         @enderror
                                     </div>
@@ -380,8 +380,8 @@
                                     <div class="mb-4">
                                         <x-label for="">Monto pagado Bs</x-label>
                                         <x-input type="number" step="0.01" class="w-full"
-                                            wire:model="create_inscripcion.{{ $i }}.monto_mixto" />
-                                        @error("create_inscripcion.$i.monto_mixto")
+                                            wire:model="create_inscripcion.{{ $i }}.monto_mixto_Bs" />
+                                        @error("create_inscripcion.$i.monto_mixto_Bs")
                                             <span class="error text-red-500">{{ $message }}</span>
                                         @enderror
                                     </div>
@@ -409,8 +409,8 @@
                                     <div class="mb-4">
                                         <x-label for="">Monto pagado $</x-label>
                                         <x-input type="number" step="0.01" class="w-full"
-                                            wire:model="create_inscripcion.{{ $i }}.monto_mixto" />
-                                        @error("create_inscripcion.$i.monto_mixto")
+                                            wire:model="create_inscripcion.{{ $i }}.monto_mixto_$" />
+                                        @error("create_inscripcion.$i.monto_mixto_$")
                                             <span class="error text-red-500">{{ $message }}</span>
                                         @enderror
                                     </div>

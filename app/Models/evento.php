@@ -30,6 +30,6 @@ class evento extends Model
 
     public function inscripcion()
     {
-        return $this->belongsToMany(inscripcion::class);
+        return $this->hasMany(inscripcion::class);
     }
 }
