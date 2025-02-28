@@ -109,7 +109,7 @@
                 </div>
 
                 <div class="grid grid-cols-2 gap-4">
-                    @if ($metodo == 1 || $metodo == 2)
+                    @if ($metodo == 1)
                         <div class="mb-4">
                             <x-label for="">Banco</x-label>
                             <x-select class="w-full" wire:model="post_create.banco_id">
@@ -122,7 +122,7 @@
                                 <span class="error text-red-500">{{ $message }}</span>
                             @enderror
                         </div>
-                    @elseif ($metodo == 3)
+                    @elseif ($metodo == 2)
                         <div class="mb-4">
                             <x-label for="">N° Cuenta</x-label>
                             <x-input type="number" class="w-full" wire:model="post_create.N°_cuenta" />
@@ -174,7 +174,7 @@
                                 <span class="error text-red-500">{{ $message }}</span>
                             @enderror
                         </div>
-                    @elseif ($metodo == 4)
+                    @elseif ($metodo == 3)
                         <div class="mb-4">
                             <x-label for="">Cedula</x-label>
                             <x-input type="number" class="w-full" wire:model="post_create.cedula" />
@@ -211,7 +211,7 @@
                                 <span class="error text-red-500">{{ $message }}</span>
                             @enderror
                         </div>
-                    @elseif ($metodo == 5)
+                    @elseif ($metodo == 4)
                         <div class="mb-4">
                             <x-label for="">N° Cuenta</x-label>
                             <x-input type="number" class="w-full" wire:model="post_create.N°_cuenta" />
@@ -248,7 +248,7 @@
                                 <span class="error text-red-500">{{ $message }}</span>
                             @enderror
                         </div>
-                    @elseif ($metodo == 6 || $metodo == 7)
+                    @elseif ($metodo == 5)
                         <div class="mb-4">
                             <x-label for="">Banco</x-label>
                             <x-select class="w-full" wire:model="post_create.banco_id">
@@ -314,7 +314,7 @@
                 </div>
 
                 <div class="grid grid-cols-2 gap-4">
-                    @if ($metodo == 1 || $metodo == 2)
+                    @if ($metodo == 1)
                         <div class="mb-4">
                             <x-label for="">Banco</x-label>
                             <x-select class="w-full" wire:model="post_update.banco_id">
@@ -326,7 +326,7 @@
 
                             </x-select>
                         </div>
-                    @elseif ($metodo == 3)
+                    @elseif ($metodo == 2)
                         <div class="mb-4">
                             <x-label for="">N° Cuenta</x-label>
                             <x-input type="number" class="w-full" wire:model="post_update.N°_cuenta" />
@@ -363,7 +363,7 @@
 
                             </x-select>
                         </div>
-                    @elseif ($metodo == 4)
+                    @elseif ($metodo == 3)
                         <div class="mb-4">
                             <x-label for="">Cedula</x-label>
                             <x-input type="number" class="w-full" wire:model="post_update.cedula" />
@@ -390,7 +390,7 @@
 
                             </x-select>
                         </div>
-                    @elseif ($metodo == 5)
+                    @elseif ($metodo == 4)
                         <div class="mb-4">
                             <x-label for="">N° Cuenta</x-label>
                             <x-input type="number" class="w-full" wire:model="post_update.N°_cuenta" />
@@ -418,6 +418,19 @@
                             </x-select>
                         </div>
 
+                        @elseif ($metodo == 5)
+                        <div class="mb-4">
+                            <x-label for="">Banco</x-label>
+                            <x-select class="w-full" wire:model="post_create.banco_id">
+                                <option value="" >Seleccione un Banco</option>
+                                @foreach ($banco as $post)
+                                    <option value="{{ $post->id }}">{{ $post->nombre }}</option>
+                                @endforeach
+                            </x-select>
+                            @error('post_create.banco_id')
+                                <span class="error text-red-500">{{ $message }}</span>
+                            @enderror
+                        </div>
                     @endif
 
                     <div class="mb-4">

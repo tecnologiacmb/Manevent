@@ -32,7 +32,7 @@ class metodo_pago extends Model
     }
     public function bancos()
     {
-        return $this->hasMany(banco::class);
+        return $this->belongsTo(banco::class);
     }
 
     public function inscripcions()

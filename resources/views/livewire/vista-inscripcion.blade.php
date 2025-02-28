@@ -2,43 +2,120 @@
     <div class=" bg-white shadow rounded-lg p-4 mb-4">
         <div class="grid grid-cols-2 gap-4">
             <div class="pl-8">
-                <h1 class="font-black text-2xl text-gray-800 leading-tight text-normal normal-case
-">
+                <h1 class="font-black text-2xl text-gray-800 leading-tight text-normal normal-case">
                     Evento: {{ $this->post_update['evento_id'] }}.
                 </h1>
             </div>
             <div class="justify-items-end pr-8">
-                <h1 class="mt-2 font-black text-2xl text-gray-800 leading-tight text-normal normal-case
-">
-                    Grupo: {{ $this->post_update['grupo_id'] }}
+                <h1 class=" font-black text-2xl text-gray-800 leading-tight text-normal normal-case">
+                    Codigo Inscripción: {{ $this->post_update['nomenclatura'] }}
                 </h1>
             </div>
+
+        </div>
+        <div class="flex items-center justify-end pr-8">
+            <h1 class="pl-56 font-black text-md text-black leading-tight text-normal normal-case">
+                Dirección IP: {{ $this->post_update['ip'] }}
+            </h1>
         </div>
         <div class="flex items-center justify-start py-0">
 
-            <h1 class="pl-8 font-black text-sm text-black leading-tight text-normal normal-case
-">
+            <h1 class="pl-8 font-black text-sm text-black leading-tight text-normal normal-case">
                 Monto Total: {{ $this->post_update['grupo_precio'] }} $
             </h1>
-            <h1 class="pl-6 font-black text-sm text-black leading-tight text-normal normal-case
-">
+            <h1 class="pl-6 font-black text-sm text-black leading-tight text-normal normal-case">
                 Monto Total: {{ $this->post_update['monto_pagado_bs'] }} Bs
             </h1>
-            <h1 class="pl-6 font-black text-sm text-black leading-tight text-normal normal-case
-">
+            <h1 class="pl-6 font-black text-sm text-black leading-tight text-normal normal-case">
                 Tasa dolar: {{ $this->post_update['dolar_id'] }} Bs
             </h1>
-
         </div>
+
     </div>
     <div class="bg-white shadow-md rounded-xl p-6">
         <form wire:submit="update">
-            <div class="grid grid-cols-3 gap-4">
-
+            <div class="grid grid-cols-4 gap-4">
                 <div class="mb-4">
                     <x-label for="">Cedula</x-label>
-                    <x-input class="w-full" wire:model="post_update.participante_id" />
+                    <x-input class="w-full" wire:model="post_update.participante_id" disabled />
                     @error('post_update.participante_id')
+                        <span class="error text-red-500">{{ $message }}</span>
+                    @enderror
+                </div>
+
+                <div class="mb-4">
+                    <x-label for="">Recorrido: </x-label>
+                    <x-select class="w-full" wire:model.change="post_update.recorrido_id">
+                        @if ($recorridos)
+                            @foreach ($recorridos as $recorrido)
+                                <option value="{{ $recorrido->id }}">{{ $recorrido->nombre }}</option>
+                            @endforeach
+                        @endif
+                    </x-select>
+                    @error('post_update.recorrido_id')
+                        <span class="error text-red-500">{{ $message }}</span>
+                    @enderror
+                </div>
+
+                <div class="mb-4">
+                    <x-label for="">Grupo: </x-label>
+                    <x-select class="w-full" wire:model.change="post_update.grupo_id">
+                        @if ($grupos)
+                            @foreach ($grupos as $grupo)
+                                <option value="{{ $grupo->id }}">{{ $grupo->nombre }}</option>
+                            @endforeach
+                        @endif
+                    </x-select>
+                    @error('post_update.grupo_id')
+                        <span class="error text-red-500">{{ $message }}</span>
+                    @enderror
+                </div>
+                <div class="mb-4">
+                    <x-label for="">categoria: </x-label>
+                    <x-select class="w-full" wire:model.change="post_update.categoria_habilitada_id">
+                        @if ($categoria_habilitada)
+                            @foreach ($categoria_habilitada as $categoria)
+                                <option value="{{ $categoria->id }}">{{ $categoria->nombre }}</option>
+                            @endforeach
+                        @endif
+                    </x-select>
+                    @error('post_update.categoria_habilitada_id')
+                        <span class="error text-red-500">{{ $message }}</span>
+                    @enderror
+                </div>
+
+                <div class="mb-4">
+                    <x-label for="">Mesa: </x-label>
+                    <x-select class="w-full" wire:model.change="post_update.mesa_id">
+                        @if ($mesas)
+                            @foreach ($mesas as $mesa)
+                                <option value="{{ $mesa->id }}">{{ $mesa->nombre }}</option>
+                            @endforeach
+                        @endif
+                    </x-select>
+                    @error('post_update.mesa_id')
+                        <span class="error text-red-500">{{ $message }}</span>
+                    @enderror
+                </div>
+                <div class="mb-4">
+                    <x-label for="">N° del competidor </x-label>
+                    <x-select class="w-full" wire:model.change="post_update.numero_id">
+                        <option value="{{ $post_update['numero'] }}">{{ $post_update['numero'] }}</option>
+                        @if ($numeros)
+                            @foreach ($numeros as $numero)
+                                <option value="{{ $numero->id }}">{{ $numero->numero }}</option>
+                            @endforeach
+                        @endif
+                    </x-select>
+                    @error('post_update.numero_id')
+                        <span class="error text-red-500">{{ $message }}</span>
+                    @enderror
+                </div>
+
+                <div class="mb-4">
+                    <x-label for="">Fecha de inscripcion</x-label>
+                    <x-input type="date" class="w-full" wire:model="post_update.created_at" />
+                    @error('post_update.created_at')
                         <span class="error text-red-500">{{ $message }}</span>
                     @enderror
                 </div>
@@ -49,42 +126,14 @@
                         <span class="error text-red-500">{{ $message }}</span>
                     @enderror
                 </div>
-                <div class="mb-4">
-                    <x-label for="">numero</x-label>
-                    <x-input class="w-full" wire:model="post_update.numero_id" />
-                    @error('post_update.numero_id')
-                        <span class="error text-red-500">{{ $message }}</span>
-                    @enderror
-                </div>
-                <div class="mb-4">
-                    <x-label for="">categoria</x-label>
-                    <x-input class="w-full" wire:model="post_update.categoria_habilitada_id" />
-                    @error('post_update.categoria_habilitada_id')
-                        <span class="error text-red-500">{{ $message }}</span>
-                    @enderror
-                </div>
-                <div class="mb-4">
-                    <x-label for="">mesa</x-label>
-                    <x-input class="w-full" wire:model="post_update.mesa_id" />
-                    @error('post_update.mesa_id')
-                        <span class="error text-red-500">{{ $message }}</span>
-                    @enderror
-                </div>
-                <div class="mb-4">
-                    <x-label for="">recorrido</x-label>
-                    <x-input class="w-full" wire:model="post_update.recorrido_id" />
-                    @error('post_update.recorrido_id')
-                        <span class="error text-red-500">{{ $message }}</span>
-                    @enderror
-                </div>
                 @if (!isset($post_update['datos']['fecha_mixto']))
-                <div class="mb-4">
-                    <x-label for="">Fecha pago</x-label>
-                    <x-input type="date" class="w-full" wire:model="post_update.datos.fecha" />
-                    @error('post_update.datos.fecha')
-                        <span class="error text-red-500">{{ $message }}</span>
-                    @enderror
-                </div>
+                    <div class="mb-4">
+                        <x-label for="">Fecha pago</x-label>
+                        <x-input type="date" class="w-full" wire:model="post_update.datos.fecha" />
+                        @error('post_update.datos.fecha')
+                            <span class="error text-red-500">{{ $message }}</span>
+                        @enderror
+                    </div>
                     @if (isset($post_update['datos']['monto_Bs']))
                         <div class="mb-4">
                             <x-label for="">Monto Bs</x-label>
@@ -133,6 +182,14 @@
                                 <span class="error text-red-500">{{ $message }}</span>
                             @enderror
                         </div>
+                        <div class="mb-4">
+                            <x-label for="">Cuenta</x-label>
+                            <x-input class="w-full" wire:model="post_update.datos.cuenta_mixto_2" />
+                            @error('post_update.datos.cuenta_mixto_2')
+                                <span class="error text-red-500">{{ $message }}</span>
+                            @enderror
+                        </div>
+
                         @if (isset($post_update['datos']['monto_Bs']))
                             <div class="mb-4">
                                 <x-label for="">Fecha pago</x-label>
@@ -152,6 +209,13 @@
                                 <x-label for="">Referencia</x-label>
                                 <x-input class="w-full" wire:model="post_update.datos.referencia" />
                                 @error('post_update.datos.referencia')
+                                    <span class="error text-red-500">{{ $message }}</span>
+                                @enderror
+                            </div>
+                            <div class="mb-4">
+                                <x-label for="">cuenta </x-label>
+                                <x-input class="w-full" wire:model="post_update.datos.cuenta_mixto_1" />
+                                @error('post_update.datos.cuenta_mixto_1')
                                     <span class="error text-red-500">{{ $message }}</span>
                                 @enderror
                             </div>
@@ -177,15 +241,22 @@
                                     <span class="error text-red-500">{{ $message }}</span>
                                 @enderror
                             </div>
+                            <div class="mb-4">
+                                <x-label for="">cuenta </x-label>
+                                <x-input class="w-full" wire:model="post_update.datos.cuenta_mixto_1" />
+                                @error('post_update.datos.cuenta_mixto_1')
+                                    <span class="error text-red-500">{{ $message }}</span>
+                                @enderror
+                            </div>
                         @endif
                     @else
-                    <div class="mb-4">
-                        <x-label for="">Fecha pago</x-label>
-                        <x-input type="date" class="w-full" wire:model="post_update.datos.fecha_mixto" />
-                        @error('post_update.datos.fecha_mixto')
-                            <span class="error text-red-500">{{ $message }}</span>
-                        @enderror
-                    </div>
+                        <div class="mb-4">
+                            <x-label for="">Fecha pago</x-label>
+                            <x-input type="date" class="w-full" wire:model="post_update.datos.fecha_mixto" />
+                            @error('post_update.datos.fecha_mixto')
+                                <span class="error text-red-500">{{ $message }}</span>
+                            @enderror
+                        </div>
                         <div class="mb-4">
                             <x-label for="">Monto $</x-label>
                             <x-input class="w-full" wire:model="post_update.datos.monto_mixto_$" />
@@ -200,6 +271,13 @@
                                 <span class="error text-red-500">{{ $message }}</span>
                             @enderror
                         </div>
+                        <div class="mb-4">
+                            <x-label for="">Cuenta</x-label>
+                            <x-input class="w-full" wire:model="post_update.datos.cuenta_mixto_2" />
+                            @error('post_update.datos.cuenta_mixto_2')
+                                <span class="error text-red-500">{{ $message }}</span>
+                            @enderror
+                        </div>
                         @if (isset($post_update['datos']['monto_Bs']))
                             <div class="mb-4">
                                 <x-label for="">Fecha pago</x-label>
@@ -219,6 +297,13 @@
                                 <x-label for="">Referencia</x-label>
                                 <x-input class="w-full" wire:model="post_update.datos.referencia" />
                                 @error('post_update.datos.referencia')
+                                    <span class="error text-red-500">{{ $message }}</span>
+                                @enderror
+                            </div>
+                            <div class="mb-4">
+                                <x-label for="">cuenta </x-label>
+                                <x-input class="w-full" wire:model="post_update.datos.cuenta_mixto_1" />
+                                @error('post_update.datos.cuenta_mixto_1')
                                     <span class="error text-red-500">{{ $message }}</span>
                                 @enderror
                             </div>
@@ -244,36 +329,17 @@
                                     <span class="error text-red-500">{{ $message }}</span>
                                 @enderror
                             </div>
+                            <div class="mb-4">
+                                <x-label for="">cuenta </x-label>
+                                <x-input class="w-full" wire:model="post_update.datos.cuenta_mixto_1" />
+                                @error('post_update.datos.cuenta_mixto_1')
+                                    <span class="error text-red-500">{{ $message }}</span>
+                                @enderror
+                            </div>
                         @endif
 
                     @endif
                 @endif
-
-
-                <div class="mb-4">
-                    <x-label for="">ip</x-label>
-                    <x-input class="w-full" wire:model="post_update.ip" />
-                    @error('post_update.ip')
-                        <span class="error text-red-500">{{ $message }}</span>
-                    @enderror
-                </div>
-                <div class="mb-4">
-                    <x-label for="">nomenclatura</x-label>
-                    <x-input class="w-full" wire:model="post_update.nomenclatura" />
-                    @error('post_update.nomenclatura')
-                        <span class="error text-red-500">{{ $message }}</span>
-                    @enderror
-                </div>
-
-                <div class="mb-4">
-                    <x-label for="">Fecha de inscripcion</x-label>
-                    <x-input type="date" class="w-full" wire:model="post_update.created_at" />
-                    @error('post_update.created_at')
-                        <span class="error text-red-500">{{ $message }}</span>
-                    @enderror
-                </div>
-
-
             </div>
             <div class="flex justify-end">
                 <x-danger-button wire:click="confirm_delete({{ $this->post_edit_id }})">

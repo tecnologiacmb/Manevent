@@ -17,14 +17,11 @@ class tipo_pago_seeder extends Seeder
 
 
         $tipo_pago = [
-            ["nombre" => "Efectivo Bs", "estado" => 1],
-            ["nombre" => "Efectivo $", "estado" => 1],
+            ["nombre" => "Efectivo", "estado" => 1],
             ["nombre" => "Zelle", "estado" => 1],
             ["nombre" => "Pago Movil", "estado" => 1],
             ["nombre" => "Transferencia", "estado" => 1],
             ["nombre" => "Punto", "estado" => 1],
-            ["nombre" => "PAGO MIXTO", "estado" => 1],
-            ["nombre" => "EFECTIVO", "estado" => 1],
         ];
 
         $now = Carbon::now();

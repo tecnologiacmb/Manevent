@@ -18,6 +18,6 @@ class banco extends Model
 
     public function metodo_pago()
     {
-        return $this->belongsTo(metodo_pago::class);
+        return $this->hasMany(metodo_pago::class);
     }
 }

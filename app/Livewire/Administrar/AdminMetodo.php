@@ -132,17 +132,17 @@ class AdminMetodo extends Component
         $rules["post_create.banco_id"] = 'required|regex:/^[0-9]+$/';
         $rules["post_create.estado"] = 'required';
 
-        if ($this->post_create["tipo_pago_id"] == 3) {
+        if ($this->post_create["tipo_pago_id"] == 2) {
             $rules["post_create.n°_cuenta"] = 'required|string|regex:/^[0-9]+$/';
             $rules["post_create.propietario"] = 'required|string|max:49|regex:/^[a-zA-Z\s]+$/';
             $rules["post_create.ABA"] = 'required|string|regex:/^[0-9]+$/';
             $rules["post_create.SWIT"] = 'required|string|regex:/^[0-9]+$/';
             $rules["post_create.correo"] = 'required|email|max:60';
-        }elseif($this->post_create["tipo_pago_id"] == 4){
+        }elseif($this->post_create["tipo_pago_id"] == 3){
             $rules["post_create.propietario"] = 'required|string|max:49|regex:/^[a-zA-Z\s]+$/';
             $rules["post_create.cedula"] = 'required|string|digits:8|regex:/^[0-9]+$/';
             $rules["post_create.telefono"] = 'required|string|digits:11|regex:/^[0-9]+$/';
-        }elseif($this->post_create["tipo_pago_id"] == 5){
+        }elseif($this->post_create["tipo_pago_id"] == 4){
             $rules["post_create.n°_cuenta"] = 'required|regex:/^[0-9]+$/';
             $rules["post_create.propietario"] = 'required|string|max:49|regex:/^[a-zA-Z\s]+$/';
             $rules["post_create.cedula"] = 'required|string|digits:8|regex:/^[0-9]+$/';
