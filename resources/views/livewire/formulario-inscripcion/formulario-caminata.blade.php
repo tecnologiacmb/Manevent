@@ -4,30 +4,26 @@
         <div class=" bg-white shadow rounded-lg p-4 mb-4">
             <div class="grid grid-cols-2 gap-4">
                 <div class="pl-8">
-                    <h1 class="font-black text-2xl text-gray-800 leading-tight text-normal normal-case
-">
+                    <h1 class="font-black text-2xl text-gray-800 leading-tight text-normal normal-case">
                         Evento: {{ $evento->nombre }}.
                     </h1>
                 </div>
                 <div class="justify-items-end pr-8">
-                    <h1 class="mt-2 font-black text-2xl text-gray-800 leading-tight text-normal normal-case
-">
+                    <h1 class="mt-2 font-black text-2xl text-gray-800 leading-tight text-normal normal-case">
                         Grupo: {{ $grupo->nombre }}
                     </h1>
                 </div>
             </div>
+
             <div class="flex items-center justify-start py-0">
 
-                <h1 class="pl-8 font-black text-sm text-black leading-tight text-normal normal-case
-">
+                <h1 class="pl-8 font-black text-sm text-black leading-tight text-normal normal-case">
                     Monto: {{ $grupo->precio }} $
                 </h1>
-                <h1 class="pl-6 font-black text-sm text-black leading-tight text-normal normal-case
-">
+                <h1 class="pl-6 font-black text-sm text-black leading-tight text-normal normal-case">
                     Monto: {{ $this->calculo($grupo->precio) }} Bs
                 </h1>
-                <h1 class="pl-6 font-black text-sm text-black leading-tight text-normal normal-case
-">
+                <h1 class="pl-6 font-black text-sm text-black leading-tight text-normal normal-case">
                     Tasa dolar: {{ $dolars->precio }} Bs
                 </h1>
 
@@ -107,7 +103,7 @@
                                 @foreach ($create_participante[$i]['ciudades'] as $ciudad)
                                     <option value="{{ $ciudad->id }}">{{ $ciudad->ciudad }}</option>
                                 @endforeach
-                           {{--  @elseif(isset($this->participante[$i]) && !is_null($this->participante[$i]))
+                                {{--  @elseif(isset($this->participante[$i]) && !is_null($this->participante[$i]))
                                 @foreach ($create_participante[$i]['ciudades'] as $ciudad)
                                     <option value="{{ $ciudad->id }}"
                                         {{ $ciudad->id == $this->participante->ciudad_id ? 'selected' : '' }}>
@@ -159,8 +155,9 @@
                                     wire:model="create_inscripcion.{{ $i }}.metodo_pago_id">
                                     <option value="">Seleccione la cuenta de pago</option>
                                     @foreach ($metodo_pago as $metodo_pagos)
-                                        <option value="{{ $metodo_pagos->id }}">
-                                            {{ $metodo_pagos->tipo_pago_nombre }}--/--{{ $metodo_pagos->banco_nombre }}
+                                        <option
+                                            value=" {{ $metodo_pagos->id }}">
+                                            {{ $metodo_pagos->tipo_pago_nombre }}->{{ $metodo_pagos->banco_nombre }}
                                         </option>
                                     @endforeach
                                 </x-select>
@@ -257,8 +254,9 @@
                                     wire:model="create_inscripcion.{{ $i }}.cuenta_mixto_1">
                                     <option value="">Seleccione la cuenta de pago</option>
                                     @foreach ($metodo_pago as $metodo_pagos)
-                                        <option value="{{ $metodo_pagos->tipo_pago_nombre }}">
-                                            {{ $metodo_pagos->tipo_pago_nombre }}
+                                        <option
+                                            value=" {{ $metodo_pagos->tipo_pago_nombre }}->{{ $metodo_pagos->banco_nombre }}">
+                                            {{ $metodo_pagos->tipo_pago_nombre }}->{{ $metodo_pagos->banco_nombre }}
                                         </option>
                                     @endforeach
                                 </x-select>
@@ -347,8 +345,9 @@
                                     wire:model="create_inscripcion.{{ $i }}.cuenta_mixto_2">
                                     <option value="">Seleccione la cuenta de pago</option>
                                     @foreach ($metodo_pago as $metodo_pagos)
-                                        <option value="{{ $metodo_pagos->tipo_pago_nombre }}">
-                                            {{ $metodo_pagos->tipo_pago_nombre }}
+                                        <option
+                                            value=" {{ $metodo_pagos->tipo_pago_nombre }}->{{ $metodo_pagos->banco_nombre }}">
+                                            {{ $metodo_pagos->tipo_pago_nombre }}->{{ $metodo_pagos->banco_nombre }}
                                         </option>
                                     @endforeach
                                 </x-select>

@@ -84,7 +84,6 @@ class FormularioCarrera extends Component
         'cedula' => "",
         'participante_id' => null,
         'tipo_pago_id' => null,
-        'tipo_pago_id_mixto' => null,
         'metodo_pago_id' => null,
         'grupo_id' => null,
         'dolar_id' => null,
@@ -113,8 +112,7 @@ class FormularioCarrera extends Component
         'cuenta_mixto_1' => null,
         'cuenta_mixto_2' => null,
         'recorrido_id' => null,
-        'Propietarios' => [],
-        'Propietarios2' => [],
+
 
     ];
 
@@ -122,10 +120,9 @@ class FormularioCarrera extends Component
     public $nomenclatura;
     public $nuevoNumeroOrden = null;
     public $userIp;
-    public $tipo_pagos;
-    public $tipo_pagos2;
 
     public $bancos;
+
 
     public function mount($id = null)
     {
@@ -200,14 +197,14 @@ class FormularioCarrera extends Component
                     'cuenta_mixto_1' => null,
                     'cuenta_mixto_2' => null,
                     'recorrido_id' => null,
-                    'Propietarios' => [],
-                    'Propietarios2' => [],
+
 
                 ];
             }
 
             $this->ciudad = ciudad::all();
             $this->mesa = mesa::all();
+            $this->metodo_pago = DB::table('metodo_pagos')->join('tipo_pagos', 'metodo_pagos.tipo_pago_id', '=', 'tipo_pagos.id')->join('bancos', 'metodo_pagos.banco_id', '=', 'bancos.id')->select('metodo_pagos.*', 'tipo_pagos.nombre as tipo_pago_nombre', 'bancos.nombre as banco_nombre')->get();
         }
     }
 
@@ -224,18 +221,6 @@ class FormularioCarrera extends Component
         if ($field === 'estado_id') {
             $this->create_participante[$index]['ciudades'] = ciudad::where('estado_id', $value)->get();
         }
-    }
-
-    public function CreateInscripcion($index, $option)
-    {
-        $this->create_inscripcion[$index]['Propietarios'] = metodo_pago::select('metodo_pagos.*', 'bancos.id', 'bancos.nombre as banco', 'tipo_pagos.nombre as tipo_pago')->join('bancos', 'metodo_pagos.banco_id', '=', 'bancos.id')->join('tipo_pagos', 'metodo_pagos.tipo_pago_id', '=', 'tipo_pagos.id')->where('tipo_pago_id', $option)
-            ->get();
-    }
-
-    public function prueba($index, $option2)
-    {
-        $this->create_inscripcion[$index]['Propietarios2'] = metodo_pago::select('metodo_pagos.*', 'bancos.id', 'bancos.nombre as banco', 'tipo_pagos.nombre as tipo_pago')->join('bancos', 'metodo_pagos.banco_id', '=', 'bancos.id')->join('tipo_pagos', 'metodo_pagos.tipo_pago_id', '=', 'tipo_pagos.id')->where('tipo_pago_id', $option2)
-            ->get();
     }
 
     public function update_radio($index, $option)
@@ -262,19 +247,12 @@ class FormularioCarrera extends Component
     public function update_pago($index, $option)
     {
 
-        if ($option === '1') {
-            $this->create_inscripcion[$index]['bolivar'] = '1';
+        if ($option === 'bolivar') {
+            $this->create_inscripcion[$index]['bolivar'] = 'bolivar';
             $this->create_inscripcion[$index]['dolar'] = null;
-
-            $this->tipo_pagos = tipo_pago::whereIn('id', [1, 3, 4, 5])
-                ->where('estado', true)
-                ->select('id', 'nombre')
-                ->get();
-        } elseif ($option === '2') {
+        } elseif ($option === 'dolar') {
             $this->create_inscripcion[$index]['bolivar'] = null;
-            $this->create_inscripcion[$index]['dolar'] = '2';
-
-            $this->tipo_pagos = tipo_pago::whereIn('id', [1, 2, 4])->where('estado', true)->select('id', 'nombre')->get();
+            $this->create_inscripcion[$index]['dolar'] = 'dolar';
         } elseif ($option === '') {
             $this->create_inscripcion[$index]['bolivar'] = null;
             $this->create_inscripcion[$index]['dolar'] = null;
@@ -283,16 +261,12 @@ class FormularioCarrera extends Component
 
     public function update_pago_mixto($index, $option2)
     {
-        if ($option2 === '1') {
-            $this->create_inscripcion[$index]['bolivar_mixto'] = '1';
+        if ($option2 === 'bolivar_mixto') {
+            $this->create_inscripcion[$index]['bolivar_mixto'] = 'bolivar_mixto';
             $this->create_inscripcion[$index]['dolar_mixto'] = null;
-
-            $this->tipo_pagos2 = tipo_pago::whereIn('id', [1, 3, 4, 5])->where('estado', true)->select('id', 'nombre')->get();
-        } elseif ($option2 === '2') {
+        } elseif ($option2 === 'dolar_mixto') {
             $this->create_inscripcion[$index]['bolivar_mixto'] = null;
-            $this->create_inscripcion[$index]['dolar_mixto'] = '2';
-
-            $this->tipo_pagos2 = tipo_pago::whereIn('id', [1, 2, 4])->where('estado', true)->select('id', 'nombre')->get();
+            $this->create_inscripcion[$index]['dolar_mixto'] = 'dolar_mixto';
         } elseif ($option2 === '') {
             $this->create_inscripcion[$index]['bolivar_mixto'] = null;
             $this->create_inscripcion[$index]['dolar_mixto'] = null;
@@ -745,7 +719,7 @@ class FormularioCarrera extends Component
                     'grupo_id' => $this->create_inscripcion[$i]['grupo_id'],
                     'dolar_id' => $this->create_inscripcion[$i]['dolar_id'],
                     'numero_id' => $this->create_inscripcion[$i]['numero_id'],
-
+                    'categoria_habilitada_id' => $this->create_inscripcion[$i]['categoria_habilitada_id'] ?? null,
                     'mesa_id' => $this->create_inscripcion[$i]['mesa_id'],
                     'datos' => $this->create_inscripcion[$i]['datos'],
                     'monto_pagado_bs' => $this->create_inscripcion[$i]['monto_pagado_bs'],

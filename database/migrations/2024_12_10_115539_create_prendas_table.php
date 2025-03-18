@@ -16,7 +16,8 @@ return new class extends Migration
             $table->foreignId("evento_id")->constrained();
             $table->foreignId("prenda_category_id")->constrained();
             $table->foreignId("prenda_talla_id")->constrained();
-            $table->integer("cantidad",);
+            $table->integer("cantidad");
+            $table->integer("restadas")->nullable();
             $table->string("sexo", 25);
             $table->boolean("estado");
             $table->timestamps();

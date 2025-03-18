@@ -16,6 +16,8 @@ use App\Models\ciudad;
 use App\Models\categoriaHabilitada;
 use App\Models\mesa;
 use App\Models\recorrido;
+use App\Models\prenda;
+
 
 use App\Enum\Mesas_enum;
 
@@ -115,7 +117,8 @@ class FormularioCaminata extends Component
     public $recorrido;
 
     public $nomenclatura;
-    public $nuevoNumeroOrden=null;
+    public $nuevoNumeroOrden = null;
+    public $restadas;
 
 
 
@@ -194,7 +197,6 @@ class FormularioCaminata extends Component
             $this->metodo_pago = DB::table('metodo_pagos')->join('tipo_pagos', 'metodo_pagos.tipo_pago_id', '=', 'tipo_pagos.id')->join('bancos', 'metodo_pagos.banco_id', '=', 'bancos.id')->select('metodo_pagos.*', 'tipo_pagos.nombre as tipo_pago_nombre', 'bancos.nombre as banco_nombre')->get();
         }
     }
-
 
     public function subtractYears()
     {
@@ -366,7 +368,7 @@ class FormularioCaminata extends Component
 
             if (!is_null($this->create_inscripcion[$i]['unico'])) {
 
-                $rules["create_inscripcion.$i.metodo_pago_id"] = 'required|integer|max:3';
+                $rules["create_inscripcion.$i.metodo_pago_id"] = 'required|integer';
                 $rules["create_inscripcion.$i.monto"] = 'required|numeric';
                 $rules["create_inscripcion.$i.fecha"] = 'required|date|before_or_equal:' . $this->fecha_actual;
                 $rules["create_inscripcion.$i.referencia"] = 'required|numeric|digits:6';
@@ -418,8 +420,8 @@ class FormularioCaminata extends Component
             $messages["create_participante.$i.fecha_nacimiento.before_or_equal"] = __('El campo fecha de nacimiento debe ser menor o igual a ' . Carbon::parse($this->fecha_evento)->format('d-m-Y'));
 
             $messages["create_inscripcion.$i.metodo_pago_id.required"] = __('El campo cuentas es obligatorio.');
-            $messages["create_inscripcion.$i.metodo_pago_id.integer"] = __('El campo cuentas debe ser un entero.');
-            $messages["create_inscripcion.$i.metodo_pago_id.max"] = __('El campo cuentas no debe ser mayor a 3 caracteres ');
+            $messages["create_inscripcion.$i.metodo_pago_id.string"] = __('El campo cuentas debe ser un string.');
+
             $messages["create_inscripcion.$i.monto.required"] = __('El campo monto es obligatorio.');
             $messages["create_inscripcion.$i.monto.numeric"] = __('El campo monto solo permite numeros.');
             $messages["create_inscripcion.$i.fecha.required"] = __('El campo fecha de pago es obligatorio.');
@@ -457,7 +459,7 @@ class FormularioCaminata extends Component
         $ultimoNumeroOrden = Inscripcion::max('id');
         $this->nuevoNumeroOrden = $ultimoNumeroOrden ? $ultimoNumeroOrden + 1 : 1;
 
-        $this->nomenclatura = 'GRCM'.'-'.$this->grupo->cantidad.$this->nuevoNumeroOrden;
+        $this->nomenclatura = 'GRCM' . '-' . $this->grupo->cantidad . $this->nuevoNumeroOrden;
 
         for ($i = 0; $i <= $this->grupo->cantidad - 1; $i++) {
             if (!empty($this->participante[$i]) && !is_null($this->participante[$i])) {
@@ -467,34 +469,31 @@ class FormularioCaminata extends Component
             }
         }
 
-        $this->inscripcion_validate_global = inscripcion::whereIn('participante_id', $this->participantes_ids)->join('participantes', 'participantes.id', '=', 'inscripcions.participante_id')->join('eventos', 'inscripcions.evento_id', '=', 'eventos.id')->where('eventos.estado', true)->select('eventos.id','participantes.nombre as nombre','participantes.cedula as cedula')->get()->toArray();
+        $this->inscripcion_validate_global = inscripcion::whereIn('participante_id', $this->participantes_ids)->join('participantes', 'participantes.id', '=', 'inscripcions.participante_id')->join('eventos', 'inscripcions.evento_id', '=', 'eventos.id')->where('eventos.estado', true)->select('eventos.id', 'participantes.nombre as nombre', 'participantes.cedula as cedula')->get()->toArray();
 
         for ($i = 0; $i <= $this->grupo->cantidad - 1; $i++) {
 
             //Validar si alguno de los enviados ya se encuentra registrado en el evento actual
             if (!empty($this->inscripcion_validate_global)) {
-                $this->cedula='';
-                $this->nombre='';
+                $this->cedula = '';
+                $this->nombre = '';
                 $this->cedula = $this->inscripcion_validate_global[$i]['cedula'];
                 $this->nombre = $this->inscripcion_validate_global[$i]['nombre'];
                 $this->inscripcion_validate_global = [];
 
                 $this->participantes_ids = [];
 
-                return $this->dispatch('existe', ['valor' => $this->cedula],['nombre' =>  $this->nombre]);
+                return $this->dispatch('existe', ['valor' => $this->cedula], ['nombre' =>  $this->nombre]);
                 //Retornar mensaje de validacion con datos del participante que se repite
 
             } elseif (empty($this->inscripcion_validate_global) && isset($this->participante[$i]) && !is_null($this->participante[$i])) {
-
                 $latestId = $this->participante[$i]->id;
                 $this->create_inscripcion[$i]['participante_id'] = $latestId;
-
                 $datos_json = [
                     'monto' => $this->create_inscripcion[$i]['monto'],
                     'fecha' => $this->create_inscripcion[$i]['fecha'],
                     'referencia' => $this->create_inscripcion[$i]['referencia']
                 ];
-
                 if (!is_null($this->create_inscripcion[$i]['monto_mixto'])) {
                     $datos_json += [
                         'monto_mixto' => $this->create_inscripcion[$i]['monto_mixto'],
@@ -513,9 +512,9 @@ class FormularioCaminata extends Component
                 if (is_null($this->create_inscripcion[$i]['recorrido_id'])) {
                     $this->create_inscripcion[$i]['recorrido_id'] = $this->grupo->recorrido_id;
                 }
-
                 $this->create_inscripcion[$i]['nomenclatura'] = $this->nomenclatura;
                 $this->create_inscripcion[$i]['ip'] = $this->userIp;
+                $this->create_inscripcion[$i]['categoria_habilitada_id'] = 12;
 
                 $inscripciones = inscripcion::create([
                     'evento_id' => $this->create_inscripcion[$i]['evento_id'],
@@ -524,7 +523,7 @@ class FormularioCaminata extends Component
                     'grupo_id' => $this->create_inscripcion[$i]['grupo_id'],
                     'dolar_id' => $this->create_inscripcion[$i]['dolar_id'],
                     'numero_id' => $this->create_inscripcion[$i]['numero_id'],
-
+                    'categoria_habilitada_id' => $this->create_inscripcion[$i]['categoria_habilitada_id'],
                     'mesa_id' => $this->create_inscripcion[$i]['mesa_id'],
                     'datos' => $this->create_inscripcion[$i]['datos'],
                     'monto_pagado_bs' => $this->create_inscripcion[$i]['monto_pagado_bs'],
@@ -578,6 +577,7 @@ class FormularioCaminata extends Component
 
                 $this->create_inscripcion[$i]['nomenclatura'] = $this->nomenclatura;
                 $this->create_inscripcion[$i]['ip'] = $this->userIp;
+                $this->create_inscripcion[$i]['categoria_habilitada_id'] = 12;
 
                 $inscripciones = inscripcion::create([
                     'evento_id' => $this->create_inscripcion[$i]['evento_id'],
@@ -586,7 +586,7 @@ class FormularioCaminata extends Component
                     'grupo_id' => $this->create_inscripcion[$i]['grupo_id'],
                     'dolar_id' => $this->create_inscripcion[$i]['dolar_id'],
                     'numero_id' => $this->create_inscripcion[$i]['numero_id'],
-
+                    'categoria_habilitada_id' => $this->create_inscripcion[$i]['categoria_habilitada_id'],
                     'mesa_id' => $this->create_inscripcion[$i]['mesa_id'],
                     'datos' => $this->create_inscripcion[$i]['datos'],
                     'monto_pagado_bs' => $this->create_inscripcion[$i]['monto_pagado_bs'],
@@ -595,6 +595,21 @@ class FormularioCaminata extends Component
                     'recorrido_id' => $this->create_inscripcion[$i]['recorrido_id'],
 
                 ]);
+                /* $this->restadas[$i] = 1;
+                $prenda_category=1;
+                $prenda = prenda::where('prenda_category_id',$prenda_category)->first();
+
+                if ($prenda) {
+                    // Si ya existe, actualiza el valor
+                    $prenda->restadas += $this->restadas[$i]; // Suma el valor
+                    $prenda->save();
+                } else {
+                    // Si no existe, crea un nuevo registro
+                    $nuevoPrenda = prenda::create([
+                        'restadas' => $this->restadas[$i],
+                    ]);
+                } */
+
                 $ultima_inscripcion_id = inscripcion::latest('id')->first()->id;
                 $this->asignar_num_mesa($ultima_inscripcion_id, $this->create_participante[$i]['cedula']);
                 /* $this->dispatch('alert');

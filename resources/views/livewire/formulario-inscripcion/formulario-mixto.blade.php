@@ -160,8 +160,8 @@
                                     wire:model="inscripcion_caminata.{{ $j }}.metodo_pago_id">
                                     <option value="">Seleccione la cuenta de pago</option>
                                     @foreach ($metodo_pago as $metodo_pagos)
-                                        <option value="{{ $metodo_pagos->id }}">
-                                            {{ $metodo_pagos->tipo_pago_nombre }}--/--{{ $metodo_pagos->banco_nombre }}
+                                        <option value=" {{ $metodo_pagos->tipo_pago_nombre }}->{{ $metodo_pagos->banco_nombre }}">
+                                            {{ $metodo_pagos->tipo_pago_nombre }}->{{ $metodo_pagos->banco_nombre }}
                                         </option>
                                     @endforeach
                                 </x-select>
@@ -258,8 +258,8 @@
                                     wire:model="inscripcion_caminata.{{ $j }}.cuenta_mixto_1">
                                     <option value="">Seleccione la cuenta de pago</option>
                                     @foreach ($metodo_pago as $metodo_pagos)
-                                        <option value="{{ $metodo_pagos->tipo_pago_nombre }}">
-                                            {{ $metodo_pagos->tipo_pago_nombre }}
+                                        <option value=" {{ $metodo_pagos->tipo_pago_nombre }}->{{ $metodo_pagos->banco_nombre }}">
+                                            {{ $metodo_pagos->tipo_pago_nombre }}->{{ $metodo_pagos->banco_nombre }}
                                         </option>
                                     @endforeach
                                 </x-select>
@@ -348,8 +348,8 @@
                                     wire:model="inscripcion_caminata.{{ $j }}.cuenta_mixto_2">
                                     <option value="">Seleccione la cuenta de pago</option>
                                     @foreach ($metodo_pago as $metodo_pagos)
-                                        <option value="{{ $metodo_pagos->tipo_pago_nombre }}">
-                                            {{ $metodo_pagos->tipo_pago_nombre }}
+                                        <option value=" {{ $metodo_pagos->tipo_pago_nombre }}->{{ $metodo_pagos->banco_nombre }}">
+                                            {{ $metodo_pagos->tipo_pago_nombre }}->{{ $metodo_pagos->banco_nombre }}
                                         </option>
                                     @endforeach
                                 </x-select>
@@ -551,8 +551,8 @@
                                 wire:model="inscripcion_carrera.{{ $i }}.metodo_pago_id">
                                 <option value="">Seleccione la cuenta de pago</option>
                                 @foreach ($metodo_pago as $metodo_pagos)
-                                    <option value="{{ $metodo_pagos->id }}">
-                                        {{ $metodo_pagos->tipo_pago_nombre }}--/--{{ $metodo_pagos->banco_nombre }}
+                                    <option value=" {{ $metodo_pagos->tipo_pago_nombre }}->{{ $metodo_pagos->banco_nombre }}">
+                                        {{ $metodo_pagos->tipo_pago_nombre }}->{{ $metodo_pagos->banco_nombre }}
                                     </option>
                                 @endforeach
                             </x-select>
@@ -649,8 +649,8 @@
                                 wire:model="inscripcion_carrera.{{ $i }}.cuenta_mixto_1">
                                 <option value="">Seleccione la cuenta de pago</option>
                                 @foreach ($metodo_pago as $metodo_pagos)
-                                    <option value="{{ $metodo_pagos->tipo_pago_nombre }}">
-                                        {{ $metodo_pagos->tipo_pago_nombre }}
+                                    <option value=" {{ $metodo_pagos->tipo_pago_nombre }}->{{ $metodo_pagos->banco_nombre }}">
+                                        {{ $metodo_pagos->tipo_pago_nombre }}->{{ $metodo_pagos->banco_nombre }}
                                     </option>
                                 @endforeach
                             </x-select>
@@ -739,8 +739,8 @@
                                 wire:model="inscripcion_carrera.{{ $i }}.cuenta_mixto_2">
                                 <option value="">Seleccione la cuenta de pago</option>
                                 @foreach ($metodo_pago as $metodo_pagos)
-                                    <option value="{{ $metodo_pagos->tipo_pago_nombre }}">
-                                        {{ $metodo_pagos->tipo_pago_nombre }}
+                                    <option value=" {{ $metodo_pagos->tipo_pago_nombre }}->{{ $metodo_pagos->banco_nombre }}">
+                                        {{ $metodo_pagos->tipo_pago_nombre }}->{{ $metodo_pagos->banco_nombre }}
                                     </option>
                                 @endforeach
                             </x-select>

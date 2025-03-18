@@ -18,6 +18,7 @@ class prenda extends Model
         'prenda_category_id',
         'prenda_talla_id',
         'cantidad',
+        'restadas',
         'sexo',
         'estado',
     ];

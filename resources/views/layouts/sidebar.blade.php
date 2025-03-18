@@ -200,73 +200,60 @@
                                 </div>
                             </li>
                             <li
-                            class="flex w-full justify-between text-black hover:text-black text-xl cursor-pointer items-center mb-6">
-                            <div
-                                class="p-2.5 mt-0 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-black text-black
-                            hover:text-white">
-                                <i class="bi bi-person-lines-fill"></i>
-                                <div class="flex justify-between w-full items-center">
-                                    <h1 class="cursor-pointer px-2 text-xl rounded-md mt-1 hover:text-white">
-                                        <a href="{{ route('incripcion') }}"
-                                            :active="request() - > routeIs('incripcion')">Inscripcion</a></span>
-                                    </h1>
+                                class="flex w-full justify-between text-black hover:text-black text-xl cursor-pointer items-center mb-6">
+                                <div
+                                    class="p-2.5 mt-0 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-black text-black hover:text-white">
+                                    <i class="bi bi-person-lines-fill"></i>
+                                    <div class="flex justify-between w-full items-center">
+                                        <h1 class="cursor-pointer px-2 text-xl rounded-md mt-1 hover:text-white">
+                                            <a href="{{ route('incripcion') }}"
+                                                :active="request() - > routeIs('incripcion')">Inscripcion</a></span>
+                                        </h1>
+                                    </div>
                                 </div>
-                            </div>
-                        </li>
+                            </li>
                             <li>
-                                <div class="ms-3 relative">
+                                <div class=" relative ">
                                     <x-dropdown align="right" width="48">
                                         <x-slot name="trigger">
-                                            @if (Laravel\Jetstream\Jetstream::managesProfilePhotos())
-                                                <button
-                                                    class="flex text-sm border-2 border-transparent rounded-full focus:outline-none focus:border-gray-300 transition">
-                                                    <img class="h-8 w-8 rounded-full object-cover"
-                                                        src="{{ Auth::user()->profile_photo_url }}"
-                                                        alt="{{ Auth::user()->name }}" />
+                                            <span class="inline-flex rounded-md ">
+                                                <button type="button"
+                                                    class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-black  hover:bg-black hover:text-white focus:outline-none  active:bg-black transition ease-in-out duration-150">
+                                                    <!-- Texto -->
+                                                    <h1 class="cursor-pointer px-2 text-xl rounded-md mt-1 hover:text-white">
+                                                    Administrar
+                                                    </h1>
+                                                    <svg class="ms-2 -me-0.5 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                                                    </svg>
                                                 </button>
-                                            @else
-                                                <span class="inline-flex rounded-md">
-                                                    <button type="button"
-                                                        class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none focus:bg-gray-50 active:bg-gray-50 transition ease-in-out duration-150">
-                                                        {{ Auth::user()->name }}
-
-                                                        <svg class="ms-2 -me-0.5 h-4 w-4"
-                                                            xmlns="http://www.w3.org/2000/svg" fill="none"
-                                                            viewBox="0 0 24 24" stroke-width="1.5"
-                                                            stroke="currentColor">
-                                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                                d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
-                                                        </svg>
-                                                    </button>
-                                                </span>
-                                            @endif
+                                            </span>
                                         </x-slot>
 
                                         <x-slot name="content">
-                                            <!-- Account Management -->
+                                            <!-- Gestión de cuenta -->
                                             <div class="block px-4 py-2 text-xs text-gray-400">
-                                                {{ __('Manage Account') }}
+                                                {{ __('Gestionar Cuenta') }}
                                             </div>
 
                                             <x-dropdown-link href="{{ route('profile.show') }}">
-                                                {{ __('Profile') }}
+                                                {{ __('Perfil') }}
                                             </x-dropdown-link>
 
                                             @if (Laravel\Jetstream\Jetstream::hasApiFeatures())
                                                 <x-dropdown-link href="{{ route('api-tokens.index') }}">
-                                                    {{ __('API Tokens') }}
+                                                    {{ __('Tokens API') }}
                                                 </x-dropdown-link>
                                             @endif
 
                                             <div class="border-t border-gray-200"></div>
 
-                                            <!-- Authentication -->
+                                            <!-- Autenticación -->
                                             <form method="POST" action="{{ route('logout') }}" x-data>
                                                 @csrf
 
-                                                <x-dropdown-link href="{{ route('logout') }}"
-                                                    @click.prevent="$root.submit();">
-                                                    {{ __('Log Out') }}
+                                                <x-dropdown-link href="{{ route('logout') }}" @click.prevent="$root.submit();">
+                                                    {{ __('Cerrar Sesión') }}
                                                 </x-dropdown-link>
                                             </form>
                                         </x-slot>

@@ -5,9 +5,7 @@ namespace App\Livewire;
 use App\Models\ciudad;
 use App\Models\estado;
 use App\Models\participante;
-use Illuminate\Support\Facades\DB;
 use Livewire\Component;
-use PhpParser\Builder\Function_;
 
 class ListaUsuarios extends Component
 {

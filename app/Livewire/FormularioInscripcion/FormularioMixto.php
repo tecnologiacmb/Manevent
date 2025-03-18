@@ -172,24 +172,18 @@ class FormularioMixto extends Component
             $this->cantidad_carrera = $cantidad_carrera;
             $this->cantidad_caminata = $cantidad_caminata;
             $this->userIp = request()->ip();
-
             $this->fecha_actual = Carbon::now()->format('Y-m-d');
             $this->evento = evento::select('id', 'nombre', 'fecha_evento')->where('estado', true)->orderBy('id', 'desc')->first();
             $this->subtractYears();
-
             $this->categoria_habilitada = categoriaHabilitada::all();
-
             $this->grupo = grupo::find($id);
             $this->dolars = dolar::select('id', 'precio')->whereDate('created_at', Carbon::today())->latest()->first();
             if (!$this->dolars) {
                 $this->dolars = dolar::latest()->first();
             }
-
             $this->numeros = numero::all();
             $this->estados = estado::all();
-
             for ($i = 0; $i <= $this->cantidad_carrera - 1; $i++) {
-
                 $this->participante_carrera[$i] = [
                     'ciudad_id' => null,
                     'estado_id' => null,
@@ -202,7 +196,6 @@ class FormularioMixto extends Component
                     'direccion' => "",
                     'fecha_nacimiento' => "",
                 ];
-
                 $this->inscripcion_carrera[$i] = [
 
                     'evento_id' => $this->evento->id,
@@ -237,9 +230,7 @@ class FormularioMixto extends Component
 
                 ];
             }
-
             for ($j = 0; $j <= $this->cantidad_caminata - 1; $j++) {
-
                 $this->participante_caminata[$j] = [
                     'ciudad_id' => null,
                     'estado_id' => null,
@@ -252,7 +243,6 @@ class FormularioMixto extends Component
                     'direccion' => "",
                     'fecha_nacimiento' => "",
                 ];
-
                 $this->inscripcion_caminata[$j] = [
 
                     'evento_id' => $this->evento->id,
@@ -287,10 +277,8 @@ class FormularioMixto extends Component
 
                 ];
             }
-
             $this->ciudad = ciudad::all();
             $this->mesa = mesa::all();
-
             $this->metodo_pago = DB::table('metodo_pagos')->join('tipo_pagos', 'metodo_pagos.tipo_pago_id', '=', 'tipo_pagos.id')->join('bancos', 'metodo_pagos.banco_id', '=', 'bancos.id')->select('metodo_pagos.*', 'tipo_pagos.nombre as tipo_pago_nombre', 'bancos.nombre as banco_nombre')->get();
         }
     }
@@ -299,7 +287,6 @@ class FormularioMixto extends Component
     {
         $this->fecha_evento = Carbon::parse($this->evento->fecha_evento)->subYears(15)->format('Y-m-d');
     }
-
     public function updatedParticipanteCarrera($value, $name)
     {
         $parts = explode('.', $name);

@@ -26,23 +26,6 @@ Route::middleware([
         return view('dashboard');
     })->name('dashboard');
 
-    /*  Route::get('/banco', function () {
-        return view('banco');
-    })->name('banco'); */
-
-    /* Route::get('/metodo-pago', function () {
-        return view('metodo-pago');
-    })->name('metodo-pago'); */
-
-   /*  Route::get('/grupo', function () {
-        return view('grupo');
-    })->name('grupo');
- */
-/*     Route::get('/categoria', function () {
-        return view('categoria');
-    })->name('categoria'); */
-
-
     Route::get('/tasaDolar', function () {
         return view('tasaDolar');
     })->name('tasaDolar');
@@ -70,7 +53,6 @@ Route::middleware([
         Route::group(['prefix' => 'incripcion',], function () {
             Route::get('',  "index")->name('incripcion');
             Route::get('/vista_inscripcion/{id}',  "create")->name('incripcion/vista_inscripcion/{id}');
-
         });
     });
     Route::controller(Categoria_Controller::class)->group(function () {
