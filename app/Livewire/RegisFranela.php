@@ -3,10 +3,12 @@
 namespace App\Livewire;
 
 use App\Models\evento;
+use App\Models\grupo;
 use App\Models\prenda;
 use Livewire\Component;
 use App\Models\prenda_category;
 use App\Models\prenda_talla;
+use Illuminate\Support\Facades\DB;
 
 class RegisFranela extends Component
 {
@@ -31,7 +33,9 @@ class RegisFranela extends Component
         $this->tallas = prenda_talla::all();
         $this->categorias = prenda_category::all();
 
-        $this->prendas = prenda::select('prendas.*', 'prenda_tallas.id as prenda_talla_id', 'prenda_tallas.talla as prenda_talla', 'prenda_categories.id as prenda_categories_id', 'prenda_categories.nombre as prenda_categories_nombre')->join('prenda_tallas', 'prendas.prenda_talla_id', '=', 'prenda_tallas.id')->join('prenda_categories', 'prendas.prenda_category_id', '=', 'prenda_categories.id')->where('prendas.estado', true)->get();
+        /* $this->prendas = prenda::select('prendas.*','prenda_tallas.talla as prenda_talla', 'prenda_categories.nombre as prenda_categories_nombre')->join('prenda_tallas', 'prendas.prenda_talla_id', '=', 'prenda_tallas.id')->join('prenda_categories', 'prendas.prenda_category_id', '=', 'prenda_categories.id')->where('prendas.estado', true)->get(); */
+
+        $this->prendas = DB::table('prendas')->join('prenda_tallas', 'prendas.prenda_talla_id', '=', 'prenda_tallas.id')->join('prenda_categories', 'prendas.prenda_category_id', '=', 'prenda_categories.id')->select('prendas.*','prenda_tallas.talla as prenda_talla', 'prenda_categories.nombre as prenda_categories_nombre')->get();
 
         $this->evento = evento::select('id', 'nombre', 'fecha_evento')->where('estado', true)->orderBy('id', 'desc')->first();
 
@@ -81,13 +85,12 @@ class RegisFranela extends Component
             'sexo' => $this->create_prenda['sexo'],
             'estado' => $this->create_prenda['estado'],
         ]);
-        $this->create_prenda = [];
-
+        $this->reset(['create_prenda']);
         $this->dispatch('alert');
+        $this->open = false;
     }
     public function render()
     {
-
         return view('livewire.regis-franela');
     }
 }

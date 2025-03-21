@@ -3,7 +3,6 @@
         @if (!empty($evento))
 
             <div class="bg-white shadow rounded-lg p-2 mb-4 flex items-center justify-between">
-
                 <div class="pl-8">
 
                     <h1 class="pl-8 font-black text-sm text-black leading-tight text-normal normal-case">

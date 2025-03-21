@@ -17,6 +17,8 @@ use App\Models\categoriaHabilitada;
 use App\Models\mesa;
 use App\Models\tipo_pago;
 use App\Models\banco;
+use App\Models\prenda;
+
 
 
 
@@ -115,6 +117,11 @@ class FormularioCarrera extends Component
 
 
     ];
+    public $create_prendas = [
+        'prendas' => null,
+        'genero' => null
+    ];
+    public $prendas;
 
     public $cedula = null;
     public $nomenclatura;
@@ -199,6 +206,10 @@ class FormularioCarrera extends Component
                     'recorrido_id' => null,
 
 
+                ];
+                $this->create_prendas[$i] = [
+                    'prendas' => null,
+                    'genero' => null
                 ];
             }
 
@@ -730,20 +741,51 @@ class FormularioCarrera extends Component
                 ]);
                 $ultima_inscripcion_id = inscripcion::latest('id')->first()->id;
                 $this->asignar_num_mesa($ultima_inscripcion_id, $this->create_participante[$i]['cedula']);
-                /* $this->dispatch('alert');
-                $this->create_participante = [];
-                $this->create_inscripcion = []; */
             }
         }
         $this->dispatch('alert');
         $this->create_participante = [];
         $this->create_inscripcion = [];
     }
+    public function asignar_prendas($value)
+    {
+        // Encuentra la prenda solo una vez
+        $prenda =prenda::select('cantidad', 'restadas')->find($value);
+        for ($i = 0; $i < $this->grupo->cantidad; $i++) {
+            $this->create_prendas[$i]['prendas'] = $value;
 
+            // Resta de cantidades dependiendo de si 'restadas' es null o no
+            if (is_null($prenda->restadas)) {
+                $resta = $prenda->cantidad - 1;
+                prenda::where('id', $value)->update(['restadas' => $resta]);
+            } else {
+                $resta = $prenda->restadas - 1;
+                prenda::where('id', $value)->update(['restadas' => $resta]);
+            }
+        }
+    }
 
+    public function update_prendas($index, $option)
+    {
+        if ($option === '1') {
 
+            $this->create_prendas[$index]['genero'] = 'Masculino';
+            $this->prendas = DB::table('prendas')->join('prenda_tallas', 'prendas.prenda_talla_id', '=', 'prenda_tallas.id')->join('prenda_categories', 'prendas.prenda_category_id', '=', 'prenda_categories.id')->select('prendas.*', 'prenda_tallas.talla as prenda_talla', 'prenda_categories.nombre as prenda_categories_nombre')->where('prendas.sexo', 'Masculino')->get();
+        } elseif ($option === '2') {
+            $this->create_prendas[$index]['genero'] = 'Femenino';
+            $this->prendas = DB::table('prendas')->join('prenda_tallas', 'prendas.prenda_talla_id', '=', 'prenda_tallas.id')->join('prenda_categories', 'prendas.prenda_category_id', '=', 'prenda_categories.id')->select('prendas.*', 'prenda_tallas.talla as prenda_talla', 'prenda_categories.nombre as prenda_categories_nombre')->where('prendas.sexo', 'Femenino')->get();
+
+        } elseif ($option === '') {
+            $this->create_prendas[$index]['genero'] = null;
+            $this->prendas= null;
+        }
+    }
     public function render()
     {
-        return view('livewire.formulario-inscripcion.formulario-carrera');
+        $grupos = grupo::where('nombre', 'NOT LIKE', '%sin franela%')->get();
+
+        return view('livewire.formulario-inscripcion.formulario-carrera', [
+            'grupos' => $grupos]);
     }
+
 }
