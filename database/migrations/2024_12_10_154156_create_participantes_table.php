@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string("correo", 30);
             $table->string("direccion", 50);
             $table->date("fecha_nacimiento");
+            $table->foreignId("genero_id")->constrained();
             $table->timestamps();
             $table->softDeletes();
         });

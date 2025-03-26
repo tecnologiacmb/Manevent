@@ -21,12 +21,16 @@ class participante extends Model
         'correo',
         'direccion',
         'fecha_nacimiento',
+        'genero_id'
     ];
 
     public function ciudades(){
         return $this->hasMany(ciudad::class);
     }
 
+    public function genero(){
+        return $this->belongsTo(genero::class);
+    }
     public function inscripcion(){
         return $this->hasOne(inscripcion::class);
     }

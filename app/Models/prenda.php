@@ -35,4 +35,8 @@ class prenda extends Model
     {
         return $this->hasMany(evento::class);
     }
+    public function inscripcion()
+    {
+        return $this->hasMany(inscripcion::class);
+    }
 }

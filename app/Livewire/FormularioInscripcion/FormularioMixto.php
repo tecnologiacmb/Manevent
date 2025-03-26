@@ -16,62 +16,43 @@ use App\Models\ciudad;
 use App\Models\categoriaHabilitada;
 use App\Models\mesa;
 use App\Enum\Mesas_enum;
+use App\Models\prenda;
+use App\Models\genero;
 
 class FormularioMixto extends Component
 {
-
     public $evento = null;
-    public $inscripcion_validate_global = [];
-    public $participantes_ids = [];
     public $cedula = null;
     public $nombre = null;
     public $apellido = null;
-
-
-    public $carrera_participante = [];
-    public $caminata_participante = [];
-
     public $metodo_pago;
     public $grupo;
     public $dolars;
     public $numero;
     public $estados;
     public $ciudad;
-    public $banco;
-    public $tipo_pago;
-    public $fecha_nacimiento_maxima;
-    public $cantidad;
-    public $opcion2 = null;
-    public $opcion0 = null;
-    public $opcion = null;
-    public $opcion3 = null;
-    public $opcion4 = null;
-    public $groupId = null;
     public $value = null;
-    public $ultimoParticipante;
     public $categoria_habilitada;
     public $inscripcion;
     public $numeros;
     public $mesa;
-    public $metodo = null;
-    public $metodos = [];
-    public $ciudades = [];
-    public $unico = null;
-    public $mixto = null;
-    public $bolivar = null;
     public $dolar = null;
-    public $bolivar_mixto = null;
-    public $dolar_mixto = null;
-    public $unico_valor = null;
-    public $mixto_valor = null;
     public $fecha_actual = null;
     public $fecha_evento;
     public $cantidad_carrera;
     public $cantidad_caminata;
+    public $nomenclatura;
+    public $nuevoNumeroOrden = null;
+    public $userIp;
+    public $generos;
+    public $prendas_caminata;
+    public $prendas_carrera;
 
-    public $selectedEstado = null;
     public $datos_json = [];
-
+    public $inscripcion_validate_global = [];
+    public $participantes_ids = [];
+    public $carrera_participante = [];
+    public $caminata_participante = [];
     public $participante_carrera = [
         'ciudad_id' => null,
         'estado_id' => null,
@@ -83,6 +64,7 @@ class FormularioMixto extends Component
         'correo' => "",
         'direccion' => "",
         'fecha_nacimiento' => "",
+        'genero_id' => null,
     ];
     public $participante_caminata = [
         'ciudad_id' => null,
@@ -95,11 +77,13 @@ class FormularioMixto extends Component
         'correo' => "",
         'direccion' => "",
         'fecha_nacimiento' => "",
+        'genero_id' => null,
     ];
     public $inscripcion_carrera = [
         'evento_id' => null,
         'cedula' => "",
         'participante_id' => null,
+        'tipo_pago_id' => null,
         'metodo_pago_id' => null,
         'grupo_id' => null,
         'dolar_id' => null,
@@ -107,7 +91,7 @@ class FormularioMixto extends Component
         'categoria_habilitada_id' => null,
         'mesa_id' => null,
         'datos' => null,
-        'monto_pagado_bs' => "",
+        'monto_pagado_bs' => null,
         'ip' => "",
         'nomenclatura' => "",
         'metodo' => null,
@@ -118,8 +102,10 @@ class FormularioMixto extends Component
         'dolar' => null,
         'bolivar_mixto' => null,
         'dolar_mixto' => null,
-        'monto' => null,
-        'monto_mixto' => null,
+        'monto_Bs' => null,
+        'monto_$' => null,
+        'monto_mixto_Bs' => null,
+        'monto_mixto_$' => null,
         'fecha' => null,
         'fecha_mixto' => null,
         'referencia' => null,
@@ -127,12 +113,13 @@ class FormularioMixto extends Component
         'cuenta_mixto_1' => null,
         'cuenta_mixto_2' => null,
         'recorrido_id' => null,
-
+        'prenda_id' => null,
     ];
     public $inscripcion_caminata = [
         'evento_id' => null,
         'cedula' => "",
         'participante_id' => null,
+        'tipo_pago_id' => null,
         'metodo_pago_id' => null,
         'grupo_id' => null,
         'dolar_id' => null,
@@ -140,7 +127,7 @@ class FormularioMixto extends Component
         'categoria_habilitada_id' => null,
         'mesa_id' => null,
         'datos' => null,
-        'monto_pagado_bs' => "",
+        'monto_pagado_bs' => null,
         'ip' => "",
         'nomenclatura' => "",
         'metodo' => null,
@@ -151,8 +138,10 @@ class FormularioMixto extends Component
         'dolar' => null,
         'bolivar_mixto' => null,
         'dolar_mixto' => null,
-        'monto' => null,
-        'monto_mixto' => null,
+        'monto_Bs' => null,
+        'monto_$' => null,
+        'monto_mixto_Bs' => null,
+        'monto_mixto_$' => null,
         'fecha' => null,
         'fecha_mixto' => null,
         'referencia' => null,
@@ -160,18 +149,23 @@ class FormularioMixto extends Component
         'cuenta_mixto_1' => null,
         'cuenta_mixto_2' => null,
         'recorrido_id' => null,
-
+        'prenda_id' => null,
     ];
-    public $nomenclatura;
-    public $nuevoNumeroOrden = null;
-    public $userIp;
-
+    public $create_prendas_carrera = [
+        'prendas' => null,
+        'genero' => null
+    ];
+    public $create_prendas_caminata = [
+        'prendas' => null,
+        'genero' => null
+    ];
     public function mount($id = null, $cantidad_carrera, $cantidad_caminata)
     {
         if (!is_null($id)) {
             $this->cantidad_carrera = $cantidad_carrera;
             $this->cantidad_caminata = $cantidad_caminata;
             $this->userIp = request()->ip();
+            $this->generos = genero::all();
             $this->fecha_actual = Carbon::now()->format('Y-m-d');
             $this->evento = evento::select('id', 'nombre', 'fecha_evento')->where('estado', true)->orderBy('id', 'desc')->first();
             $this->subtractYears();
@@ -195,11 +189,13 @@ class FormularioMixto extends Component
                     'correo' => "",
                     'direccion' => "",
                     'fecha_nacimiento' => "",
+                    'genero_id' => null,
                 ];
                 $this->inscripcion_carrera[$i] = [
-
                     'evento_id' => $this->evento->id,
+                    'cedula' => "",
                     'participante_id' => null,
+                    'tipo_pago_id' => null,
                     'metodo_pago_id' => null,
                     'grupo_id' => $id,
                     'dolar_id' => $this->dolars->id,
@@ -218,8 +214,10 @@ class FormularioMixto extends Component
                     'dolar' => null,
                     'bolivar_mixto' => null,
                     'dolar_mixto' => null,
-                    'monto' => null,
-                    'monto_mixto' => null,
+                    'monto_Bs' => null,
+                    'monto_$' => null,
+                    'monto_mixto_Bs' => null,
+                    'monto_mixto_$' => null,
                     'fecha' => $this->fecha_actual,
                     'fecha_mixto' => $this->fecha_actual,
                     'referencia' => null,
@@ -227,7 +225,11 @@ class FormularioMixto extends Component
                     'cuenta_mixto_1' => null,
                     'cuenta_mixto_2' => null,
                     'recorrido_id' => null,
-
+                    'prenda_id' => null,
+                ];
+                $this->create_prendas_carrera[$i] = [
+                    'prendas' => null,
+                    'genero' => null
                 ];
             }
             for ($j = 0; $j <= $this->cantidad_caminata - 1; $j++) {
@@ -242,11 +244,13 @@ class FormularioMixto extends Component
                     'correo' => "",
                     'direccion' => "",
                     'fecha_nacimiento' => "",
+                    'genero_id' => null,
                 ];
                 $this->inscripcion_caminata[$j] = [
-
                     'evento_id' => $this->evento->id,
+                    'cedula' => "",
                     'participante_id' => null,
+                    'tipo_pago_id' => null,
                     'metodo_pago_id' => null,
                     'grupo_id' => $id,
                     'dolar_id' => $this->dolars->id,
@@ -265,8 +269,10 @@ class FormularioMixto extends Component
                     'dolar' => null,
                     'bolivar_mixto' => null,
                     'dolar_mixto' => null,
-                    'monto' => null,
-                    'monto_mixto' => null,
+                    'monto_Bs' => null,
+                    'monto_$' => null,
+                    'monto_mixto_Bs' => null,
+                    'monto_mixto_$' => null,
                     'fecha' => $this->fecha_actual,
                     'fecha_mixto' => $this->fecha_actual,
                     'referencia' => null,
@@ -274,7 +280,11 @@ class FormularioMixto extends Component
                     'cuenta_mixto_1' => null,
                     'cuenta_mixto_2' => null,
                     'recorrido_id' => null,
-
+                    'prenda_id' => null,
+                ];
+                $this->create_prendas_caminata[$j] = [
+                    'prendas' => null,
+                    'genero' => null
                 ];
             }
             $this->ciudad = ciudad::all();
@@ -629,19 +639,28 @@ class FormularioMixto extends Component
             $rules["participante_carrera.$i.fecha_nacimiento"] = 'required|date|before_or_equal:' . $this->fecha_evento;
 
             if (!is_null($this->inscripcion_carrera[$i]['unico'])) {
-                $rules["inscripcion_carrera.$i.metodo_pago_id"] = 'required|integer';
-                $rules["inscripcion_carrera.$i.monto"] = 'required|numeric';
+                $rules["inscripcion_carrera.$i.metodo_pago_id"] = 'required';
                 $rules["inscripcion_carrera.$i.fecha"] = 'required|date|before_or_equal:' . $this->fecha_actual;
                 $rules["inscripcion_carrera.$i.referencia"] = 'required|numeric|digits:6';
+
+                if (!is_null($this->inscripcion_carrera[$i]['monto_Bs'])) {
+                    $rules["inscripcion_carrera.$i.monto_Bs"] = 'required|numeric';
+                } else {
+                    $rules["inscripcion_carrera.$i.monto_$"] = 'required|numeric';
+                }
             } else {
-                $rules["inscripcion_carrera.$i.monto"] = 'required|numeric';
                 $rules["inscripcion_carrera.$i.fecha"] = 'required|date|before_or_equal:' . $this->fecha_actual;
                 $rules["inscripcion_carrera.$i.referencia"] = 'required|numeric|digits:6';
-                $rules["inscripcion_carrera.$i.monto_mixto"] = 'required|numeric';
                 $rules["inscripcion_carrera.$i.fecha_mixto"] = 'required|date|before_or_equal:' . $this->fecha_actual;
                 $rules["inscripcion_carrera.$i.referencia_mixto"] = 'required|numeric|digits:6';
                 $rules["inscripcion_carrera.$i.cuenta_mixto_1"] = 'required|string';
                 $rules["inscripcion_carrera.$i.cuenta_mixto_2"] = 'required|string';
+
+                if (!is_null($this->inscripcion_carrera[$i]['monto_mixto_Bs'])) {
+                    $rules["inscripcion_carrera.$i.monto_mixto_Bs"] = 'required|numeric';
+                } else {
+                    $rules["inscripcion_carrera.$i.monto_mixto_$"] = 'required|numeric';
+                }
             }
         }
 
@@ -656,19 +675,28 @@ class FormularioMixto extends Component
             $rules["participante_caminata.$j.fecha_nacimiento"] = 'required|date|before_or_equal:' . $this->fecha_evento;
 
             if (!is_null($this->inscripcion_caminata[$j]['unico'])) {
-                $rules["inscripcion_caminata.$j.metodo_pago_id"] = 'required|integer';
-                $rules["inscripcion_caminata.$j.monto"] = 'required|numeric';
+                $rules["inscripcion_caminata.$j.metodo_pago_id"] = 'required';
                 $rules["inscripcion_caminata.$j.fecha"] = 'required|date|before_or_equal:' . $this->fecha_actual;
                 $rules["inscripcion_caminata.$j.referencia"] = 'required|numeric|digits:6';
+
+                if (!is_null($this->inscripcion_caminata[$j]['monto_Bs'])) {
+                    $rules["inscripcion_caminata.$j.monto_Bs"] = 'required|numeric';
+                } else {
+                    $rules["inscripcion_caminata.$j.monto_$"] = 'required|numeric';
+                }
             } else {
-                $rules["inscripcion_caminata.$j.monto"] = 'required|numeric';
                 $rules["inscripcion_caminata.$j.fecha"] = 'required|date|before_or_equal:' . $this->fecha_actual;
                 $rules["inscripcion_caminata.$j.referencia"] = 'required|numeric|digits:6';
-                $rules["inscripcion_caminata.$j.monto_mixto"] = 'required|numeric';
                 $rules["inscripcion_caminata.$j.fecha_mixto"] = 'required|date|before_or_equal:' . $this->fecha_actual;
                 $rules["inscripcion_caminata.$j.referencia_mixto"] = 'required|numeric|digits:6';
                 $rules["inscripcion_caminata.$j.cuenta_mixto_1"] = 'required|string';
                 $rules["inscripcion_caminata.$j.cuenta_mixto_2"] = 'required|string';
+
+                if (!is_null($this->inscripcion_caminata[$j]['monto_mixto_Bs'])) {
+                    $rules["inscripcion_caminata.$j.monto_mixto_Bs"] = 'required|numeric';
+                } else {
+                    $rules["inscripcion_caminata.$j.monto_mixto_$"] = 'required|numeric';
+                }
             }
         }
         return $rules;
@@ -706,10 +734,13 @@ class FormularioMixto extends Component
             $messages["participante_carrera.$i.fecha_nacimiento.before_or_equal"] = __('El campo fecha de nacimiento debe ser menor o igual a ' . Carbon::parse($this->fecha_evento)->format('d-m-Y'));
 
             $messages["inscripcion_carrera.$i.metodo_pago_id.required"] = __('El campo cuentas es obligatorio.');
-            $messages["inscripcion_carrera.$i.metodo_pago_id.integer"] = __('El campo cuentas debe ser un entero.');
 
-            $messages["inscripcion_carrera.$i.monto.required"] = __('El campo monto es obligatorio.');
-            $messages["inscripcion_carrera.$i.monto.numeric"] = __('El campo monto solo permite numeros.');
+            $messages["inscripcion_carrera.$i.monto_Bs.required"] = __('El campo monto es obligatorio.');
+            $messages["inscripcion_carrera.$i.monto_Bs.numeric"] = __('El campo monto solo permite numeros.');
+            $messages["inscripcion_carrera.$i.monto_$.required"] = __('El campo monto es obligatorio.');
+            $messages["inscripcion_carrera.$i.monto_$.numeric"] = __('El campo monto solo permite numeros.');
+
+
             $messages["inscripcion_carrera.$i.fecha.required"] = __('El campo fecha de pago es obligatorio.');
             $messages["inscripcion_carrera.$i.fecha.date"] = __('El campo fecha de pago debe tener la sintaxis correcta.');
             $messages["inscripcion_carrera.$i.fecha.before_or_equal"] = __('El campo fecha de pago debe ser menor o igual a ' . Carbon::parse($this->fecha_evento)->format('d-m-Y'));
@@ -718,8 +749,10 @@ class FormularioMixto extends Component
             $messages["inscripcion_carrera.$i.referencia.digits"] = __('El campo referencia solo admite 6 digitos');
 
 
-            $messages["inscripcion_carrera.$i.monto_mixto.required"] = __('El campo monto es obligatorio.');
-            $messages["inscripcion_carrera.$i.monto_mixto.numeric"] = __('El campo monto solo permite numeros.');
+            $messages["inscripcion_carrera.$i.monto_mixto_Bs.required"] = __('El campo monto es obligatorio.');
+            $messages["inscripcion_carrera.$i.monto_mixto_Bs.numeric"] = __('El campo monto solo permite numeros.');
+            $messages["inscripcion_carrera.$i.monto_mixto_$.required"] = __('El campo monto es obligatorio.');
+            $messages["inscripcion_carrera.$i.monto_mixto_$.numeric"] = __('El campo monto solo permite numeros.');
             $messages["inscripcion_carrera.$i.fecha_mixto.required"] = __('El campo fecha de pago es obligatorio.');
             $messages["inscripcion_carrera.$i.fecha_mixto.date"] = __('El campo fecha de pago debe tener la sintaxis correcta.');
             $messages["inscripcion_carrera.$i.fecha_mixto.before_or_equal"] = __('El campo fecha de pago debe ser menor o igual a ' . Carbon::parse($this->fecha_actual)->format('d-m-Y'));
@@ -765,10 +798,12 @@ class FormularioMixto extends Component
             $messages["participante_caminata.$j.fecha_nacimiento.before_or_equal"] = __('El campo fecha de nacimiento debe ser menor o igual a ' . Carbon::parse($this->fecha_evento)->format('d-m-Y'));
 
             $messages["inscripcion_caminata.$j.metodo_pago_id.required"] = __('El campo cuentas es obligatorio.');
-            $messages["inscripcion_caminata.$j.metodo_pago_id.integer"] = __('El campo cuentas debe ser un entero.');
 
-            $messages["inscripcion_caminata.$j.monto.required"] = __('El campo monto es obligatorio.');
-            $messages["inscripcion_caminata.$j.monto.numeric"] = __('El campo monto solo permite numeros.');
+            $messages["inscripcion_caminata.$j.monto_Bs.required"] = __('El campo monto es obligatorio.');
+            $messages["inscripcion_caminata.$j.monto_Bs.numeric"] = __('El campo monto solo permite numeros.');
+            $messages["inscripcion_caminata.$j.monto_$.required"] = __('El campo monto es obligatorio.');
+            $messages["inscripcion_caminata.$j.monto_$.numeric"] = __('El campo monto solo permite numeros.');
+
             $messages["inscripcion_caminata.$j.fecha.required"] = __('El campo fecha de pago es obligatorio.');
             $messages["inscripcion_caminata.$j.fecha.date"] = __('El campo fecha de pago debe tener la sintaxis correcta.');
             $messages["inscripcion_caminata.$j.fecha.before_or_equal"] = __('El campo fecha de pago debe ser menor o igual a ' . Carbon::parse($this->fecha_evento)->format('d-m-Y'));
@@ -777,8 +812,10 @@ class FormularioMixto extends Component
             $messages["inscripcion_caminata.$j.referencia.digits"] = __('El campo referencia solo admite 6 digitos');
 
 
-            $messages["inscripcion_caminata.$j.monto_mixto.required"] = __('El campo monto es obligatorio.');
-            $messages["inscripcion_caminata.$j.monto_mixto.numeric"] = __('El campo monto solo permite numeros.');
+            $messages["inscripcion_caminata.$j.monto_mixto_Bs.required"] = __('El campo monto es obligatorio.');
+            $messages["inscripcion_caminata.$j.monto_mixto_Bs.numeric"] = __('El campo monto solo permite numeros.');
+            $messages["inscripcion_caminata.$j.monto_mixto_$.required"] = __('El campo monto es obligatorio.');
+            $messages["inscripcion_caminata.$j.monto_mixto_$.numeric"] = __('El campo monto solo permite numeros.');
             $messages["inscripcion_caminata.$j.fecha_mixto.required"] = __('El campo fecha de pago es obligatorio.');
             $messages["inscripcion_caminata.$j.fecha_mixto.date"] = __('El campo fecha de pago debe tener la sintaxis correcta.');
             $messages["inscripcion_caminata.$j.fecha_mixto.before_or_equal"] = __('El campo fecha de pago debe ser menor o igual a ' . Carbon::parse($this->fecha_actual)->format('d-m-Y'));
@@ -895,102 +932,6 @@ class FormularioMixto extends Component
 
                 return $this->dispatch('existe', ['valor' => $this->cedula]);
                 //Retornar mensaje de validacion con datos del participante que se repite
-
-            }
-
-            dd('entre');
-            for ($i = 0; $i <= $this->cantidad_caminata - 1; $i++) {
-                $latestId = $this->caminata_participante[$i]->id;
-                $this->inscripcion_caminata[$i]['participante_id'] = $latestId;
-
-                $datos_json = [
-                    'monto' => $this->inscripcion_caminata[$i]['monto'],
-                    'fecha' => $this->inscripcion_caminata[$i]['fecha'],
-                    'referencia' => $this->inscripcion_caminata[$i]['referencia']
-                ];
-
-                if (!is_null($this->inscripcion_caminata[$i]['monto_mixto'])) {
-                    $datos_json += [
-                        'monto_mixto' => $this->inscripcion_caminata[$i]['monto_mixto'],
-                        'fecha_mixto' => $this->inscripcion_caminata[$i]['fecha_mixto'],
-                        'referencia_mixto' => $this->inscripcion_caminata[$i]['referencia_mixto'],
-                        'cuenta_mixto_1' => $this->inscripcion_caminata[$i]['cuenta_mixto_1'],
-                        'cuenta_mixto_2' => $this->inscripcion_caminata[$i]['cuenta_mixto_2']
-                    ];
-                }
-                $datos_json = json_encode($datos_json);
-                $this->inscripcion_caminata[$i]['datos'] = $datos_json;
-
-                if (is_null($this->inscripcion_caminata[$i]['metodo_pago_id'])) {
-                    $this->inscripcion_caminata[$i]['metodo_pago_id'] = 3;
-                }
-
-                $inscripciones = inscripcion::create([
-                    'evento_id' => $this->inscripcion_caminata[$i]['evento_id'],
-                    'participante_id' => $this->inscripcion_caminata[$i]['participante_id'],
-                    'metodo_pago_id' => $this->inscripcion_caminata[$i]['metodo_pago_id'],
-                    'grupo_id' => $this->inscripcion_caminata[$i]['grupo_id'],
-                    'dolar_id' => $this->inscripcion_caminata[$i]['dolar_id'],
-                    'numero_id' => $this->inscripcion_caminata[$i]['numero_id'],
-
-                    'mesa_id' => $this->inscripcion_caminata[$i]['mesa_id'],
-                    'datos' => $this->inscripcion_caminata[$i]['datos'],
-                    'monto_pagado_bs' => $this->inscripcion_caminata[$i]['monto_pagado_bs'],
-                    'ip' => $this->inscripcion_caminata[$i]['ip'],
-                    'nomenclatura' => $this->inscripcion_caminata[$i]['nomenclatura'],
-                    'recorrido_id' => $this->inscripcion_caminata[$i]['recorrido_id'],
-
-                ]);
-                $ultima_inscripcion_id = inscripcion::latest('id')->first()->id;
-                $this->asignar_num_mesa_caminata($ultima_inscripcion_id, $this->participante_caminata[$i]['cedula']);
-            }
-            for ($i = 0; $i <= $this->cantidad_carrera - 1; $i++) {
-
-                $latestId = $this->carrera_participante[$i]->id;
-                $this->inscripcion_carrera[$i]['participante_id'] = $latestId;
-                $ultimoParticipante = participante::find($latestId);
-                $datos_json = [
-                    'monto' => $this->inscripcion_carrera[$i]['monto'],
-                    'fecha' => $this->inscripcion_carrera[$i]['fecha'],
-                    'referencia' => $this->inscripcion_carrera[$i]['referencia']
-                ];
-
-                if (!is_null($this->inscripcion_carrera[$i]['monto_mixto'])) {
-                    $datos_json += [
-                        'monto_mixto' => $this->inscripcion_carrera[$i]['monto_mixto'],
-                        'fecha_mixto' => $this->inscripcion_carrera[$i]['fecha_mixto'],
-                        'referencia_mixto' => $this->inscripcion_carrera[$i]['referencia_mixto'],
-                        'cuenta_mixto_1' => $this->inscripcion_carrera[$i]['cuenta_mixto_1'],
-                        'cuenta_mixto_2' => $this->inscripcion_carrera[$i]['cuenta_mixto_2']
-                    ];
-                }
-                $datos_json = json_encode($datos_json);
-                $this->inscripcion_carrera[$i]['datos'] = $datos_json;
-                $categoria_id = $this->edad($ultimoParticipante->fecha_nacimiento);
-                $this->inscripcion_carrera[$i]['categoria_habilitada_id'] = $categoria_id;
-
-                if (is_null($this->inscripcion_carrera[$i]['metodo_pago_id'])) {
-                    $this->inscripcion_carrera[$i]['metodo_pago_id'] = 3;
-                }
-
-                $inscripciones = inscripcion::create([
-                    'evento_id' => $this->inscripcion_carrera[$i]['evento_id'],
-                    'participante_id' => $this->inscripcion_carrera[$i]['participante_id'],
-                    'metodo_pago_id' => $this->inscripcion_carrera[$i]['metodo_pago_id'],
-                    'grupo_id' => $this->inscripcion_carrera[$i]['grupo_id'],
-                    'dolar_id' => $this->inscripcion_carrera[$i]['dolar_id'],
-                    'numero_id' => $this->inscripcion_carrera[$i]['numero_id'] ?? null,
-                    'categoria_habilitada_id' => $this->inscripcion_carrera[$i]['categoria_habilitada_id'] ?? null,
-                    'mesa_id' => $this->inscripcion_carrera[$i]['mesa_id'] ?? null,
-                    'datos' => $this->inscripcion_carrera[$i]['datos'],
-                    'monto_pagado_bs' => $this->inscripcion_carrera[$i]['monto_pagado_bs'],
-                    'ip' => $this->inscripcion_carrera[$i]['ip'],
-                    'nomenclatura' => $this->inscripcion_carrera[$i]['nomenclatura'],
-                    'recorrido_id' => $this->inscripcion_carrera[$i]['recorrido_id'],
-
-                ]);
-                $ultima_inscripcion_id = inscripcion::latest('id')->first()->id;
-                $this->asignar_num_mesa_carrera($ultima_inscripcion_id, $this->participante_carrera[$i]['cedula']);
             }
         } else {
             for ($i = 0; $i <= $this->cantidad_caminata - 1; $i++) {
@@ -1000,20 +941,34 @@ class FormularioMixto extends Component
                     $latestId = $this->caminata_participante[$i]->id;
                     $this->inscripcion_caminata[$i]['participante_id'] = $latestId;
                     $datos_json = [
-                        'monto' => $this->inscripcion_caminata[$i]['monto'],
                         'fecha' => $this->inscripcion_caminata[$i]['fecha'],
                         'referencia' => $this->inscripcion_caminata[$i]['referencia']
                     ];
-
-
-                    if (!is_null($this->inscripcion_caminata[$i]['monto_mixto'])) {
+                    if (!is_null($this->inscripcion_caminata[$i]['monto_Bs'])) {
                         $datos_json += [
-                            'monto_mixto' => $this->inscripcion_caminata[$i]['monto_mixto'],
+                            'monto_Bs' => $this->inscripcion_caminata[$i]['monto_Bs'],
+                        ];
+                    } else {
+                        $datos_json += [
+                            'monto_$' => $this->inscripcion_caminata[$i]['monto_$'],
+                        ];
+                    }
+                    if (!is_null($this->inscripcion_caminata[$i]['monto_mixto_Bs']) || !is_null($this->inscripcion_caminata[$i]['monto_mixto_$'])) {
+                        $datos_json += [
                             'fecha_mixto' => $this->inscripcion_caminata[$i]['fecha_mixto'],
                             'referencia_mixto' => $this->inscripcion_caminata[$i]['referencia_mixto'],
                             'cuenta_mixto_1' => $this->inscripcion_caminata[$i]['cuenta_mixto_1'],
                             'cuenta_mixto_2' => $this->inscripcion_caminata[$i]['cuenta_mixto_2']
                         ];
+                        if (!is_null($this->inscripcion_caminata[$i]['monto_mixto_Bs'])) {
+                            $datos_json += [
+                                'monto_mixto_Bs' => $this->inscripcion_caminata[$i]['monto_mixto_Bs'],
+                            ];
+                        } else if (!is_null($this->inscripcion_caminata[$i]['monto_mixto_$'])) {
+                            $datos_json += [
+                                'monto_mixto_$' => $this->inscripcion_caminata[$i]['monto_mixto_$'],
+                            ];
+                        }
                     }
                     $datos_json = json_encode($datos_json);
                     $this->inscripcion_caminata[$i]['datos'] = $datos_json;
@@ -1027,6 +982,9 @@ class FormularioMixto extends Component
 
                     $this->inscripcion_caminata[$i]['nomenclatura'] = $this->nomenclatura;
                     $this->inscripcion_caminata[$i]['ip'] = $this->userIp;
+                    $this->inscripcion_caminata[$i]['categoria_habilitada_id'] = 12;
+
+                    $this->inscripcion_caminata[$i]['prenda_id'] = $this->create_prendas_caminata[$i]['prendas'];
 
                     $inscripciones = inscripcion::create([
                         'evento_id' => $this->inscripcion_caminata[$i]['evento_id'],
@@ -1035,16 +993,18 @@ class FormularioMixto extends Component
                         'grupo_id' => $this->inscripcion_caminata[$i]['grupo_id'],
                         'dolar_id' => $this->inscripcion_caminata[$i]['dolar_id'],
                         'numero_id' => $this->inscripcion_caminata[$i]['numero_id'],
+                        'categoria_habilitada_id' => $this->inscripcion_caminata[$i]['categoria_habilitada_id'],
                         'mesa_id' => $this->inscripcion_caminata[$i]['mesa_id'],
                         'datos' => $this->inscripcion_caminata[$i]['datos'],
                         'monto_pagado_bs' => $this->inscripcion_caminata[$i]['monto_pagado_bs'],
                         'ip' => $this->inscripcion_caminata[$i]['ip'],
                         'nomenclatura' => $this->inscripcion_caminata[$i]['nomenclatura'],
                         'recorrido_id' => $this->inscripcion_caminata[$i]['recorrido_id'],
-
+                        'prenda_id' => $this->inscripcion_caminata[$i]['prenda_id'],
                     ]);
                     $ultima_inscripcion_id = inscripcion::latest('id')->first()->id;
                     $this->asignar_num_mesa_caminata($ultima_inscripcion_id, $this->participante_caminata[$i]['cedula']);
+                    $this->asignar_prendas_caminata($this->create_prendas_caminata[$i]['prendas']);
                 } else {
                     $participante = participante::create([
                         'ciudad_id' => $this->participante_caminata[$i]['ciudad_id'],
@@ -1055,25 +1015,42 @@ class FormularioMixto extends Component
                         'correo' => $this->participante_caminata[$i]['correo'],
                         'direccion' => $this->participante_caminata[$i]['direccion'],
                         'fecha_nacimiento' => $this->participante_caminata[$i]['fecha_nacimiento'],
+                        'genero_id' => $this->participante_caminata[$i]['genero_id'],
                     ]);
                     $latestId = participante::latest('id')->first()->id;
                     $this->inscripcion_caminata[$i]['participante_id'] = $latestId;
                     $ultimoParticipante = participante::find($latestId);
                     $datos_json = [
-                        'monto' => $this->inscripcion_caminata[$i]['monto'],
                         'fecha' => $this->inscripcion_caminata[$i]['fecha'],
                         'referencia' => $this->inscripcion_caminata[$i]['referencia']
                     ];
-
-                    if (!is_null($this->inscripcion_caminata[$i]['monto_mixto'])) {
+                    if (!is_null($this->inscripcion_caminata[$i]['monto_Bs'])) {
                         $datos_json += [
-                            'monto_mixto' => $this->inscripcion_caminata[$i]['monto_mixto'],
+                            'monto_Bs' => $this->inscripcion_caminata[$i]['monto_Bs'],
+                        ];
+                    } else {
+                        $datos_json += [
+                            'monto_$' => $this->inscripcion_caminata[$i]['monto_$'],
+                        ];
+                    }
+                    if (!is_null($this->inscripcion_caminata[$i]['monto_mixto_Bs']) || !is_null($this->inscripcion_caminata[$i]['monto_mixto_$'])) {
+                        $datos_json += [
                             'fecha_mixto' => $this->inscripcion_caminata[$i]['fecha_mixto'],
                             'referencia_mixto' => $this->inscripcion_caminata[$i]['referencia_mixto'],
                             'cuenta_mixto_1' => $this->inscripcion_caminata[$i]['cuenta_mixto_1'],
                             'cuenta_mixto_2' => $this->inscripcion_caminata[$i]['cuenta_mixto_2']
                         ];
+                        if (!is_null($this->inscripcion_caminata[$i]['monto_mixto_Bs'])) {
+                            $datos_json += [
+                                'monto_mixto_Bs' => $this->inscripcion_caminata[$i]['monto_mixto_Bs'],
+                            ];
+                        } else if (!is_null($this->inscripcion_caminata[$i]['monto_mixto_$'])) {
+                            $datos_json += [
+                                'monto_mixto_$' => $this->inscripcion_caminata[$i]['monto_mixto_$'],
+                            ];
+                        }
                     }
+
                     $datos_json = json_encode($datos_json);
                     $this->inscripcion_caminata[$i]['datos'] = $datos_json;
 
@@ -1083,9 +1060,10 @@ class FormularioMixto extends Component
                     if (is_null($this->inscripcion_caminata[$i]['recorrido_id'])) {
                         $this->inscripcion_caminata[$i]['recorrido_id'] = 1;
                     }
-
                     $this->inscripcion_caminata[$i]['nomenclatura'] = $this->nomenclatura;
                     $this->inscripcion_caminata[$i]['ip'] = $this->userIp;
+                    $this->inscripcion_caminata[$i]['categoria_habilitada_id'] = 12;
+                    $this->inscripcion_caminata[$i]['prenda_id'] = $this->create_prendas_caminata[$i]['prendas'];
 
                     $inscripciones = inscripcion::create([
                         'evento_id' => $this->inscripcion_caminata[$i]['evento_id'],
@@ -1094,15 +1072,18 @@ class FormularioMixto extends Component
                         'grupo_id' => $this->inscripcion_caminata[$i]['grupo_id'],
                         'dolar_id' => $this->inscripcion_caminata[$i]['dolar_id'],
                         'numero_id' => $this->inscripcion_caminata[$i]['numero_id'],
+                        'categoria_habilitada_id' => $this->inscripcion_caminata[$i]['categoria_habilitada_id'],
                         'mesa_id' => $this->inscripcion_caminata[$i]['mesa_id'],
                         'datos' => $this->inscripcion_caminata[$i]['datos'],
                         'monto_pagado_bs' => $this->inscripcion_caminata[$i]['monto_pagado_bs'],
                         'ip' => $this->inscripcion_caminata[$i]['ip'],
                         'nomenclatura' => $this->inscripcion_caminata[$i]['nomenclatura'],
                         'recorrido_id' => $this->inscripcion_caminata[$i]['recorrido_id'],
+                        'prenda_id' => $this->inscripcion_caminata[$i]['prenda_id'],
                     ]);
                     $ultima_inscripcion_id = inscripcion::latest('id')->first()->id;
                     $this->asignar_num_mesa_caminata($ultima_inscripcion_id, $this->participante_caminata[$i]['cedula']);
+                    $this->asignar_prendas_caminata($this->create_prendas_caminata[$i]['prendas']);
                 }
             }
 
@@ -1114,28 +1095,41 @@ class FormularioMixto extends Component
                     $latestId = $this->carrera_participante[$i]->id;
                     $this->inscripcion_carrera[$i]['participante_id'] = $latestId;
                     $ultimoParticipante = participante::find($latestId);
-
                     $datos_json = [
-                        'monto' => $this->inscripcion_carrera[$i]['monto'],
                         'fecha' => $this->inscripcion_carrera[$i]['fecha'],
                         'referencia' => $this->inscripcion_carrera[$i]['referencia']
-                    ];
 
-                    if (!is_null($this->inscripcion_carrera[$i]['monto_mixto'])) {
+                    ];
+                    if (!is_null($this->inscripcion_carrera[$i]['monto_Bs'])) {
                         $datos_json += [
-                            'monto_mixto' => $this->inscripcion_carrera[$i]['monto_mixto'],
+                            'monto_Bs' => $this->inscripcion_carrera[$i]['monto_Bs'],
+                        ];
+                    } else {
+                        $datos_json += [
+                            'monto_$' => $this->inscripcion_carrera[$i]['monto_$'],
+                        ];
+                    }
+
+                    if (!is_null($this->inscripcion_carrera[$i]['monto_mixto_Bs']) || !is_null($this->inscripcion_carrera[$i]['monto_mixto_$'])) {
+                        $datos_json += [
                             'fecha_mixto' => $this->inscripcion_carrera[$i]['fecha_mixto'],
                             'referencia_mixto' => $this->inscripcion_carrera[$i]['referencia_mixto'],
                             'cuenta_mixto_1' => $this->inscripcion_carrera[$i]['cuenta_mixto_1'],
                             'cuenta_mixto_2' => $this->inscripcion_carrera[$i]['cuenta_mixto_2']
                         ];
+                        if (!is_null($this->inscripcion_carrera[$i]['monto_mixto_Bs'])) {
+                            $datos_json += [
+                                'monto_mixto_Bs' => $this->inscripcion_carrera[$i]['monto_mixto_Bs'],
+                            ];
+                        } else if (!is_null($this->inscripcion_carrera[$i]['monto_mixto_$'])) {
+                            $datos_json += [
+                                'monto_mixto_$' => $this->inscripcion_carrera[$i]['monto_mixto_$'],
+                            ];
+                        }
                     }
                     $datos_json = json_encode($datos_json);
                     $this->inscripcion_carrera[$i]['datos'] = $datos_json;
                     $categoria_id = $this->edad($ultimoParticipante->fecha_nacimiento);
-
-                    $categoria_id = $this->edad($ultimoParticipante->fecha_nacimiento);
-
                     $this->inscripcion_carrera[$i]['categoria_habilitada_id'] = $categoria_id;
 
                     if (is_null($this->inscripcion_carrera[$i]['metodo_pago_id'])) {
@@ -1147,6 +1141,7 @@ class FormularioMixto extends Component
 
                     $this->inscripcion_carrera[$i]['nomenclatura'] = $this->nomenclatura;
                     $this->inscripcion_carrera[$i]['ip'] = $this->userIp;
+                    $this->inscripcion_carrera[$i]['prenda_id'] = $this->create_prendas_carrera[$i]['prendas'];
 
                     $inscripciones = inscripcion::create([
                         'evento_id' => $this->inscripcion_carrera[$i]['evento_id'],
@@ -1162,10 +1157,11 @@ class FormularioMixto extends Component
                         'ip' => $this->inscripcion_carrera[$i]['ip'],
                         'nomenclatura' => $this->inscripcion_carrera[$i]['nomenclatura'],
                         'recorrido_id' => $this->inscripcion_carrera[$i]['recorrido_id'],
-
+                        'prenda_id' => $this->inscripcion_carrera[$i]['prenda_id'],
                     ]);
                     $ultima_inscripcion_id = inscripcion::latest('id')->first()->id;
                     $this->asignar_num_mesa_carrera($ultima_inscripcion_id, $this->participante_carrera[$i]['cedula']);
+                    $this->asignar_prendas_carrera($this->create_prendas_carrera[$i]['prendas']);
                 } else {
 
                     $participante = participante::create([
@@ -1177,27 +1173,48 @@ class FormularioMixto extends Component
                         'correo' => $this->participante_carrera[$i]['correo'],
                         'direccion' => $this->participante_carrera[$i]['direccion'],
                         'fecha_nacimiento' => $this->participante_carrera[$i]['fecha_nacimiento'],
+                        'genero_id' => $this->participante_carrera[$i]['genero_id'],
+
                     ]);
                     $latestId = participante::latest('id')->first()->id;
                     $this->inscripcion_carrera[$i]['participante_id'] = $latestId;
                     $ultimoParticipante = participante::find($latestId);
                     $datos_json = [
-                        'monto' => $this->inscripcion_carrera[$i]['monto'],
                         'fecha' => $this->inscripcion_carrera[$i]['fecha'],
                         'referencia' => $this->inscripcion_carrera[$i]['referencia']
-                    ];
 
-                    if (!is_null($this->inscripcion_carrera[$i]['monto_mixto'])) {
+                    ];
+                    if (!is_null($this->inscripcion_carrera[$i]['monto_Bs'])) {
                         $datos_json += [
-                            'monto_mixto' => $this->inscripcion_carrera[$i]['monto_mixto'],
+                            'monto_Bs' => $this->inscripcion_carrera[$i]['monto_Bs'],
+                        ];
+                    } else {
+                        $datos_json += [
+                            'monto_$' => $this->inscripcion_carrera[$i]['monto_$'],
+                        ];
+                    }
+
+                    if (!is_null($this->inscripcion_carrera[$i]['monto_mixto_Bs']) || !is_null($this->inscripcion_carrera[$i]['monto_mixto_$'])) {
+                        $datos_json += [
                             'fecha_mixto' => $this->inscripcion_carrera[$i]['fecha_mixto'],
                             'referencia_mixto' => $this->inscripcion_carrera[$i]['referencia_mixto'],
                             'cuenta_mixto_1' => $this->inscripcion_carrera[$i]['cuenta_mixto_1'],
                             'cuenta_mixto_2' => $this->inscripcion_carrera[$i]['cuenta_mixto_2']
                         ];
+                        if (!is_null($this->inscripcion_carrera[$i]['monto_mixto_Bs'])) {
+                            $datos_json += [
+                                'monto_mixto_Bs' => $this->inscripcion_carrera[$i]['monto_mixto_Bs'],
+                            ];
+                        } else if (!is_null($this->inscripcion_carrera[$i]['monto_mixto_$'])) {
+                            $datos_json += [
+                                'monto_mixto_$' => $this->inscripcion_carrera[$i]['monto_mixto_$'],
+                            ];
+                        }
                     }
                     $datos_json = json_encode($datos_json);
                     $this->inscripcion_carrera[$i]['datos'] = $datos_json;
+                    $categoria_id = $this->edad($ultimoParticipante->fecha_nacimiento);
+                    $this->inscripcion_carrera[$i]['categoria_habilitada_id'] = $categoria_id;
 
                     if (is_null($this->inscripcion_carrera[$i]['metodo_pago_id'])) {
                         $this->inscripcion_carrera[$i]['metodo_pago_id'] = 3;
@@ -1208,6 +1225,7 @@ class FormularioMixto extends Component
 
                     $this->inscripcion_carrera[$i]['nomenclatura'] = $this->nomenclatura;
                     $this->inscripcion_carrera[$i]['ip'] = $this->userIp;
+                    $this->inscripcion_carrera[$i]['prenda_id'] = $this->create_prendas_carrera[$i]['prendas'];
 
                     $inscripciones = inscripcion::create([
                         'evento_id' => $this->inscripcion_carrera[$i]['evento_id'],
@@ -1215,18 +1233,19 @@ class FormularioMixto extends Component
                         'metodo_pago_id' => $this->inscripcion_carrera[$i]['metodo_pago_id'],
                         'grupo_id' => $this->inscripcion_carrera[$i]['grupo_id'],
                         'dolar_id' => $this->inscripcion_carrera[$i]['dolar_id'],
-                        'numero_id' => $this->inscripcion_carrera[$i]['numero_id'],
-
-                        'mesa_id' => $this->inscripcion_carrera[$i]['mesa_id'],
+                        'numero_id' => $this->inscripcion_carrera[$i]['numero_id'] ?? null,
+                        'categoria_habilitada_id' => $this->inscripcion_carrera[$i]['categoria_habilitada_id'] ?? null,
+                        'mesa_id' => $this->inscripcion_carrera[$i]['mesa_id'] ?? null,
                         'datos' => $this->inscripcion_carrera[$i]['datos'],
                         'monto_pagado_bs' => $this->inscripcion_carrera[$i]['monto_pagado_bs'],
                         'ip' => $this->inscripcion_carrera[$i]['ip'],
                         'nomenclatura' => $this->inscripcion_carrera[$i]['nomenclatura'],
                         'recorrido_id' => $this->inscripcion_carrera[$i]['recorrido_id'],
-
+                        'prenda_id' => $this->inscripcion_carrera[$i]['prenda_id'],
                     ]);
                     $ultima_inscripcion_id = inscripcion::latest('id')->first()->id;
                     $this->asignar_num_mesa_carrera($ultima_inscripcion_id, $this->participante_carrera[$i]['cedula']);
+                    $this->asignar_prendas_carrera($this->create_prendas_carrera[$i]['prendas']);
                 }
             }
         }
@@ -1235,6 +1254,71 @@ class FormularioMixto extends Component
         $this->inscripcion_caminata = [];
         $this->participante_carrera = [];
         $this->inscripcion_carrera = [];
+    }
+
+    public function asignar_prendas_carrera($value)
+    {
+        // Encuentra la prenda solo una vez
+        $prenda = prenda::select('cantidad', 'restadas')->find($value);
+        for ($i = 0; $i <= $this->cantidad_carrera - 1; $i++) {
+            $this->create_prendas_carrera[$i]['prendas'] = $value;
+
+            // Resta de cantidades dependiendo de si 'restadas' es null o no
+            if (is_null($prenda->restadas)) {
+                $resta = $prenda->cantidad - 1;
+                prenda::where('id', $value)->update(['restadas' => $resta]);
+            } else {
+                $resta = $prenda->restadas - 1;
+                prenda::where('id', $value)->update(['restadas' => $resta]);
+            }
+        }
+    }
+    public function asignar_prendas_caminata($value)
+    {
+        // Encuentra la prenda solo una vez
+        $prenda = prenda::select('cantidad', 'restadas')->find($value);
+        for ($i = 0; $i <= $this->cantidad_caminata - 1; $i++) {
+            $this->create_prendas_caminata[$i]['prendas'] = $value;
+
+            // Resta de cantidades dependiendo de si 'restadas' es null o no
+            if (is_null($prenda->restadas)) {
+                $resta = $prenda->cantidad - 1;
+                prenda::where('id', $value)->update(['restadas' => $resta]);
+            } else {
+                $resta = $prenda->restadas - 1;
+                prenda::where('id', $value)->update(['restadas' => $resta]);
+            }
+        }
+    }
+    public function update_prendas_caminata($index, $option)
+    {
+
+        if ($option === '1') {
+
+            $this->create_prendas_caminata[$index]['genero'] = 'Masculino';
+            $this->prendas_caminata = DB::table('prendas')->join('prenda_tallas', 'prendas.prenda_talla_id', '=', 'prenda_tallas.id')->join('prenda_categories', 'prendas.prenda_category_id', '=', 'prenda_categories.id')->select('prendas.*', 'prenda_tallas.talla as prenda_talla', 'prenda_categories.nombre as prenda_categories_nombre')->where('prendas.sexo', 'Masculino')->get();
+        } elseif ($option === '2') {
+            $this->create_prendas_caminata[$index]['genero'] = 'Femenino';
+            $this->prendas_caminata = DB::table('prendas')->join('prenda_tallas', 'prendas.prenda_talla_id', '=', 'prenda_tallas.id')->join('prenda_categories', 'prendas.prenda_category_id', '=', 'prenda_categories.id')->select('prendas.*', 'prenda_tallas.talla as prenda_talla', 'prenda_categories.nombre as prenda_categories_nombre')->where('prendas.sexo', 'Femenino')->get();
+        } elseif ($option === '') {
+            $this->create_prendas_caminata[$index]['genero'] = null;
+            $this->prendas_caminata = null;
+        }
+    }
+    public function update_prendas_carrera($index, $option)
+    {
+
+        if ($option === '1') {
+
+            $this->create_prendas_carrera[$index]['genero'] = 'Masculino';
+            $this->prendas_carrera = DB::table('prendas')->join('prenda_tallas', 'prendas.prenda_talla_id', '=', 'prenda_tallas.id')->join('prenda_categories', 'prendas.prenda_category_id', '=', 'prenda_categories.id')->select('prendas.*', 'prenda_tallas.talla as prenda_talla', 'prenda_categories.nombre as prenda_categories_nombre')->where('prendas.sexo', 'Masculino')->get();
+        } elseif ($option === '2') {
+            $this->create_prendas_carrera[$index]['genero'] = 'Femenino';
+            $this->prendas_carrera = DB::table('prendas')->join('prenda_tallas', 'prendas.prenda_talla_id', '=', 'prenda_tallas.id')->join('prenda_categories', 'prendas.prenda_category_id', '=', 'prenda_categories.id')->select('prendas.*', 'prenda_tallas.talla as prenda_talla', 'prenda_categories.nombre as prenda_categories_nombre')->where('prendas.sexo', 'Femenino')->get();
+        } elseif ($option === '') {
+            $this->create_prendas_carrera[$index]['genero'] = null;
+            $this->prendas_carrera = null;
+        }
     }
     public function render()
     {

@@ -44,7 +44,7 @@
                             <th class="p-4 border-b border-blue-gray-100 bg-blue-gray-50 w-4">
                                 <p
                                     class="block font-sans text-sm antialiased font-normal leading-none text-blue-gray-900 opacity-70">
-                                    Restadas</p>
+                                    Disponibles</p>
                             </th>
 
                             <th class="p-4 border-b border-blue-gray-100 bg-blue-gray-50 w-4">
@@ -80,7 +80,12 @@
                                 <td class="p-4 border-b border-blue-gray-50">
                                     <p
                                         class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-                                        {{ $prenda->restadas }}</p>
+                                        @if ($prenda->restadas == 0)
+                                            {{ $prenda->cantidad }}
+                                        @else
+                                            {{ $prenda->restadas }}
+                                        @endif
+                                    </p>
                                 </td>
                                 <td class="p-4 border-b border-blue-gray-50">
                                     <p

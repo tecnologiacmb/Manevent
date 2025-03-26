@@ -34,8 +34,7 @@ class inscripcion extends Model
         'ip',
         'nomenclatura',
         'recorrido_id',
-
-
+        'prenda_id',
     ];
 
     public function evento(){
@@ -68,5 +67,7 @@ class inscripcion extends Model
         return $this->hasMany(mesa::class);
     }
 
-
+    public function prendas(){
+        return $this->belongsTo(prenda::class);
+    }
 }

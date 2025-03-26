@@ -49,19 +49,24 @@ class AdminGrupo extends Component
         }
         $this->post_create['dolar_id'] = $this->dolars ? $this->dolars->id : null;
         $this->recorridos = recorrido::all();
-      }
+    }
     public function crear()
     {
         $this->open = true;
     }
     public function calculo($num)
     {
-        $total = 0;
-        $ultimoDolar = $this->dolars;
+        if (isset($this->dolars)) {
+            $total = 0;
+            $ultimoDolar = $this->dolars;
+            $total = $num * $ultimoDolar->precio;
 
-        $total = $num * $ultimoDolar->precio;
+            return $total;
+        } else {
+            $total = 0;
 
-        return $total;
+            return $total;
+        }
     }
     public function seve()
     {

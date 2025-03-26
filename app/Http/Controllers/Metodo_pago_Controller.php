@@ -9,7 +9,7 @@ class Metodo_pago_Controller extends Controller
 {
     public function index(Request $request)
     {
-        $this->authorize('ver-admin', metodo_pago::class);
+        $this->authorize('super-admin', metodo_pago::class);
 
         try {
             return view('metodo-pago',);

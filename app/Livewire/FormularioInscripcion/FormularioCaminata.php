@@ -17,17 +17,14 @@ use App\Models\categoriaHabilitada;
 use App\Models\mesa;
 use App\Models\recorrido;
 use App\Models\prenda;
-
-
+use App\Models\genero;
 use App\Enum\Mesas_enum;
-
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class FormularioCaminata extends Component
 {
     public $evento = null;
     public $prendas;
-
     public $inscripcion_validate_global = [];
     public $metodo_pago;
     public $grupo;
@@ -37,34 +34,21 @@ class FormularioCaminata extends Component
     public $ciudad;
     public $participantes_ids = [];
     public $banco;
-    public $tipo_pago;
     public $cantidad;
-    public $opcion2 = null;
-    public $opcion0 = null;
-    public $opcion = null;
-    public $opcion3 = null;
-    public $opcion4 = null;
-    public $groupId = null;
-
     public $ultimoParticipante;
     public $categoria_habilitada;
     public $inscripcion;
     public $numeros;
     public $mesa;
     public $fecha_evento;
-    public $metodo = null;
-    public $metodos = [];
-    public $ciudades = [];
-    public $unico = null;
-    public $mixto = null;
-    public $bolivar = null;
-    public $dolar = null;
-    public $bolivar_mixto = null;
-    public $dolar_mixto = null;
-    public $unico_valor = null;
-    public $mixto_valor = null;
     public $fecha_actual = null;
-    public $selectedEstado = null;
+    public $cedula = null;
+    public $nombre = null;
+    public $userIp;
+    public $recorrido;
+    public $nomenclatura;
+    public $nuevoNumeroOrden = null;
+    public $generos = null;
     public $datos_json = [];
     public $create_participante = [
         'ciudad_id' => null,
@@ -77,10 +61,11 @@ class FormularioCaminata extends Component
         'correo' => "",
         'direccion' => "",
         'fecha_nacimiento' => "",
+        'genero_id' => null,
+
     ];
     public $participante = [];
-    public $create_inscripcion =
-    [
+    public $create_inscripcion = [
         'evento_id' => null,
         'cedula' => "",
         'participante_id' => null,
@@ -111,23 +96,13 @@ class FormularioCaminata extends Component
         'cuenta_mixto_2' => null,
         'numero_orden' => null,
         'recorrido_id' => null,
+        'prenda_id' => null,
+
     ];
-    public $cedula = null;
-    public $nombre = null;
-
-    public $userIp;
-    public $recorrido;
-
-    public $nomenclatura;
-    public $nuevoNumeroOrden = null;
     public $create_prendas = [
         'prendas' => null,
         'genero' => null
     ];
-
-
-
-
 
     public function mount($id = null)
     {
@@ -139,13 +114,12 @@ class FormularioCaminata extends Component
 
             $this->subtractYears();
             $this->categoria_habilitada = categoriaHabilitada::all();
-
+            $this->generos = genero::all();
             $this->grupo = grupo::find($id);
             $this->dolars = dolar::select('id', 'precio')->whereDate('created_at', Carbon::today())->latest()->first();
             if (!$this->dolars) {
                 $this->dolars = dolar::latest()->first();
             }
-
             $this->numeros = numero::all();
             $this->estados = estado::all();
             $this->cantidad = $this->grupo->cantidad;
@@ -161,9 +135,10 @@ class FormularioCaminata extends Component
                     'correo' => "",
                     'direccion' => "",
                     'fecha_nacimiento' => "",
+                    'genero_id' => null,
+
                 ];
                 $this->participante[$i] = [];
-
                 $this->create_inscripcion[$i] = [
                     'evento_id' => $this->evento->id,
                     'cedula' => "",
@@ -195,8 +170,8 @@ class FormularioCaminata extends Component
                     'cuenta_mixto_2' => null,
                     'numero_orden' => null,
                     'recorrido_id' => null,
+                    'prenda_id' => null,
                 ];
-
                 $this->create_prendas[$i] = [
                     'prendas' => null,
                     'genero' => null
@@ -313,12 +288,17 @@ class FormularioCaminata extends Component
     }
     public function calculo($num)
     {
-        $total = 0;
-        $ultimoDolar = $this->dolars->latest()->first();
+        if (isset($this->dolars)) {
+            $total = 0;
+            $ultimoDolar = $this->dolars->latest()->first();
+            $total = $num * $ultimoDolar->precio;
 
-        $total = $num * $ultimoDolar->precio;
+            return $total;
+        } else {
+            $total = 0;
 
-        return $total;
+            return $total;
+        }
     }
 
     public function asignar_num_mesa($inscripcion_id, $cedula)
@@ -561,6 +541,7 @@ class FormularioCaminata extends Component
                 $this->create_inscripcion[$i]['nomenclatura'] = $this->nomenclatura;
                 $this->create_inscripcion[$i]['ip'] = $this->userIp;
                 $this->create_inscripcion[$i]['categoria_habilitada_id'] = 12;
+                $this->create_inscripcion[$i]['prenda_id'] = $this->create_prendas[$i]['prendas'];
 
                 $inscripciones = inscripcion::create([
                     'evento_id' => $this->create_inscripcion[$i]['evento_id'],
@@ -576,6 +557,7 @@ class FormularioCaminata extends Component
                     'ip' => $this->create_inscripcion[$i]['ip'],
                     'nomenclatura' => $this->create_inscripcion[$i]['nomenclatura'],
                     'recorrido_id' => $this->create_inscripcion[$i]['recorrido_id'],
+                    'prenda_id' => $this->create_inscripcion[$i]['prenda_id'],
 
                 ]);
                 $ultima_inscripcion_id = inscripcion::latest('id')->first()->id;
@@ -592,6 +574,8 @@ class FormularioCaminata extends Component
                     'correo' => $this->create_participante[$i]['correo'],
                     'direccion' => $this->create_participante[$i]['direccion'],
                     'fecha_nacimiento' => $this->create_participante[$i]['fecha_nacimiento'],
+                    'genero_id' => $this->create_participante[$i]['genero_id'],
+
                 ]);
                 $latestId = participante::latest('id')->first()->id;
                 $this->create_inscripcion[$i]['participante_id'] = $latestId;
@@ -640,7 +624,7 @@ class FormularioCaminata extends Component
                 $this->create_inscripcion[$i]['nomenclatura'] = $this->nomenclatura;
                 $this->create_inscripcion[$i]['ip'] = $this->userIp;
                 $this->create_inscripcion[$i]['categoria_habilitada_id'] = 12;
-
+                $this->create_inscripcion[$i]['prenda_id'] = $this->create_prendas[$i]['prendas'];
                 $inscripciones = inscripcion::create([
                     'evento_id' => $this->create_inscripcion[$i]['evento_id'],
                     'participante_id' => $this->create_inscripcion[$i]['participante_id'],
@@ -655,7 +639,7 @@ class FormularioCaminata extends Component
                     'ip' => $this->create_inscripcion[$i]['ip'],
                     'nomenclatura' => $this->create_inscripcion[$i]['nomenclatura'],
                     'recorrido_id' => $this->create_inscripcion[$i]['recorrido_id'],
-
+                    'prenda_id' => $this->create_inscripcion[$i]['prenda_id'],
                 ]);
 
                 $ultima_inscripcion_id = inscripcion::latest('id')->first()->id;

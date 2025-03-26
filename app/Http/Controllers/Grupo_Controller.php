@@ -9,7 +9,7 @@ class Grupo_Controller extends Controller
 {
     public function index(Request $request)
     {
-        $this->authorize('ver-admin', grupo::class);
+        $this->authorize('super-admin', grupo::class);
 
         try {
             return view('grupo',);

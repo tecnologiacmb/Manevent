@@ -26,6 +26,8 @@ class categoria_habilitada_seeder extends Seeder
             ['nombre' => "Master E", 'edad_min' => 60, 'edad_max' => 64],
             ['nombre' => "Master F", 'edad_min' => 65, 'edad_max' => 69],
             ['nombre' => "Master G", 'edad_min' => 70, 'edad_max' => 90],
+            ['nombre' => "Sin categoria", 'edad_min' => 0, 'edad_max' => 0],
+
 
 
         ];

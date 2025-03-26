@@ -18,6 +18,7 @@ use App\Models\mesa;
 use App\Models\tipo_pago;
 use App\Models\banco;
 use App\Models\prenda;
+use App\Models\genero;
 
 
 
@@ -38,15 +39,12 @@ class FormularioCarrera extends Component
     public $estados;
     public $ciudad;
     public $participantes_ids = [];
-    public $banco;
+
     public $tipo_pago;
     public $cantidad;
-    public $opcion2 = null;
-    public $opcion0 = null;
-    public $opcion = null;
-    public $opcion3 = null;
-    public $opcion4 = null;
+
     public $groupId = null;
+    public $generos;
 
     public $ultimoParticipante;
     public $categoria_habilitada;
@@ -54,17 +52,6 @@ class FormularioCarrera extends Component
     public $numeros;
     public $mesa;
     public $fecha_evento;
-    public $metodo = null;
-    public $metodos = [];
-    public $ciudades = [];
-    public $unico = null;
-    public $mixto = null;
-    public $bolivar = null;
-    public $dolar = null;
-    public $bolivar_mixto = null;
-    public $dolar_mixto = null;
-    public $unico_valor = null;
-    public $mixto_valor = null;
     public $fecha_actual = null;
     public $selectedEstado = null;
     public $datos_json = [];
@@ -79,6 +66,7 @@ class FormularioCarrera extends Component
         'correo' => "",
         'direccion' => "",
         'fecha_nacimiento' => "",
+        'genero_id' => null,
     ];
     public $participante = [];
     public $create_inscripcion = [
@@ -114,7 +102,7 @@ class FormularioCarrera extends Component
         'cuenta_mixto_1' => null,
         'cuenta_mixto_2' => null,
         'recorrido_id' => null,
-
+        'prenda_id' => null,
 
     ];
     public $create_prendas = [
@@ -122,21 +110,17 @@ class FormularioCarrera extends Component
         'genero' => null
     ];
     public $prendas;
-
     public $cedula = null;
     public $nomenclatura;
     public $nuevoNumeroOrden = null;
     public $userIp;
-
-    public $bancos;
-
 
     public function mount($id = null)
     {
         if (!is_null($id)) {
 
             $this->userIp = request()->ip();
-
+            $this->generos = genero::all();
             $this->fecha_actual = Carbon::now()->format('Y-m-d');
             $this->evento = evento::select('id', 'nombre', 'fecha_evento')->where('estado', true)->orderBy('id', 'desc')->first();
             $this->subtractYears();
@@ -167,6 +151,7 @@ class FormularioCarrera extends Component
                     'correo' => "",
                     'direccion' => "",
                     'fecha_nacimiento' => "",
+                    'genero_id' => null,
                 ];
 
                 $this->participante[$i] = [];
@@ -204,8 +189,7 @@ class FormularioCarrera extends Component
                     'cuenta_mixto_1' => null,
                     'cuenta_mixto_2' => null,
                     'recorrido_id' => null,
-
-
+                    'prenda_id' => null,
                 ];
                 $this->create_prendas[$i] = [
                     'prendas' => null,
@@ -639,9 +623,9 @@ class FormularioCarrera extends Component
                 if (is_null($this->create_inscripcion[$i]['recorrido_id'])) {
                     $this->create_inscripcion[$i]['recorrido_id'] = $this->grupo->recorrido_id;
                 }
-
                 $this->create_inscripcion[$i]['nomenclatura'] = $this->nomenclatura;
                 $this->create_inscripcion[$i]['ip'] = $this->userIp;
+                $this->create_inscripcion[$i]['prenda_id'] = $this->create_prendas[$i]['prendas'];
 
                 $inscripciones = inscripcion::create([
                     'evento_id' => $this->create_inscripcion[$i]['evento_id'],
@@ -657,10 +641,12 @@ class FormularioCarrera extends Component
                     'ip' => $this->create_inscripcion[$i]['ip'],
                     'nomenclatura' => $this->create_inscripcion[$i]['nomenclatura'],
                     'recorrido_id' => $this->create_inscripcion[$i]['recorrido_id'],
-
+                    'prenda_id' => $this->create_inscripcion[$i]['prenda_id'],
                 ]);
+
                 $ultima_inscripcion_id = inscripcion::latest('id')->first()->id;
                 $this->asignar_num_mesa($ultima_inscripcion_id, $this->create_participante[$i]['cedula']);
+                $this->asignar_prendas($this->create_prendas[$i]['prendas']);
             } else {
 
                 $participante = participante::create([
@@ -672,6 +658,7 @@ class FormularioCarrera extends Component
                     'correo' => $this->create_participante[$i]['correo'],
                     'direccion' => $this->create_participante[$i]['direccion'],
                     'fecha_nacimiento' => $this->create_participante[$i]['fecha_nacimiento'],
+                    'genero_id' => $this->create_participante[$i]['genero_id'],
                 ]);
                 $latestId = participante::latest('id')->first()->id;
                 $this->create_inscripcion[$i]['participante_id'] = $latestId;
@@ -722,7 +709,7 @@ class FormularioCarrera extends Component
 
                 $this->create_inscripcion[$i]['nomenclatura'] = $this->nomenclatura;
                 $this->create_inscripcion[$i]['ip'] = $this->userIp;
-
+                $this->create_inscripcion[$i]['prenda_id'] = $this->create_prendas[$i]['prendas'];
                 $inscripciones = inscripcion::create([
                     'evento_id' => $this->create_inscripcion[$i]['evento_id'],
                     'participante_id' => $this->create_inscripcion[$i]['participante_id'],
@@ -737,10 +724,12 @@ class FormularioCarrera extends Component
                     'ip' => $this->create_inscripcion[$i]['ip'],
                     'nomenclatura' => $this->create_inscripcion[$i]['nomenclatura'],
                     'recorrido_id' => $this->create_inscripcion[$i]['recorrido_id'],
+                    'prenda_id' => $this->create_inscripcion[$i]['prenda_id'],
 
                 ]);
                 $ultima_inscripcion_id = inscripcion::latest('id')->first()->id;
                 $this->asignar_num_mesa($ultima_inscripcion_id, $this->create_participante[$i]['cedula']);
+                $this->asignar_prendas($this->create_prendas[$i]['prendas']);
             }
         }
         $this->dispatch('alert');
@@ -750,7 +739,7 @@ class FormularioCarrera extends Component
     public function asignar_prendas($value)
     {
         // Encuentra la prenda solo una vez
-        $prenda =prenda::select('cantidad', 'restadas')->find($value);
+        $prenda = prenda::select('cantidad', 'restadas')->find($value);
         for ($i = 0; $i < $this->grupo->cantidad; $i++) {
             $this->create_prendas[$i]['prendas'] = $value;
 
@@ -774,10 +763,9 @@ class FormularioCarrera extends Component
         } elseif ($option === '2') {
             $this->create_prendas[$index]['genero'] = 'Femenino';
             $this->prendas = DB::table('prendas')->join('prenda_tallas', 'prendas.prenda_talla_id', '=', 'prenda_tallas.id')->join('prenda_categories', 'prendas.prenda_category_id', '=', 'prenda_categories.id')->select('prendas.*', 'prenda_tallas.talla as prenda_talla', 'prenda_categories.nombre as prenda_categories_nombre')->where('prendas.sexo', 'Femenino')->get();
-
         } elseif ($option === '') {
             $this->create_prendas[$index]['genero'] = null;
-            $this->prendas= null;
+            $this->prendas = null;
         }
     }
     public function render()
@@ -785,7 +773,7 @@ class FormularioCarrera extends Component
         $grupos = grupo::where('nombre', 'NOT LIKE', '%sin franela%')->get();
 
         return view('livewire.formulario-inscripcion.formulario-carrera', [
-            'grupos' => $grupos]);
+            'grupos' => $grupos
+        ]);
     }
-
 }

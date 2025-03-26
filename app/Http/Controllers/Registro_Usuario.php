@@ -2,19 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\categoriaHabilitada;
+use App\Models\User;
 use Illuminate\Http\Request;
 
-class Categoria_Controller extends Controller
+class Registro_Usuario extends Controller
 {
+
     public function index(Request $request)
     {
-        $this->authorize('super-admin', categoriaHabilitada::class);
+        $this->authorize('super-admin', User::class);
 
         try {
-            return view('categoria',);
+            return view('registro_usuario',);
         } catch (\Throwable $th) {
             return response()->json(['message' => $th->getMessage()], 500);
         }
     }
+
 }

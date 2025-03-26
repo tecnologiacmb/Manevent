@@ -66,12 +66,12 @@
         <div
             class="group w-full rounded-lg bg-slate-300 transition relative duration-300 cursor-pointer hover:translate-y-[3px] hover:shadow-[0_-8px_0px_0px_#000000]">
             <p class="py-2 text-black text-xl pl-8">Hombres</p>
-            <p class="mx-4 text-black text-2xl pl-6 group-hover:text-blue-900">{{ $ParticipanteEvento }}</p>
+            <p class="mx-4 text-black text-2xl pl-6 group-hover:text-blue-900">{{ $ParticipanteHombre }}</p>
 
             <div class="mt-4 mx-4 bg-gray-200 rounded-full h-4 relative">
-                <div class="bg-blue-500 rounded-full h-4" style="width: {{ $porcentaje }}%;"></div>
+                <div class="bg-blue-500 rounded-full h-4" style="width: {{ $PorcentajeHombre }}%;"></div>
                 <p class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-sm text-gray-700">
-                    {{ $porcentaje }}%</p>
+                    {{ $PorcentajeHombre }}%</p>
             </div>
 
             <img src="{{ asset('storage/image/hombre.png') }}" alt="Imagen de participante"
@@ -81,13 +81,13 @@
         <div
         class="group w-full rounded-lg bg-slate-300 transition relative duration-300 cursor-pointer hover:translate-y-[3px] hover:shadow-[0_-8px_0px_0px_#000000]">
         <p class="py-2 text-black text-xl pl-8">Mujeres</p>
-        <p class="mx-4 text-black text-2xl pl-6 group-hover:text-blue-900">{{ $ParticipanteEvento }}</p>
+        <p class="mx-4 text-black text-2xl pl-6 group-hover:text-blue-900">{{ $ParticipanteMujer }}</p>
 
         <div class="mt-4 mx-4 bg-gray-200 rounded-full h-4 relative">
-            <div class="bg-blue-500 rounded-full h-4" style="width: {{ $porcentaje }}%;"></div>
+            <div class="bg-blue-500 rounded-full h-4" style="width: {{ $PorcentajeMujer }}%;"></div>
             <p
                 class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-sm text-gray-700">
-                {{ $porcentaje }}%</p>
+                {{ $PorcentajeMujer }}%</p>
         </div>
 
         <img src="{{ asset('storage/image/mujer.png') }}" alt="Imagen de participante"
@@ -133,7 +133,7 @@
         <div
             class="group w-full rounded-lg bg-slate-300  transition relative duration-300 cursor-pointer hover:translate-y-[3px] hover:shadow-[0_-8px_0px_0px_#000000]">
             <p class="py-2 text-black text-xl pl-8">Franelas</p>
-            <p class="mx-4 text-black text-xl pl-4 group-hover:text-blue-800">Talla: Xl</p>
+            <p class="mx-4 text-black text-xl pl-4 group-hover:text-blue-800">Talla: XL</p>
             <p class="mx-4 text-black text-sm pl-4 group-hover:text-red-800">Disponibles: {{ $Franelas_XL }}
             </p>
 

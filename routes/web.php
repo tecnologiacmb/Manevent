@@ -8,6 +8,7 @@ use App\Http\Controllers\Categoria_Controller;
 use App\Http\Controllers\Grupo_Controller;
 use App\Http\Controllers\Inscrippcion_Controller;
 use App\Http\Controllers\Metodo_pago_Controller;
+use App\Http\Controllers\Registro_Usuario;
 use App\Http\Controllers\Usuarios_Controller;
 use Illuminate\Support\Facades\Route;
 
@@ -41,6 +42,11 @@ Route::middleware([
     Route::controller(Banco_Controller::class)->group(function () {
         Route::group(['prefix' => 'banco',], function () {
             Route::get('',  "index")->name('banco');
+        });
+    });
+    Route::controller(Registro_Usuario::class)->group(function () {
+        Route::group(['prefix' => 'registro_usuario',], function () {
+            Route::get('',  "index")->name('registro_usuario');
         });
     });
     Route::controller(Usuarios_Controller::class)->group(function () {

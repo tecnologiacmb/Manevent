@@ -9,7 +9,7 @@ class Usuarios_Controller extends Controller
 {
     public function index(Request $request)
     {
-        $this->authorize('ver-usuarios', participante::class);
+        $this->authorize('ver-usuario', participante::class);
 
         try {
             return view('vista_usuarios',);

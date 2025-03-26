@@ -11,13 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('categoria_habilitadas', function (Blueprint $table) {
+        Schema::create('generos', function (Blueprint $table) {
             $table->id();
-            $table->string("nombre", 25);
-            $table->integer("edad_min")->nullable();
-            $table->integer("edad_max")->nullable();
+            $table->string('genero');
+            $table->boolean('estado');
             $table->timestamps();
             $table->softDeletes();
+
         });
     }
 
@@ -26,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('categoria_habilitadas');
+        Schema::dropIfExists('generos');
     }
 };

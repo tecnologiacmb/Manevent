@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
     {
         $this->call(estados_seeder::class);
         $this->call(ciudades_seeder::class);
+        $this->call(genero_seeder::class);
         $this->call(numero_seeder::class);
         $this->call(tipo_pago_seeder::class);
         $this->call(recorrido_seeder::class);

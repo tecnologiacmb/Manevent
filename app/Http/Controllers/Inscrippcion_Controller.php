@@ -9,7 +9,7 @@ class Inscrippcion_Controller extends Controller
 {
     public function index(Request $request)
     {
-        $this->authorize('ver-admin', inscripcion::class);
+        $this->authorize('super-admin', inscripcion::class);
 
         try {
             return view('incripcion',);

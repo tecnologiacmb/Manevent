@@ -30,7 +30,6 @@
         @for ($i = 0; $i <= $cantidad - 1; $i++)
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 bg-white rounded-lg p-4 shadow">
                 <div class="grid grid-cols-2 gap-4">
-
                     <div class="mb-4">
                         <x-label for="">Cedula </x-label>
                         <x-input class="w-full" wire:model.change="create_participante.{{ $i }}.cedula"
@@ -39,7 +38,6 @@
                             <span class="error text-red-500">{{ $message }}</span>
                         @enderror
                     </div>
-
                     <div class="mb-4">
                         <x-label for="">Nombre</x-label>
                         <x-input class="w-full" wire:model="create_participante.{{ $i }}.nombre" />
@@ -47,7 +45,6 @@
                             <span class="error text-red-500">{{ $message }}</span>
                         @enderror
                     </div>
-
                     <div class="mb-4">
                         <x-label for="">Apellido</x-label>
                         <x-input class="w-full" wire:model="create_participante.{{ $i }}.apellido" />
@@ -55,7 +52,6 @@
                             <span class="error text-red-500">{{ $message }}</span>
                         @enderror
                     </div>
-
                     <div class="mb-4">
                         <x-label for="">Telefono</x-label>
                         <x-input class="w-full" wire:model="create_participante.{{ $i }}.telefono" />
@@ -109,7 +105,6 @@
                             <span class="error text-red-500">{{ $message }}</span>
                         @enderror
                     </div>
-
                     <div class="mb-4">
                         <x-label for="">Direccion</x-label>
                         <x-input class="w-full" wire:model="create_participante.{{ $i }}.direccion" />
@@ -119,42 +114,67 @@
                     </div>
                     <div class="mb-4">
                         <x-label for="">Metodo realizado </x-label>
-                        <x-select class="w-full" wire:click="update_radio({{ $i }},$event.target.value)">
+                        <x-select class="w-full" wire:change="update_radio({{ $i }},$event.target.value)">
                             <option value="">Seleccione un pago</option>
                             <option value="1">Unico</option>
                             <option value="2">Mixto</option>
                         </x-select>
                     </div>
-
                 </div>
-                @if (!str_contains($grupo->nombre, 'sin franela'))
-    <div class="grid grid-cols-2 gap-4">
-        <div>
-            <x-label for="">Prendas</x-label>
-            <x-select class="w-full" wire:change="update_prendas({{ $i }},$event.target.value)">
-                <option value="">Selecciona el Genero</option>
-                <option value="1">Masculino</option>
-                <option value="2">Femenino</option>
-            </x-select>
-        </div>
+                <div class="grid grid-cols-3 gap-4">
+                    <div>
+                        <x-label for="">Genero</x-label>
+                        <x-select class="w-full" wire:model="create_participante.{{ $i }}.genero_id">
+                            <option value="">Seleccionar Genero</option>
+                            @foreach ($generos as $genero)
+                                <option value="{{ $genero->id }}">{{ $genero->genero }}</option>
+                            @endforeach
 
-        @if ($this->create_prendas[$i]['genero'] == 'Masculino')
-            <div>
-                <x-label for="">Talla</x-label>
-                <x-select class="w-full" wire:model="create_prendas.{{ $i }}.prendas">
-                    <option value="">Seleccione una talla</option>
-                    @foreach ($prendas as $prenda)
-                        <option value="{{ $prenda->id }}"
-                            {{ $prenda->sexo == $this->create_prendas[$i]['genero'] ? 'selected' : '' }}>
-                            {{ $prenda->prenda_categories_nombre }} Talla
-                            {{ $prenda->prenda_talla }}
-                        </option>
-                    @endforeach
-                </x-select>
-            </div>
-        @endif
-    </div>
-@endif
+                        </x-select>
+                    </div>
+                    @if (!str_contains($grupo->nombre, 'sin franela'))
+                        <div>
+                            <x-label for="">Prendas</x-label>
+                            <x-select class="w-full"
+                                wire:change="update_prendas({{ $i }},$event.target.value)">
+                                <option value="">Seleccionar prenda</option>
+                                <option value="1">Masculino</option>
+                                <option value="2">Femenino</option>
+                            </x-select>
+                        </div>
+
+                        @if ($this->create_prendas[$i]['genero'] == 'Masculino')
+                            <div>
+                                <x-label for="">Talla</x-label>
+                                <x-select class="w-full" wire:model="create_prendas.{{ $i }}.prendas">
+                                    <option value="">Seleccione una talla</option>
+                                    @foreach ($prendas as $prenda)
+                                        <option value="{{ $prenda->id }}"
+                                            {{ $prenda->sexo == $this->create_prendas[$i]['genero'] ? 'selected' : '' }}>
+                                            {{ $prenda->prenda_categories_nombre }} Talla
+                                            {{ $prenda->prenda_talla }}
+                                        </option>
+                                    @endforeach
+                                </x-select>
+                            </div>
+                            @elseif ($this->create_prendas[$i]['genero'] == 'Femenino')
+                            <div>
+                                <x-label for="">Talla</x-label>
+                                <x-select class="w-full" wire:model="create_prendas.{{ $i }}.prendas">
+                                    <option value="">Seleccione una talla</option>
+                                    @foreach ($prendas as $prenda)
+                                        <option value="{{ $prenda->id }}"
+                                            {{ $prenda->sexo == $this->create_prendas[$i]['genero'] ? 'selected' : '' }}>
+                                            {{ $prenda->prenda_categories_nombre }} Talla
+                                            {{ $prenda->prenda_talla }}
+                                        </option>
+                                    @endforeach
+                                </x-select>
+                            </div>
+                        @endif
+                    @endif
+                </div>
+
                 {{-- cuando el pago es unico --}}
                 @if (isset($this->create_inscripcion[$i]) && $this->create_inscripcion[$i]['unico'] == '1')
                     <div>
@@ -270,7 +290,8 @@
                                     wire:model="create_inscripcion.{{ $i }}.cuenta_mixto_1">
                                     <option value="">Seleccione la cuenta de pago</option>
                                     @foreach ($metodo_pago as $metodo_pagos)
-                                        <option value=" {{ $metodo_pagos->tipo_pago_nombre }}->{{ $metodo_pagos->banco_nombre }}">
+                                        <option
+                                            value=" {{ $metodo_pagos->tipo_pago_nombre }}->{{ $metodo_pagos->banco_nombre }}">
                                             {{ $metodo_pagos->tipo_pago_nombre }}->{{ $metodo_pagos->banco_nombre }}
                                         </option>
                                     @endforeach
@@ -362,7 +383,8 @@
                                 wire:model="create_inscripcion.{{ $i }}.cuenta_mixto_2">
                                 <option value="">Seleccione la cuenta de pago</option>
                                 @foreach ($metodo_pago as $metodo_pagos)
-                                    <option value=" {{ $metodo_pagos->tipo_pago_nombre }}->{{ $metodo_pagos->banco_nombre }}">
+                                    <option
+                                        value=" {{ $metodo_pagos->tipo_pago_nombre }}->{{ $metodo_pagos->banco_nombre }}">
                                         {{ $metodo_pagos->tipo_pago_nombre }}->{{ $metodo_pagos->banco_nombre }}
                                     </option>
                                 @endforeach
@@ -434,7 +456,7 @@
                         @endif
                     </div>
                     {{-- si pago en $ --}}
-                    @endif
+                @endif
             </div>
 
 
