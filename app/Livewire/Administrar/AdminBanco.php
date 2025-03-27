@@ -11,8 +11,6 @@ use Livewire\WithPagination;
 class AdminBanco extends Component
 {
     use WithPagination;
-
-
     public $nameBanco, $post_edit_id;
     public $open = false;
     public $open_edit = false;

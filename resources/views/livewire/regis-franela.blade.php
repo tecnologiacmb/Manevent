@@ -50,7 +50,7 @@
                             <th class="p-4 border-b border-blue-gray-100 bg-blue-gray-50 w-4">
                                 <p
                                     class="block font-sans text-sm antialiased font-normal leading-none text-blue-gray-900 opacity-70">
-                                    Sexo</p>
+                                    Genero</p>
                             </th>
                             <th class="p-4 border-b border-blue-gray-100 bg-blue-gray-50 w-1/5">
                                 <p

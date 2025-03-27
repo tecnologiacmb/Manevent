@@ -65,25 +65,25 @@
             </thead>
 
             <tbody>
-                @foreach ($inscripcions as $inscripcion)
+                @foreach ($inscripciones as $inscripcion)
                     <tr>
                         <td class="p-4 border-b border-blue-gray-50">
                             <p
                                 class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-                                {{$inscripcion->nomenclatura}}
+                                {{ $inscripcion->nomenclatura }}
                             </p>
                         </td>
                         <td class="p-4 border-b border-blue-gray-50">
                             <p
                                 class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-                                {{$inscripcion->cedula}}
+                                {{ $inscripcion->cedula }}
 
                             </p>
                         </td>
                         <td class="p-4 border-b border-blue-gray-50">
                             <p
                                 class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-                                {{$inscripcion->nombre_recorrido}}
+                                {{ $inscripcion->nombre_recorrido }}
 
                             </p>
                         </td>
@@ -91,36 +91,35 @@
                         <td class="p-4 border-b border-blue-gray-50">
                             <p
                                 class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-                                {{$inscripcion->mesa_nombre}}
+                                {{ $inscripcion->mesa_nombre }}
                             </p>
                         </td>
                         <td class="p-4 border-b border-blue-gray-50">
                             <p
                                 class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-                                {{$inscripcion->ip}}
+                                {{ $inscripcion->ip }}
 
                             </p>
                         </td>
                         <td class="p-4 border-b border-blue-gray-50">
                             <p
                                 class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-                                {{$inscripcion->precio}}
+                                {{ $inscripcion->precio }}
 
                             </p>
                         </td>
                         <td class="p-4 border-b border-blue-gray-50">
                             <p
                                 class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-                                {{$inscripcion->created_at}}
+                                {{ $inscripcion->created_at }}
 
                             </p>
                         </td>
                         <td class="p-4 border-b border-blue-gray-50">
-                            <x-button class="bg-blue-500"><a
-                                href="incripcion/vista_inscripcion/{{ $inscripcion->id }}">
-                                <i class="bi bi-eye-fill"></i>
-                            </a>
-                        </x-button>
+                            <x-button class="bg-blue-500"><a href="incripcion/vista_inscripcion/{{ $inscripcion->id }}">
+                                    <i class="bi bi-eye-fill"></i>
+                                </a>
+                            </x-button>
 
                         </td>
                         {{--   <td class="p-4 border-b border-blue-gray-50">
@@ -137,6 +136,9 @@
                 @endforeach
             </tbody>
         </table>
+        <div>
+            {{ $inscripciones->links() }}
+        </div>
     </div>
 
 

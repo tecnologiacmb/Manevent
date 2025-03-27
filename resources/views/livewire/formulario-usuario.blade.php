@@ -12,7 +12,7 @@
     </div>
     <form wire:submit="update">
         <div class="bg-white shadow-md rounded-xl p-6">
-            <div class="grid grid-cols-3 gap-4">
+            <div class="grid grid-cols-2 gap-4">
                 <div class="mb-4">
                     <x-label for="">Cedula</x-label>
                     <x-input class="w-full" wire:model="post_update.cedula" />
@@ -54,6 +54,15 @@
                     @error('post_update.direccion')
                         <span class="error text-red-500">{{ $message }}</span>
                     @enderror
+                </div>
+                <div class="mb-4">
+                    <x-label for="">Genero</x-label>
+                    <x-select class="w-full" wire:model.change="post_update.genero_id">
+                        <option value="">Seleccione su Genero</option>
+                    @foreach ($generos as $genero)
+                            <option value="{{ $genero->id}}"> {{ $genero->genero }}</option>
+                        @endforeach
+                    </x-select>
                 </div>
                 <div class="mb-4">
                     <x-label for="">Fecha de nacimineto</x-label>

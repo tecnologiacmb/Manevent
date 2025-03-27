@@ -7,6 +7,7 @@ use App\Models\estado;
 use App\Models\evento;
 use App\Models\participante;
 use App\Models\categoriaHabilitada;
+use App\Models\genero;
 use App\Models\inscripcion;
 use Livewire\Component;
 use Carbon\Carbon;
@@ -25,6 +26,8 @@ class FormularioUsuario extends Component
         'estado_id' => null,
         'fecha_nacimiento' => "",
         'ciudades' => [],
+        'genero_id' => null,
+
     ];
     public $post_update_categoria = [
         'categoria_habilitada_id' => null,
@@ -35,6 +38,7 @@ class FormularioUsuario extends Component
     public $categoria_habilitada;
     public $evento;
     public $fecha_evento;
+    public $generos;
 
     protected $listeners = ['delete'];
 
@@ -42,16 +46,18 @@ class FormularioUsuario extends Component
     {
         if (!is_null($id)) {
             $this->estados = estado::all();
+            $this->generos = genero::all();
             $this->evento = evento::select('id', 'nombre', 'fecha_evento')->where('estado', true)->orderBy('id', 'desc')->first();
             $this->categoria_habilitada = categoriaHabilitada::all();
             $this->post_edit_id = $id;
-            $post = participante::find($this->post_edit_id);
+            $post = participante::join('generos','participantes.genero_id','=','generos.id')->find($this->post_edit_id);
             $this->post_update["nombre"] = $post->nombre;
             $this->post_update["apellido"] = $post->apellido;
             $this->post_update["cedula"] = $post->cedula;
             $this->post_update["telefono"] = $post->telefono;
             $this->post_update["correo"] = $post->correo;
             $this->post_update["direccion"] = $post->direccion;
+            $this->post_update["genero_id"] = $post->genero_id;
             $this->post_update["fecha_nacimiento"] = $post->fecha_nacimiento;
             $ciudad = ciudad::find($post->ciudad_id);
             if ($ciudad) {
@@ -101,6 +107,7 @@ class FormularioUsuario extends Component
             'correo' => $this->post_update['correo'],
             'direccion' => $this->post_update['direccion'],
             'telefono' => $this->post_update['telefono'],
+            'genero_id' => $this->post_update['genero_id'],
             'fecha_nacimiento' => $this->post_update['fecha_nacimiento'],
             'ciudad_id' => $this->post_update['ciudad_id'],
         ]);

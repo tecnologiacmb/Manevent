@@ -124,6 +124,16 @@
                 </div>
             </div>
 
+            <div>
+                <x-label for="">Prendas</x-label>
+                <x-select class="w-full" wire:model="post_update.prenda_id">
+                    <option value="">Seleccionar prenda</option>
+                    @foreach ($prendas as $prenda)
+                        <option value="{{ $prenda->id }}">{{ $prenda->categoria}} {{$prenda->sexo}} Talla {{$prenda->talla}}</option>
+                    @endforeach
+                </x-select>
+            </div>
+
             @if (!isset($post_update['datos']['fecha_mixto']))
                 <div class="grid grid-cols-4 gap-4">
 
@@ -176,41 +186,37 @@
                 <div class="grid grid-cols-4 gap-4">
 
                     @if (isset($post_update['datos']['monto_mixto_Bs']))
-                        <div class="grid grid-cols-4 gap-4">
-
-                            <div class="mb-4">
-                                <x-label for="">Cuenta </x-label>
-                                <x-select class="w-full" wire:model="post_update.datos.cuenta_mixto_2">
-                                    @foreach ($metodo_pago as $metodo_pagos)
-                                        <option value="{{ $metodo_pagos->id }}">
-                                            {{ $metodo_pagos->tipo_pago_nombre }}--/--{{ $metodo_pagos->banco_nombre }}
-                                        </option>
-                                    @endforeach
-                                </x-select>
-                            </div>
-                            <div class="mb-4">
-                                <x-label for="">Fecha pago</x-label>
-                                <x-input type="date" class="w-full" wire:model="post_update.datos.fecha_mixto" />
-                                @error('post_update.datos.fecha_mixto')
-                                    <span class="error text-red-500">{{ $message }}</span>
-                                @enderror
-                            </div>
-                            <div class="mb-4">
-                                <x-label for="">Monto Bs</x-label>
-                                <x-input class="w-full" wire:model="post_update.datos.monto_mixto_Bs" />
-                                @error('post_update.datos.monto_mixto_Bs')
-                                    <span class="error text-red-500">{{ $message }}</span>
-                                @enderror
-                            </div>
-                            <div class="mb-4">
-                                <x-label for="">Referencia</x-label>
-                                <x-input class="w-full" wire:model="post_update.datos.referencia_mixto" />
-                                @error('post_update.datos.referencia_mixto')
-                                    <span class="error text-red-500">{{ $message }}</span>
-                                @enderror
-                            </div>
+                        <div class="mb-4">
+                            <x-label for="">Cuenta </x-label>
+                            <x-select class="w-full" wire:model="post_update.datos.cuenta_mixto_2">
+                                @foreach ($metodo_pago as $metodo_pagos)
+                                    <option value="{{ $metodo_pagos->id }}">
+                                        {{ $metodo_pagos->tipo_pago_nombre }}--/--{{ $metodo_pagos->banco_nombre }}
+                                    </option>
+                                @endforeach
+                            </x-select>
                         </div>
-
+                        <div class="mb-4">
+                            <x-label for="">Fecha pago</x-label>
+                            <x-input type="date" class="w-full" wire:model="post_update.datos.fecha_mixto" />
+                            @error('post_update.datos.fecha_mixto')
+                                <span class="error text-red-500">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        <div class="mb-4">
+                            <x-label for="">Monto Bs</x-label>
+                            <x-input class="w-full" wire:model="post_update.datos.monto_mixto_Bs" />
+                            @error('post_update.datos.monto_mixto_Bs')
+                                <span class="error text-red-500">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        <div class="mb-4">
+                            <x-label for="">Referencia</x-label>
+                            <x-input class="w-full" wire:model="post_update.datos.referencia_mixto" />
+                            @error('post_update.datos.referencia_mixto')
+                                <span class="error text-red-500">{{ $message }}</span>
+                            @enderror
+                        </div>
                         @if (isset($post_update['datos']['monto_Bs']))
 
                             <div class="mb-4">
