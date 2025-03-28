@@ -118,7 +118,6 @@ class AdminGrupo extends Component
         $post = grupo::find($delete_id);
         $post->delete();
     }
-
     public function rules(): array
     {
         $rules["post_create.recorrido_id"] = 'required|regex:/^[0-9]+$/';

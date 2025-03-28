@@ -26,7 +26,8 @@ return new class extends Migration
             $table->string("ip", 30)->nullable();
             $table->string("nomenclatura", 20)->nullable();
             $table->foreignId("recorrido_id")->nullable()->constrained();
-            $table->foreignId("prenda_id")->constrained();
+            $table->foreignId("recorrido_id_grupos")->nullable()->references('id')->on('recorridos');
+            $table->foreignId("prenda_id")->nullable()->constrained();
             $table->timestamps();
             $table->softDeletes();
         });

@@ -93,9 +93,11 @@
                                         {{ $prenda->sexo }}</p>
                                 </td>
                                 <td class="p-4 border-b border-blue-gray-50">
-                                    <x-button class="bg-blue-500"><a href="#"
-                                            class="block font-sans text-sm antialiased font-medium leading-normal text-blue-gray-900">Seleccionar</a>
-                                    </x-button>
+                                    <div class="justify-items-end pr-8">
+                                        <x-button class="bg-blue-500 shadow" wire:click="edit({{ $prenda->id }})">
+                                            Agregar
+                                        </x-button>
+                                    </div>
                                 </td>
                             </tr>
                         @endforeach
@@ -112,13 +114,12 @@
                 </div>
             </div>
         @endif
-
     </div>
 
     <form wire:submit="seve">
         <x-dialog-modal wire:model="open">
             <x-slot name="title">
-                Actualizar Datos
+                Registrar Prendas
             </x-slot>
 
             <x-slot name="content">
@@ -166,6 +167,7 @@
                             <option value="">Seleccione un Estado</option>
                             <option value="Femenino">Femenino</option>
                             <option value="Masculino">Masculino</option>
+
                         </x-select>
                         @error('create_prenda.sexo')
                             <span class="error text-red-500">{{ $message }}</span>
@@ -189,6 +191,92 @@
             <x-slot name="footer">
                 <div class="flex justify-end">
                     <x-danger-button class="mr-2" wire:click="$set('open',false)">
+                        Cancelar
+                    </x-danger-button>
+
+                    <x-button>
+                        Agregar
+                    </x-button>
+                </div>
+            </x-slot>
+        </x-dialog-modal>
+    </form>
+
+    <form wire:submit="update">
+        <x-dialog-modal wire:model="open_update">
+            <x-slot name="title">
+                Actualizar Datos
+            </x-slot>
+
+            <x-slot name="content">
+                <div class="grid grid-cols-2 gap-4">
+
+                    <div class="mb-4">
+                        <x-label for="">Categoria {{$create_prenda['prenda_category_id']}}</x-label>
+                        <x-select class="w-full" wire:model="create_prenda.prenda_category_id">
+                            <option value="">Seleccione un Estado</option>
+                            @foreach ($categorias as $categoria)
+                                <option value=" {{ $categoria->id }}">
+                                    {{ $categoria->nombre }}
+                                </option>
+                            @endforeach
+                        </x-select>
+                        @error('create_prenda.prenda_category_id')
+                            <span class="error text-red-500">{{ $message }}</span>
+                        @enderror
+                    </div>
+                    <div class="mb-4">
+                        <x-label for="">Talla {{$create_prenda['prenda_talla_id']}}</x-label>
+                        <x-select class="w-full" wire:model="create_prenda.prenda_talla_id">
+                            <option value="">Seleccione un Estado</option>
+                            @foreach ($tallas as $talla)
+                                <option value=" {{ $talla->id }}">
+                                    {{ $talla->talla }}
+                                </option>
+                            @endforeach
+                        </x-select>
+                        @error('create_prenda.prenda_talla_id')
+                            <span class="error text-red-500">{{ $message }}</span>
+                        @enderror
+                    </div>
+                    <div class="mb-4">
+                        <x-label for="">Cantidad </x-label>
+                        <x-input class="w-full" type="number" wire:model="create_prenda.cantidad" />
+                        @error('create_prenda.cantidad')
+                            <span class="error text-red-500">{{ $message }}</span>
+                        @enderror
+                    </div>
+                    <div class="mb-4">
+                        <x-label for="">Sexo</x-label>
+                        <x-select class="w-full" wire:model="create_prenda.sexo"
+                            wire:change="select_sexo($event.target.value)">
+                            <option value="">Seleccione un Estado</option>
+                            <option value="Femenino">Femenino</option>
+                            <option value="Masculino">Masculino</option>
+
+                        </x-select>
+                        @error('create_prenda.sexo')
+                            <span class="error text-red-500">{{ $message }}</span>
+                        @enderror
+                    </div>
+                    <div class="mb-4">
+                        <x-label for="">Estado</x-label>
+                        <x-select class="w-full" wire:model="create_prenda.estado">
+                            <option value="">Seleccione un Estado</option>
+                            <option value="0">Deshabilitado</option>
+                            <option value="1">Habilitado</option>
+                        </x-select>
+                        @error('create_prenda.estado')
+                            <span class="error text-red-500">{{ $message }}</span>
+                        @enderror
+                    </div>
+                </div>
+
+            </x-slot>
+
+            <x-slot name="footer">
+                <div class="flex justify-end">
+                    <x-danger-button class="mr-2" wire:click="$set('open_update',false)">
                         Cancelar
                     </x-danger-button>
 

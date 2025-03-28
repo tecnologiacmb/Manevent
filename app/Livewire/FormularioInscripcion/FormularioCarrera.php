@@ -102,6 +102,7 @@ class FormularioCarrera extends Component
         'cuenta_mixto_1' => null,
         'cuenta_mixto_2' => null,
         'recorrido_id' => null,
+        'recorrido_id_grupos' => null,
         'prenda_id' => null,
 
     ];
@@ -189,6 +190,7 @@ class FormularioCarrera extends Component
                     'cuenta_mixto_1' => null,
                     'cuenta_mixto_2' => null,
                     'recorrido_id' => null,
+                    'recorrido_id_grupos' => null,
                     'prenda_id' => null,
                 ];
                 $this->create_prendas[$i] = [
@@ -623,9 +625,16 @@ class FormularioCarrera extends Component
                 if (is_null($this->create_inscripcion[$i]['recorrido_id'])) {
                     $this->create_inscripcion[$i]['recorrido_id'] = $this->grupo->recorrido_id;
                 }
+                $this->create_inscripcion[$i]['recorrido_id_grupos'] = $this->grupo->recorrido_id;
+
                 $this->create_inscripcion[$i]['nomenclatura'] = $this->nomenclatura;
                 $this->create_inscripcion[$i]['ip'] = $this->userIp;
-                $this->create_inscripcion[$i]['prenda_id'] = $this->create_prendas[$i]['prendas'];
+                if (!is_null($this->create_prendas[$i]['prendas'])) {
+                    $this->create_inscripcion[$i]['prenda_id'] = $this->create_prendas[$i]['prendas'];
+                    $this->asignar_prendas($this->create_prendas[$i]['prendas']);
+                } else {
+                    $this->create_inscripcion[$i]['prenda_id'] = 1;
+                }
 
                 $inscripciones = inscripcion::create([
                     'evento_id' => $this->create_inscripcion[$i]['evento_id'],
@@ -641,12 +650,12 @@ class FormularioCarrera extends Component
                     'ip' => $this->create_inscripcion[$i]['ip'],
                     'nomenclatura' => $this->create_inscripcion[$i]['nomenclatura'],
                     'recorrido_id' => $this->create_inscripcion[$i]['recorrido_id'],
+                    'recorrido_id_grupos' => $this->create_inscripcion[$i]['recorrido_id_grupos'],
                     'prenda_id' => $this->create_inscripcion[$i]['prenda_id'],
                 ]);
 
                 $ultima_inscripcion_id = inscripcion::latest('id')->first()->id;
                 $this->asignar_num_mesa($ultima_inscripcion_id, $this->create_participante[$i]['cedula']);
-                $this->asignar_prendas($this->create_prendas[$i]['prendas']);
             } else {
 
                 $participante = participante::create([
@@ -706,10 +715,16 @@ class FormularioCarrera extends Component
                 if (is_null($this->create_inscripcion[$i]['recorrido_id'])) {
                     $this->create_inscripcion[$i]['recorrido_id'] = $this->grupo->recorrido_id;
                 }
+                $this->create_inscripcion[$i]['recorrido_id_grupos'] = $this->grupo->recorrido_id;
 
                 $this->create_inscripcion[$i]['nomenclatura'] = $this->nomenclatura;
                 $this->create_inscripcion[$i]['ip'] = $this->userIp;
-                $this->create_inscripcion[$i]['prenda_id'] = $this->create_prendas[$i]['prendas'];
+                if (!is_null($this->create_prendas[$i]['prendas'])) {
+                    $this->create_inscripcion[$i]['prenda_id'] = $this->create_prendas[$i]['prendas'];
+                    $this->asignar_prendas($this->create_prendas[$i]['prendas']);
+                } else {
+                    $this->create_inscripcion[$i]['prenda_id'] = 1;
+                }
                 $inscripciones = inscripcion::create([
                     'evento_id' => $this->create_inscripcion[$i]['evento_id'],
                     'participante_id' => $this->create_inscripcion[$i]['participante_id'],
@@ -724,12 +739,13 @@ class FormularioCarrera extends Component
                     'ip' => $this->create_inscripcion[$i]['ip'],
                     'nomenclatura' => $this->create_inscripcion[$i]['nomenclatura'],
                     'recorrido_id' => $this->create_inscripcion[$i]['recorrido_id'],
+                    'recorrido_id_grupos' => $this->create_inscripcion[$i]['recorrido_id_grupos'],
+
                     'prenda_id' => $this->create_inscripcion[$i]['prenda_id'],
 
                 ]);
                 $ultima_inscripcion_id = inscripcion::latest('id')->first()->id;
                 $this->asignar_num_mesa($ultima_inscripcion_id, $this->create_participante[$i]['cedula']);
-                $this->asignar_prendas($this->create_prendas[$i]['prendas']);
             }
         }
         $this->dispatch('alert');

@@ -83,11 +83,7 @@
                                     </div>
                                     <div hidden class="text-left text-sm mt-2 w-4/5 mx-auto text-black font-bold"
                                         id="submenu1">
-                                        <h1 class="cursor-pointer p-2 hover:bg-black rounded-md mt-1 hover:text-white">
-                                            <i class="bi bi-bank2"></i>
-                                            <a href="{{ route('banco') }}" :active="request() - > routeIs('banco')"
-                                                class="ml-2">Banco</a>
-                                        </h1>
+
                                         <h1 class="cursor-pointer p-2 hover:bg-black rounded-md mt-1 hover:text-white">
                                             <i class="bi bi-cash-coin"></i>
                                             <a href="{{ route('metodo-pago') }}"

@@ -45,8 +45,23 @@
                     @enderror
                 </div>
                 <div class="mb-4">
+                    <x-label for="">Clasificacion: </x-label>
+                    <x-select class="w-full" wire:model="post_update.recorrido_id">
+                        <option value="">Seleccione un recorrido</option>
+                        @if ($clasificacions)
+                            @foreach ($clasificacions as $clasificacion)
+                                <option value="{{ $clasificacion->id }}">{{ $clasificacion->nombre }}</option>
+                            @endforeach
+                        @endif
+                    </x-select>
+                    @error('post_update.recorrido_id')
+                        <span class="error text-red-500">{{ $message }}</span>
+                    @enderror
+                </div>
+                <div class="mb-4">
                     <x-label for="">Recorrido: </x-label>
-                    <x-select class="w-full" wire:model.change="post_update.recorrido_id">
+                    <x-select class="w-full" wire:model="post_update.recorrido_id_grupos"
+                        wire:change="update_grupos($event.target.value)">
                         <option value="">Seleccione un recorrido</option>
                         @if ($recorridos)
                             @foreach ($recorridos as $recorrido)
@@ -54,7 +69,7 @@
                             @endforeach
                         @endif
                     </x-select>
-                    @error('post_update.recorrido_id')
+                    @error('post_update.recorrido_id_grupos')
                         <span class="error text-red-500">{{ $message }}</span>
                     @enderror
                 </div>
@@ -72,8 +87,7 @@
                         <span class="error text-red-500">{{ $message }}</span>
                     @enderror
                 </div>
-            </div>
-            <div class="grid grid-cols-4 gap-4">
+
 
                 <div class="mb-4">
                     <x-label for="">categoria: </x-label>
@@ -122,18 +136,19 @@
                         <span class="error text-red-500">{{ $message }}</span>
                     @enderror
                 </div>
+                <div>
+                    <x-label for="">Prendas</x-label>
+                    <x-select class="w-full" wire:model="post_update.prenda_id">
+                        <option value="">Seleccionar prenda</option>
+                        @foreach ($prendas as $prenda)
+                            <option value="{{ $prenda->id }}">{{ $prenda->categoria }} {{ $prenda->sexo }}
+                                Talla
+                                {{ $prenda->talla }}
+                            </option>
+                        @endforeach
+                    </x-select>
+                </div>
             </div>
-
-            <div>
-                <x-label for="">Prendas</x-label>
-                <x-select class="w-full" wire:model="post_update.prenda_id">
-                    <option value="">Seleccionar prenda</option>
-                    @foreach ($prendas as $prenda)
-                        <option value="{{ $prenda->id }}">{{ $prenda->categoria}} {{$prenda->sexo}} Talla {{$prenda->talla}}</option>
-                    @endforeach
-                </x-select>
-            </div>
-
             @if (!isset($post_update['datos']['fecha_mixto']))
                 <div class="grid grid-cols-4 gap-4">
 
@@ -142,7 +157,7 @@
                         <x-select class="w-full" wire:model="post_update.metodo_pago_id">
                             @foreach ($metodo_pago as $metodo_pagos)
                                 <option value="{{ $metodo_pagos->id }}">
-                                    {{ $metodo_pagos->tipo_pago_nombre }}--/--{{ $metodo_pagos->banco_nombre }}
+                                    {{ $metodo_pagos->tipo_pago_nombre }}->{{ $metodo_pagos->banco_nombre }}
                                 </option>
                             @endforeach
                         </x-select>
@@ -191,7 +206,7 @@
                             <x-select class="w-full" wire:model="post_update.datos.cuenta_mixto_2">
                                 @foreach ($metodo_pago as $metodo_pagos)
                                     <option value="{{ $metodo_pagos->id }}">
-                                        {{ $metodo_pagos->tipo_pago_nombre }}--/--{{ $metodo_pagos->banco_nombre }}
+                                        {{ $metodo_pagos->tipo_pago_nombre }}->{{ $metodo_pagos->banco_nombre }}
                                     </option>
                                 @endforeach
                             </x-select>
@@ -289,7 +304,7 @@
                             <x-select class="w-full" wire:model="post_update.datos.cuenta_mixto_2">
                                 @foreach ($metodo_pago as $metodo_pagos)
                                     <option value="{{ $metodo_pagos->id }}">
-                                        {{ $metodo_pagos->tipo_pago_nombre }}--/--{{ $metodo_pagos->banco_nombre }}
+                                        {{ $metodo_pagos->tipo_pago_nombre }}->{{ $metodo_pagos->banco_nombre }}
                                     </option>
                                 @endforeach
                             </x-select>

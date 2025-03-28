@@ -17,6 +17,12 @@
                     <th class="p-4 border-b border-blue-gray-100 bg-blue-gray-50">
                         <p
                             class="block font-sans text-sm antialiased font-normal leading-none text-blue-gray-900 opacity-70">
+                            ID
+                        </p>
+                    </th>
+                    <th class="p-4 border-b border-blue-gray-100 bg-blue-gray-50">
+                        <p
+                            class="block font-sans text-sm antialiased font-normal leading-none text-blue-gray-900 opacity-70">
                             Banco
                         </p>
                     </th>
@@ -46,7 +52,12 @@
                         @foreach ($posts as $post)
                             @if ($post->banco_id == $ban->id && $post->tipo_pago_id == $pago->id)
                                 <tr>
-
+                                    <td class="p-4 border-b border-blue-gray-50">
+                                        <p
+                                            class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
+                                            {{ $pago->id }}
+                                        </p>
+                                    </td>
                                     <td class="p-4 border-b border-blue-gray-50">
                                         <p
                                             class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
@@ -252,7 +263,7 @@
                         <div class="mb-4">
                             <x-label for="">Banco</x-label>
                             <x-select class="w-full" wire:model="post_create.banco_id">
-                                <option value="" >Seleccione un Banco</option>
+                                <option value="">Seleccione un Banco</option>
                                 @foreach ($banco as $post)
                                     <option value="{{ $post->id }}">{{ $post->nombre }}</option>
                                 @endforeach
@@ -417,12 +428,11 @@
 
                             </x-select>
                         </div>
-
-                        @elseif ($metodo == 5)
+                    @elseif ($metodo == 5)
                         <div class="mb-4">
                             <x-label for="">Banco</x-label>
                             <x-select class="w-full" wire:model="post_create.banco_id">
-                                <option value="" >Seleccione un Banco</option>
+                                <option value="">Seleccione un Banco</option>
                                 @foreach ($banco as $post)
                                     <option value="{{ $post->id }}">{{ $post->nombre }}</option>
                                 @endforeach

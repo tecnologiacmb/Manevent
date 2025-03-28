@@ -22,6 +22,8 @@ class tipo_pago_seeder extends Seeder
             ["nombre" => "Pago Movil", "estado" => 1],
             ["nombre" => "Transferencia", "estado" => 1],
             ["nombre" => "Punto", "estado" => 1],
+            ["nombre" => "Mixto", "estado" => 1],
+
         ];
 
         $now = Carbon::now();

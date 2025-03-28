@@ -21,29 +21,29 @@ class VistaInscripcion extends Component
     public $numeros;
     public $post;
     public $recorridos;
+    public $clasificacions;
     public $mesas;
     public $grupos;
     public $categoria_habilitada;
     public $metodo_pago;
     public $datos;
     public $prendas;
-
-
     public $post_update = [
         'evento_id' => null,
-        'participante_id' => "",
-        'metodo_pago_id' => "",
-        'grupo_id' => "",
-        'grupo_precio' => "",
-        'dolar_id' => "",
-        'numero_id' => "",
+        'participante_id' => null,
+        'metodo_pago_id' => null,
+        'grupo_id' => null,
+        'grupo_precio' => null,
+        'dolar_id' => null,
+        'numero_id' => null,
         'categoria_habilitada_id' => null,
         'mesa_id' => null,
         'datos' => [],
-        'monto_pagado_bs' => "",
+        'monto_pagado_bs' => null,
         'ip' => null,
-        'nomenclatura' => "",
-        'recorrido_id' => "",
+        'nomenclatura' => null,
+        'recorrido_id' => null,
+        'recorrido_id_grupos' => null,
         'created_at' => "",
         'monto_Bs' => null,
         'monto_$' => null,
@@ -64,17 +64,15 @@ class VistaInscripcion extends Component
     {
         if (!is_null($id)) {
             $this->post_edit_id = $id;
-            $this->recorridos = recorrido::select('id', 'nombre')->whereBetween('id', [1, 2])->get();
+            $this->recorridos = recorrido::select('id', 'nombre')->whereBetween('id', [1, 3])->get();
+            $this->clasificacions = recorrido::select('id', 'nombre')->whereBetween('id', [1, 2])->get();
+
             $this->mesas = mesa::select('id', 'nombre')->where('estado', true)->get();
-            $this->grupos = grupo::select('id', 'nombre')->where('estado', true)->get();
             $this->categoria_habilitada = categoriaHabilitada::select('id', 'nombre')->get();
 
-            $this->metodo_pago = metodo_pago::select('metodo_pagos.*', 'tipo_pagos.nombre as tipo_pago_nombre', 'bancos.nombre as banco_nombre')->join('tipo_pagos', 'metodo_pagos.tipo_pago_id', '=', 'tipo_pagos.id')->join('bancos', 'metodo_pagos.banco_id', '=', 'bancos.id')->get();
-
-            $this->prendas = prenda::join('prenda_categories', 'prendas.prenda_category_id', '=', 'prenda_categories.id')->join('prenda_tallas', 'prendas.prenda_talla_id', '=', 'prenda_tallas.id')->select('prendas.*', 'prenda_categories.nombre as categoria', 'prenda_tallas.talla as talla')->get();
             // Obtener la inscripción y sus detalles relacionados
 
-            $this->post = inscripcion::select('inscripcions.*','prendas.id as prenda_id','numeros.id as id_numero', 'eventos.nombre as evento_nombre', 'participantes.cedula as participante_cedula', 'tipo_pagos.nombre as metodo', 'grupos.id as grupo_id', 'grupos.precio as grupo_precio', 'mesas.id as mesa_id', 'recorridos.id as recorrido_id', 'categoria_habilitadas.id as id_category', 'dolars.precio as precio')
+            $this->post = inscripcion::select('inscripcions.*', 'prendas.id as prenda_id', 'numeros.id as id_numero', 'eventos.nombre as evento_nombre', 'participantes.cedula as participante_cedula', 'tipo_pagos.nombre as metodo', 'grupos.id as grupo_id', 'grupos.precio as grupo_precio', 'mesas.id as mesa_id', 'recorridos.id as recorrido_id', 'categoria_habilitadas.id as id_category', 'dolars.precio as precio')
                 ->join('eventos', 'inscripcions.evento_id', '=', 'eventos.id')
                 ->join('participantes', 'inscripcions.participante_id', '=', 'participantes.id')
                 ->join('metodo_pagos', 'inscripcions.metodo_pago_id', '=', 'metodo_pagos.id')
@@ -88,7 +86,7 @@ class VistaInscripcion extends Component
                 ->join('numeros', 'inscripcions.numero_id', '=', 'numeros.id')->find($this->post_edit_id);
 
             // Rellenar los detalles de la inscripción
-            $this->post_update["evento_id"] = $this->post->evento_id;
+            $this->post_update["evento_id"] = $this->post->evento_nombre;
             $this->post_update["participante_id"] = $this->post->participante_cedula;
             $this->post_update["metodo_pago_id"] = $this->post->metodo_pago_id;
             $this->post_update["grupo_id"] = $this->post->grupo_id;
@@ -105,8 +103,12 @@ class VistaInscripcion extends Component
             $this->post_update["ip"] = $this->post->ip;
             $this->post_update["nomenclatura"] = $this->post->nomenclatura;
             $this->post_update["recorrido_id"] = $this->post->recorrido_id;
+            $this->post_update["recorrido_id_grupos"] = $this->post->recorrido_id_grupos;
+            $this->update_grupos($this->post->recorrido_id_grupos);
+
             $this->post_update["created_at"] = \Carbon\Carbon::parse($this->post->created_at)->format('Y-m-d');
             // Obtener el último dígito de la cédula del participante
+
             $ultimo_digito = substr($this->post->participante_cedula, -1);
             // Seleccionar los números disponibles y con estado verdadero según el último dígito
             switch ($ultimo_digito) {
@@ -131,21 +133,18 @@ class VistaInscripcion extends Component
                     $this->numeros = numero::where('disponible', true)->where('estado', true)->whereBetween('id', [401, 500])->orderBy('id', 'asc')->get();
                     break;
             }
-            $this->updateGrupos();
         }
     }
 
-    public function updatedPostUpdateRecorridoId()
+
+    public function update_grupos($value)
     {
-        $this->updateGrupos();
-    }
-    public function updateGrupos()
-    {
-        if ($this->post_update['recorrido_id']) {
-            $this->grupos = Grupo::where('recorrido_id', $this->post_update['recorrido_id'])->get();
-            $this->metodo_pago = metodo_pago::select('metodo_pagos.*', 'tipo_pagos.nombre as tipo_pago_nombre', 'bancos.nombre as banco_nombre')->join('tipo_pagos', 'metodo_pagos.tipo_pago_id', '=', 'tipo_pagos.id')->join('bancos', 'metodo_pagos.banco_id', '=', 'bancos.id')->get();
-        } else {
-            $this->grupos = [];
+        if ($value == 1) {
+            $this->grupos = grupo::where('recorrido_id', $value)->get();
+        } else if ($value == 2) {
+            $this->grupos = grupo::where('recorrido_id', $value)->get();
+        } else if ($value == 3) {
+            $this->grupos = Grupo::where('recorrido_id', $value)->get();
         }
     }
 
@@ -179,6 +178,7 @@ class VistaInscripcion extends Component
             'metodo_pago_id' => $this->post_update['metodo_pago_id'],
             'grupo_id' => $this->post_update['grupo_id'],
             'recorrido_id' => $this->post_update['recorrido_id'],
+            'recorrido_id_grupos' => $this->post_update['recorrido_id_grupos'],
             'categoria_habilitada_id' => $this->post_update['categoria_habilitada_id'],
             'mesa_id' => $this->post_update['mesa_id'],
             'numero_id' => $this->post_update['numero_id'],
@@ -198,8 +198,18 @@ class VistaInscripcion extends Component
         $post = inscripcion::find($delete_id);
         $post->delete();
     }
+    public function cargar_modulos()
+    {
+        $this->metodo_pago = metodo_pago::select('metodo_pagos.*', 'tipo_pagos.nombre as tipo_pago_nombre', 'bancos.nombre as banco_nombre')->join('tipo_pagos', 'metodo_pagos.tipo_pago_id', '=', 'tipo_pagos.id')->join('bancos', 'metodo_pagos.banco_id', '=', 'bancos.id')->get();
+
+        $this->prendas = prenda::join('prenda_categories', 'prendas.prenda_category_id', '=', 'prenda_categories.id')->join('prenda_tallas', 'prendas.prenda_talla_id', '=', 'prenda_tallas.id')->select('prendas.*', 'prenda_categories.nombre as categoria', 'prenda_tallas.talla as talla')->get();
+    }
     public function render()
     {
-        return view('livewire.vista-inscripcion');
+        $this->cargar_modulos();
+        $grupos = grupo::where('nombre', 'NOT LIKE', '%sin franela%')->get();
+        return view('livewire.vista-inscripcion', [
+            'grupos' => $grupos
+        ]);
     }
 }

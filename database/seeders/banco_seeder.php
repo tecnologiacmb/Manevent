@@ -15,6 +15,8 @@ class banco_seeder extends Seeder
     public function run(): void
     {
         $banco = [
+            ["nombre" => "Efectivo", "codigo" => "0001", "estado" => 1],
+            ["nombre" => "Pago Mixto", "codigo" => "0002", "estado" => 1],
             ["nombre" => "100% BANCO, BANCO UNIVERSAL C.A.", "codigo" => "0156", "estado" => 1],
             ["nombre" => "BANCAMIGA BANCO UNIVERSAL", "codigo" => "0172", "estado" => 1],
             ["nombre" => "BANCO ACTIVO, C.A.", "codigo" => "0171", "estado" => 1],
@@ -39,8 +41,7 @@ class banco_seeder extends Seeder
             ["nombre" => "MERCANTIL BANCO UNIVERSAL", "codigo" => "0105", "estado" => 1],
             ["nombre" => "MIBANCO BANCO DE DESARROLLO", "codigo" => "0169", "estado" => 1],
             ["nombre" => "VENEZOLANO DE CREDITO, S.A. BANCO UNIVERSAL", "codigo" => "0104", "estado" => 1],
-            ["nombre" => "Efectivo", "codigo" => "0001", "estado" => 1],
-            ["nombre" => "Pago Mixto", "codigo" => "0002", "estado" => 1],
+
         ];
 
         $now = Carbon::now();

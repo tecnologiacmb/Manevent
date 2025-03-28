@@ -16,11 +16,9 @@ class AdminCategoria extends Component
     protected $listeners = ['delete'];
     public $open_edit = false;
     public $post_create = [
-
         'nombre' => "",
         'edad_min' => "",
         'edad_max' => "",
-
     ];
     public $post_update = [
         'nombre' => "",

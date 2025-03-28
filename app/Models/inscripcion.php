@@ -34,6 +34,7 @@ class inscripcion extends Model
         'ip',
         'nomenclatura',
         'recorrido_id',
+        'recorrido_id_grupos',
         'prenda_id',
     ];
 

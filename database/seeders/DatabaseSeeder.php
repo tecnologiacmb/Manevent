@@ -25,6 +25,10 @@ class DatabaseSeeder extends Seeder
         $this->call(mesa_seeder::class);
         $this->call(categoria_habilitada_seeder::class);
         $this->call(User_seeder::class);
+        $this->call(prendas_seeder::class);
+        $this->call(metodo_pago_seeder::class);
+
+
 
     }
 }

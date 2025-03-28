@@ -3,7 +3,6 @@
 use App\Http\Controllers\Caminata_controller;
 use App\Http\Controllers\Carrera_controller;
 use App\Http\Controllers\Mixto_controller;
-use App\Http\Controllers\Banco_Controller;
 use App\Http\Controllers\Categoria_Controller;
 use App\Http\Controllers\Grupo_Controller;
 use App\Http\Controllers\Inscrippcion_Controller;
@@ -39,11 +38,7 @@ Route::middleware([
         return view('evento');
     })->name('evento');
 
-    Route::controller(Banco_Controller::class)->group(function () {
-        Route::group(['prefix' => 'banco',], function () {
-            Route::get('',  "index")->name('banco');
-        });
-    });
+
     Route::controller(Registro_Usuario::class)->group(function () {
         Route::group(['prefix' => 'registro_usuario',], function () {
             Route::get('',  "index")->name('registro_usuario');

@@ -30,9 +30,8 @@
             </div>
 
         </div>
-
         @for ($i = 0; $i <= $grupo->cantidad - 1; $i++)
-            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 bg-white rounded-lg p-4 shadow">
+            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 bg-white shadow rounded-lg p-4 ">
                 <div class="grid grid-cols-2 gap-4">
                     <div class="mb-4">
                         <x-label for="">Cedula </x-label>
@@ -147,6 +146,7 @@
                                 <option value="">Seleccionar prenda</option>
                                 <option value="1">Masculino</option>
                                 <option value="2">Femenino</option>
+
                             </x-select>
                         </div>
 
@@ -281,7 +281,8 @@
                 @if (isset($this->create_inscripcion[$i]) && $this->create_inscripcion[$i]['mixto'] == '2')
                     {{-- cuando el pago es mixto --}}
                     <div>
-                        <h1 class="font-semibold text-gray-700 leading-tight text-normal normal-case">Reporte del pago
+                        <h1 class="font-semibold text-gray-700 leading-tight text-normal normal-case">Reporte del
+                            pago
                             N° 1 </h1>
                         <hr class="border-gray-300"><br>
                         <div class="grid grid-cols-2 gap-4">
@@ -372,7 +373,8 @@
                                 </div>
                             @endif
                         </div>
-                        <h1 class="font-semibold text-gray-700 leading-tight text-normal normal-case">Reporte del pago
+                        <h1 class="font-semibold text-gray-700 leading-tight text-normal normal-case">Reporte del
+                            pago
                             N° 2 </h1>
                         <hr class="border-gray-300"><br>
                         <div class="grid grid-cols-2 gap-4">

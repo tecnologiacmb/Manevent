@@ -113,6 +113,7 @@ class FormularioMixto extends Component
         'cuenta_mixto_1' => null,
         'cuenta_mixto_2' => null,
         'recorrido_id' => null,
+        'recorrido_id_grupos' => null,
         'prenda_id' => null,
     ];
     public $inscripcion_caminata = [
@@ -149,6 +150,7 @@ class FormularioMixto extends Component
         'cuenta_mixto_1' => null,
         'cuenta_mixto_2' => null,
         'recorrido_id' => null,
+        'recorrido_id_grupos' => null,
         'prenda_id' => null,
     ];
     public $create_prendas_carrera = [
@@ -225,6 +227,7 @@ class FormularioMixto extends Component
                     'cuenta_mixto_1' => null,
                     'cuenta_mixto_2' => null,
                     'recorrido_id' => null,
+                    'recorrido_id_grupos' => null,
                     'prenda_id' => null,
                 ];
                 $this->create_prendas_carrera[$i] = [
@@ -280,6 +283,7 @@ class FormularioMixto extends Component
                     'cuenta_mixto_1' => null,
                     'cuenta_mixto_2' => null,
                     'recorrido_id' => null,
+                    'recorrido_id_grupos' => null,
                     'prenda_id' => null,
                 ];
                 $this->create_prendas_caminata[$j] = [
@@ -974,18 +978,21 @@ class FormularioMixto extends Component
                     $this->inscripcion_caminata[$i]['datos'] = $datos_json;
 
                     if (is_null($this->inscripcion_caminata[$i]['metodo_pago_id'])) {
-                        $this->inscripcion_caminata[$i]['metodo_pago_id'] = 3;
+                        $this->inscripcion_caminata[$i]['metodo_pago_id'] = 1;
                     }
                     if (is_null($this->inscripcion_caminata[$i]['recorrido_id'])) {
                         $this->inscripcion_caminata[$i]['recorrido_id'] = 1;
                     }
-
+                    $this->inscripcion_caminata[$i]['recorrido_id_grupos'] = $this->grupo->recorrido_id;
                     $this->inscripcion_caminata[$i]['nomenclatura'] = $this->nomenclatura;
                     $this->inscripcion_caminata[$i]['ip'] = $this->userIp;
                     $this->inscripcion_caminata[$i]['categoria_habilitada_id'] = 12;
-
-                    $this->inscripcion_caminata[$i]['prenda_id'] = $this->create_prendas_caminata[$i]['prendas'];
-
+                    if (!is_null($this->create_prendas[$i]['prendas'])) {
+                        $this->inscripcion_caminata[$i]['prenda_id'] = $this->create_prendas[$i]['prendas'];
+                        $this->asignar_prendas_caminata($this->create_prendas_caminata[$i]['prendas']);
+                    } else {
+                        $this->inscripcion_caminata[$i]['prenda_id'] = 1;
+                    }
                     $inscripciones = inscripcion::create([
                         'evento_id' => $this->inscripcion_caminata[$i]['evento_id'],
                         'participante_id' => $this->inscripcion_caminata[$i]['participante_id'],
@@ -1000,11 +1007,11 @@ class FormularioMixto extends Component
                         'ip' => $this->inscripcion_caminata[$i]['ip'],
                         'nomenclatura' => $this->inscripcion_caminata[$i]['nomenclatura'],
                         'recorrido_id' => $this->inscripcion_caminata[$i]['recorrido_id'],
+                        'recorrido_id_grupos' => $this->inscripcion_caminata[$i]['recorrido_id_grupos'],
                         'prenda_id' => $this->inscripcion_caminata[$i]['prenda_id'],
                     ]);
                     $ultima_inscripcion_id = inscripcion::latest('id')->first()->id;
                     $this->asignar_num_mesa_caminata($ultima_inscripcion_id, $this->participante_caminata[$i]['cedula']);
-                    $this->asignar_prendas_caminata($this->create_prendas_caminata[$i]['prendas']);
                 } else {
                     $participante = participante::create([
                         'ciudad_id' => $this->participante_caminata[$i]['ciudad_id'],
@@ -1055,15 +1062,22 @@ class FormularioMixto extends Component
                     $this->inscripcion_caminata[$i]['datos'] = $datos_json;
 
                     if (is_null($this->inscripcion_caminata[$i]['metodo_pago_id'])) {
-                        $this->inscripcion_caminata[$i]['metodo_pago_id'] = 3;
+                        $this->inscripcion_caminata[$i]['metodo_pago_id'] = 1;
                     }
                     if (is_null($this->inscripcion_caminata[$i]['recorrido_id'])) {
                         $this->inscripcion_caminata[$i]['recorrido_id'] = 1;
                     }
+                    $this->inscripcion_caminata[$i]['recorrido_id_grupos'] = $this->grupo->recorrido_id;
+
                     $this->inscripcion_caminata[$i]['nomenclatura'] = $this->nomenclatura;
                     $this->inscripcion_caminata[$i]['ip'] = $this->userIp;
                     $this->inscripcion_caminata[$i]['categoria_habilitada_id'] = 12;
-                    $this->inscripcion_caminata[$i]['prenda_id'] = $this->create_prendas_caminata[$i]['prendas'];
+                    if (!is_null($this->create_prendas[$i]['prendas'])) {
+                        $this->inscripcion_caminata[$i]['prenda_id'] = $this->create_prendas[$i]['prendas'];
+                        $this->asignar_prendas_caminata($this->create_prendas_caminata[$i]['prendas']);
+                    } else {
+                        $this->inscripcion_caminata[$i]['prenda_id'] = 1;
+                    }
 
                     $inscripciones = inscripcion::create([
                         'evento_id' => $this->inscripcion_caminata[$i]['evento_id'],
@@ -1079,11 +1093,11 @@ class FormularioMixto extends Component
                         'ip' => $this->inscripcion_caminata[$i]['ip'],
                         'nomenclatura' => $this->inscripcion_caminata[$i]['nomenclatura'],
                         'recorrido_id' => $this->inscripcion_caminata[$i]['recorrido_id'],
+                        'recorrido_id_grupos' => $this->inscripcion_caminata[$i]['recorrido_id_grupos'],
                         'prenda_id' => $this->inscripcion_caminata[$i]['prenda_id'],
                     ]);
                     $ultima_inscripcion_id = inscripcion::latest('id')->first()->id;
                     $this->asignar_num_mesa_caminata($ultima_inscripcion_id, $this->participante_caminata[$i]['cedula']);
-                    $this->asignar_prendas_caminata($this->create_prendas_caminata[$i]['prendas']);
                 }
             }
 
@@ -1133,16 +1147,21 @@ class FormularioMixto extends Component
                     $this->inscripcion_carrera[$i]['categoria_habilitada_id'] = $categoria_id;
 
                     if (is_null($this->inscripcion_carrera[$i]['metodo_pago_id'])) {
-                        $this->inscripcion_carrera[$i]['metodo_pago_id'] = 3;
+                        $this->inscripcion_carrera[$i]['metodo_pago_id'] = 1;
                     }
                     if (is_null($this->inscripcion_carrera[$i]['recorrido_id'])) {
                         $this->inscripcion_carrera[$i]['recorrido_id'] = 2;
                     }
+                    $this->inscripcion_carrera[$i]['recorrido_id_grupos'] = $this->grupo->recorrido_id;
 
                     $this->inscripcion_carrera[$i]['nomenclatura'] = $this->nomenclatura;
                     $this->inscripcion_carrera[$i]['ip'] = $this->userIp;
-                    $this->inscripcion_carrera[$i]['prenda_id'] = $this->create_prendas_carrera[$i]['prendas'];
-
+                    if (!is_null($this->create_prendas[$i]['prendas'])) {
+                        $this->inscripcion_carrera[$i]['prenda_id'] = $this->create_prendas[$i]['prendas'];
+                        $this->asignar_prendas_carrera($this->create_prendas_carrera[$i]['prendas']);
+                    } else {
+                        $this->inscripcion_carrera[$i]['prenda_id'] = 1;
+                    }
                     $inscripciones = inscripcion::create([
                         'evento_id' => $this->inscripcion_carrera[$i]['evento_id'],
                         'participante_id' => $this->inscripcion_carrera[$i]['participante_id'],
@@ -1157,11 +1176,11 @@ class FormularioMixto extends Component
                         'ip' => $this->inscripcion_carrera[$i]['ip'],
                         'nomenclatura' => $this->inscripcion_carrera[$i]['nomenclatura'],
                         'recorrido_id' => $this->inscripcion_carrera[$i]['recorrido_id'],
+                        'recorrido_id_grupos' => $this->inscripcion_carrera[$i]['recorrido_id_grupos'],
                         'prenda_id' => $this->inscripcion_carrera[$i]['prenda_id'],
                     ]);
                     $ultima_inscripcion_id = inscripcion::latest('id')->first()->id;
                     $this->asignar_num_mesa_carrera($ultima_inscripcion_id, $this->participante_carrera[$i]['cedula']);
-                    $this->asignar_prendas_carrera($this->create_prendas_carrera[$i]['prendas']);
                 } else {
 
                     $participante = participante::create([
@@ -1217,15 +1236,21 @@ class FormularioMixto extends Component
                     $this->inscripcion_carrera[$i]['categoria_habilitada_id'] = $categoria_id;
 
                     if (is_null($this->inscripcion_carrera[$i]['metodo_pago_id'])) {
-                        $this->inscripcion_carrera[$i]['metodo_pago_id'] = 3;
+                        $this->inscripcion_carrera[$i]['metodo_pago_id'] = 1;
                     }
                     if (is_null($this->inscripcion_carrera[$i]['recorrido_id'])) {
                         $this->inscripcion_carrera[$i]['recorrido_id'] = 2;
                     }
+                    $this->inscripcion_carrera[$i]['recorrido_id_grupos'] = $this->grupo->recorrido_id;
 
                     $this->inscripcion_carrera[$i]['nomenclatura'] = $this->nomenclatura;
                     $this->inscripcion_carrera[$i]['ip'] = $this->userIp;
-                    $this->inscripcion_carrera[$i]['prenda_id'] = $this->create_prendas_carrera[$i]['prendas'];
+                    if (!is_null($this->create_prendas[$i]['prendas'])) {
+                        $this->inscripcion_carrera[$i]['prenda_id'] = $this->create_prendas[$i]['prendas'];
+                        $this->asignar_prendas_carrera($this->create_prendas_carrera[$i]['prendas']);
+                    } else {
+                        $this->inscripcion_carrera[$i]['prenda_id'] = 1;
+                    }
 
                     $inscripciones = inscripcion::create([
                         'evento_id' => $this->inscripcion_carrera[$i]['evento_id'],
@@ -1241,11 +1266,11 @@ class FormularioMixto extends Component
                         'ip' => $this->inscripcion_carrera[$i]['ip'],
                         'nomenclatura' => $this->inscripcion_carrera[$i]['nomenclatura'],
                         'recorrido_id' => $this->inscripcion_carrera[$i]['recorrido_id'],
+                        'recorrido_id_grupos' => $this->inscripcion_carrera[$i]['recorrido_id_grupos'],
                         'prenda_id' => $this->inscripcion_carrera[$i]['prenda_id'],
                     ]);
                     $ultima_inscripcion_id = inscripcion::latest('id')->first()->id;
                     $this->asignar_num_mesa_carrera($ultima_inscripcion_id, $this->participante_carrera[$i]['cedula']);
-                    $this->asignar_prendas_carrera($this->create_prendas_carrera[$i]['prendas']);
                 }
             }
         }
