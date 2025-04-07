@@ -159,7 +159,7 @@
                                 <x-select class="w-full"
                                     wire:model="create_prendas_caminata.{{ $j }}.prendas">
                                     <option value="">Seleccione una talla</option>
-                                    @foreach ($prendas_caminata as $prenda)
+                                    @foreach ($prendas_caminata[$j] as $prenda)
                                         <option value="{{ $prenda->id }}"
                                             {{ $prenda->sexo == $this->create_prendas_caminata[$j]['genero'] ? 'selected' : '' }}>
                                             {{ $prenda->prenda_categories_nombre }} Talla
@@ -174,7 +174,7 @@
                                 <x-select class="w-full"
                                     wire:model="create_prendas_caminata.{{ $j }}.prendas">
                                     <option value="">Seleccione una talla</option>
-                                    @foreach ($prendas_caminata as $prenda)
+                                    @foreach ($prendas_caminata[$j] as $prenda)
                                         <option value="{{ $prenda->id }}"
                                             {{ $prenda->sexo == $this->create_prendas_caminata[$j]['genero'] ? 'selected' : '' }}>
                                             {{ $prenda->prenda_categories_nombre }} Talla
@@ -272,8 +272,8 @@
                                     <div class="mb-4">
                                         <x-label for="">Monto pagado $</x-label>
                                         <x-input type="number" step="0.01" class="w-full"
-                                            wire:model="inscripcion_caminata.{{ $j }}.monto_$" />
-                                        @error("inscripcion_caminata.$j.monto_$")
+                                            wire:model="inscripcion_caminata.{{ $j }}.monto_USD" />
+                                        @error("inscripcion_caminata.$j.monto_USD")
                                             <span class="error text-red-500">{{ $message }}</span>
                                         @enderror
                                     </div>
@@ -369,8 +369,8 @@
                                     <div class="mb-4">
                                         <x-label for="">Monto pagado $</x-label>
                                         <x-input type="number" step="0.01" class="w-full"
-                                            wire:model="inscripcion_caminata.{{ $j }}.monto_$" />
-                                        @error("inscripcion_caminata.$j.monto_$")
+                                            wire:model="inscripcion_caminata.{{ $j }}.monto_USD" />
+                                        @error("inscripcion_caminata.$j.monto_USD")
                                             <span class="error text-red-500">{{ $message }}</span>
                                         @enderror
                                     </div>
@@ -460,8 +460,8 @@
                                     <div class="mb-4">
                                         <x-label for="">Monto pagado $</x-label>
                                         <x-input type="number" step="0.01" class="w-full"
-                                            wire:model="inscripcion_caminata.{{ $j }}.monto_mixto_$" />
-                                        @error("inscripcion_caminata.$j.monto_mixto_$")
+                                            wire:model="inscripcion_caminata.{{ $j }}.monto_mixto_USD" />
+                                        @error("inscripcion_caminata.$j.monto_mixto_USD")
                                             <span class="error text-red-500">{{ $message }}</span>
                                         @enderror
                                     </div>
@@ -600,7 +600,7 @@
                                 <x-select class="w-full"
                                     wire:model="create_prendas_carrera.{{ $i }}.prendas">
                                     <option value="">Seleccione una talla</option>
-                                    @foreach ($prendas_carrera as $prenda)
+                                    @foreach ($prendas_carrera[$i] as $prenda)
                                         <option value="{{ $prenda->id }}"
                                             {{ $prenda->sexo == $this->create_prendas_carrera[$i]['genero'] ? 'selected' : '' }}>
                                             {{ $prenda->prenda_categories_nombre }} Talla
@@ -615,7 +615,7 @@
                                 <x-select class="w-full"
                                     wire:model="create_prendas_carrera.{{ $i }}.prendas">
                                     <option value="">Seleccione una talla</option>
-                                    @foreach ($prendas_carrera as $prenda)
+                                    @foreach ($prendas_carrera[$i] as $prenda)
                                         <option value="{{ $prenda->id }}"
                                             {{ $prenda->sexo == $this->create_prendas_carrera[$i]['genero'] ? 'selected' : '' }}>
                                             {{ $prenda->prenda_categories_nombre }} Talla
@@ -711,8 +711,8 @@
                                     <div class="mb-4">
                                         <x-label for="">Monto pagado $</x-label>
                                         <x-input type="number" step="0.01" class="w-full"
-                                            wire:model="inscripcion_carrera.{{ $i }}.monto_$" />
-                                        @error("inscripcion_carrera.$i.monto_$")
+                                            wire:model="inscripcion_carrera.{{ $i }}.monto_USD" />
+                                        @error("inscripcion_carrera.$i.monto_USD")
                                             <span class="error text-red-500">{{ $message }}</span>
                                         @enderror
                                     </div>
@@ -808,8 +808,8 @@
                                     <div class="mb-4">
                                         <x-label for="">Monto pagado $</x-label>
                                         <x-input type="number" step="0.01" class="w-full"
-                                            wire:model="inscripcion_carrera.{{ $i }}.monto_$" />
-                                        @error("inscripcion_carrera.$i.monto_$")
+                                            wire:model="inscripcion_carrera.{{ $i }}.monto_USD" />
+                                        @error("inscripcion_carrera.$i.monto_USD")
                                             <span class="error text-red-500">{{ $message }}</span>
                                         @enderror
                                     </div>
@@ -899,8 +899,8 @@
                                     <div class="mb-4">
                                         <x-label for="">Monto pagado $</x-label>
                                         <x-input type="number" step="0.01" class="w-full"
-                                            wire:model="inscripcion_carrera.{{ $i }}.monto_mixto_$" />
-                                        @error("inscripcion_carrera.$i.monto_mixto_$")
+                                            wire:model="inscripcion_carrera.{{ $i }}.monto_mixto_USD" />
+                                        @error("inscripcion_carrera.$i.monto_mixto_USD")
                                             <span class="error text-red-500">{{ $message }}</span>
                                         @enderror
                                     </div>

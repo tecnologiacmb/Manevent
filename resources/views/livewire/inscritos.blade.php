@@ -1,8 +1,31 @@
 <div>
-    <div class="bg-white shadow rounded-lg p-4 mb-4">
-        <h1 class="font-black text-xl text-gray-800 leading-tight text-normal">
-            Lista de inscripciones
+    <div class="bg-white shadow rounded-lg p-4 mb-2">
+        <h1 class="font-black text-xl text-gray-800 leading-tight text-normal text-center">
+            Inscripciones
         </h1>
+
+        <div class="flex items-center">
+            <input type="text" wire:model.live="query" placeholder="Buscar..."
+                class="w-5/12 px-4 mt-2 py-2 border-2 border-slate-300 rounded-lg focus:outline-none focus:border-blue-200 transition duration-300" />
+
+            <x-select wire:model.live="eventoId" class="ml-2 mt-2">
+                <option value="">Todos los eventos</option>
+                @foreach ($eventos as $evento)
+                    <option value="{{ $evento->id }}">{{ $evento->nombre }}</option>
+                @endforeach
+            </x-select>
+
+            <label for="" class="ml-2">Inicio</label>
+            <input type="date" wire:model.live="startDate"
+                class="w-1/6 px-4 mt-2 ml-1 py-2 border-2 border-slate-300 rounded-lg focus:outline-none focus:border-blue-200 transition duration-300" />
+
+            <label for="" class="ml-2">Fin</label>
+            <input type="date" wire:model.live="endDate"
+                class="w-1/6 px-4 mt-2 ml-1 py-2 border-2 border-slate-300 rounded-lg focus:outline-none focus:border-blue-200 transition duration-300" />
+
+            <x-button class="ml-2 bg-red-700 hover:bg-slate-300 " wire:click="limpiar()"
+                type="reset">Cancelar</x-button>
+        </div>
 
     </div>
 

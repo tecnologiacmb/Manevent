@@ -16,12 +16,14 @@ class AdminGrupo extends Component
 
 
     public $grupos;
+    public $tipo_grupos;
+    public $query;
+    public $RecorridoId;
     public $dolars;
     public $recorridos;
     public $open_edit = false;
     public $open = false;
     public $post_edit_id;
-
     public $post_create = [
         'recorrido_id' => "",
         'nombre' => "",
@@ -43,11 +45,11 @@ class AdminGrupo extends Component
     {
 
         $this->grupos = grupo::all();
+
         $this->dolars = dolar::select('id', 'precio')->whereDate('created_at', Carbon::today())->latest()->first();
         if (!$this->dolars) {
             $this->dolars = dolar::latest()->first();
         }
-        $this->post_create['dolar_id'] = $this->dolars ? $this->dolars->id : null;
         $this->recorridos = recorrido::all();
     }
     public function crear()
@@ -77,7 +79,6 @@ class AdminGrupo extends Component
             'precio' => $this->post_create['precio'],
             'cantidad' => $this->post_create['cantidad'],
             'estado' => $this->post_create['estado'],
-
         ]);
         $this->reset(['post_create']);
         $this->dispatch('alert');
@@ -148,7 +149,16 @@ class AdminGrupo extends Component
     }
     public function render()
     {
-        $grupos = grupo::orderBy('id', 'desc')->paginate(5);
+        $grupos =  grupo::select('grupos.*')->join('recorridos', 'grupos.recorrido_id', '=', 'recorridos.id')
+            ->where(function ($query) {
+                $query->orWhere('grupos.nombre', 'like', '%' . $this->query . '%')
+                    ->orWhere('grupos.precio', 'like', '%' . $this->query . '%');
+            })
+            ->when($this->RecorridoId, function ($query) { // Add this when clause
+                $query->where('grupos.recorrido_id', $this->RecorridoId);
+            }) // Especificar tabla para el género
+            ->orderBy('id', 'desc')
+            ->paginate(4);
         return view('livewire.administrar.admin-grupo', [
             'posts' => $grupos
         ]);

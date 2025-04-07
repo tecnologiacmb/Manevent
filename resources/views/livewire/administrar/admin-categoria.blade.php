@@ -7,12 +7,16 @@
             Agregar
         </x-button>
     </div>
+    <div class="bg-white shadow rounded-lg p-4 mb-2 px-8">
+        <input type="text" wire:model.live="query" placeholder="Buscar..."
+            class="w-4/5 px-8 mt-2 py-2 border-2 border-slate-300 rounded-lg focus:outline-none focus:border-blue-200 transition duration-300" />
 
+        <x-button class="ml-4 bg-red-700 hover:bg-slate-300 " wire:click="limpiar()" type="reset">Cancelar</x-button>
+    </div>
     <div
-        class="relative flex flex-col w-full h-full overflow-scroll text-black bg-white shadow-md rounded-xl bg-clip-border overflow-x-hidden overflow-y-hidden">
+        class="relative flex flex-col w-full h-full overflow-scroll text-black bg-white shadow-md rounded-xl bg-clip-border overflow-x-auto overflow-y-hidden">
 
-
-        <table class="w-full text-left table-auto min-w-max">
+        <table class="w-full text-center table-auto min-w-max">
             <thead>
                 <tr>
                     <th class="p-4 border-b border-blue-gray-100 bg-blue-gray-50">
@@ -36,20 +40,14 @@
                     <th class="p-4 border-b border-blue-gray-100 bg-blue-gray-50">
                         <p
                             class="block font-sans text-sm antialiased font-normal leading-none text-blue-gray-900 opacity-70">
+                            Acciones
                         </p>
                     </th>
                 </tr>
             </thead>
-
             <tbody>
                 @foreach ($posts as $post)
                     <tr>
-                        <td class="p-4 border-b border-blue-gray-50">
-                            <p
-                                class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-                                {{ $post->id }}
-                            </p>
-                        </td>
                         <td class="p-4 border-b border-blue-gray-50">
                             <p
                                 class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
@@ -68,8 +66,7 @@
                                 {{ $post->edad_max }}
                             </p>
                         </td>
-
-                        <td class="p-4 border-b border-blue-gray-50 space-x-8">
+                        <td class="p-4 border-b border-blue-gray-50">
                             <x-button class="bg-blue-500" wire:click="edit({{ $post->id }})">
                                 <i class="bi bi-pencil-square"></i>
                             </x-button>
@@ -135,7 +132,6 @@
             </x-slot>
         </x-dialog-modal>
     </form>
-
     <form wire:submit="update">
         <x-dialog-modal wire:model="open_edit">
             <x-slot name="title">
@@ -176,7 +172,6 @@
             </x-slot>
         </x-dialog-modal>
     </form>
-
 </div>
 @push('js')
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

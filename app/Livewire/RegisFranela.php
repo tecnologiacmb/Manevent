@@ -12,12 +12,16 @@ use Illuminate\Support\Facades\DB;
 
 class RegisFranela extends Component
 {
-    public $tallas = null;
-    public $categorias = null;
-    public $prendas = null;
+    public $tallas;
+    public $categorias;
+    public $prendas;
     public $open = false;
     public $open_update = false;
-    public $evento = null;
+    public $eventos;
+    public $query;
+    public $eventoId;
+    public $genero;
+
     public $post_edit_id;
     public $create_prenda = [
         'evento_id' => null,
@@ -33,37 +37,18 @@ class RegisFranela extends Component
     {
         $this->tallas = prenda_talla::all();
         $this->categorias = prenda_category::all();
-        /* $this->prendas = DB::table('prendas')->join('prenda_tallas', 'prendas.prenda_talla_id', '=', 'prenda_tallas.id')->join('prenda_categories', 'prendas.prenda_category_id', '=', 'prenda_categories.id')->select('prendas.*', 'prenda_tallas.talla as prenda_talla', 'prenda_categories.nombre as prenda_categories_nombre')->get(); */
-
-        $this->evento = evento::select('id', 'nombre', 'fecha_evento')->where('estado', true)->orderBy('id', 'desc')->first();
-
-        if (!is_null($this->evento)) {
-            $this->create_prenda = [
-                'evento_id' => $this->evento->id,
-                'prenda_category_id' => null,
-                'prenda_talla_id' => null,
-                'cantidad' => null,
-                'restadas' => null,
-                'sexo' => null,
-                'estado' => null,
-            ];
-        } else {
-            $this->create_prenda = [
-                'evento_id' => null,
-                'prenda_category_id' => null,
-                'prenda_talla_id' => null,
-                'cantidad' => null,
-                'sexo' => null,
-                'estado' => null,
-            ];
-        }
+        $this->eventos = evento::all();
     }
     public function crear()
     {
         $this->open = true;
     }
-
-
+    public function limpiar()
+    {
+        $this->genero = '';
+        $this->query = '';
+        $this->eventoId = '';
+    }
     public function select_sexo($value)
     {
         if ($value == 'Femenino') {
@@ -103,6 +88,8 @@ class RegisFranela extends Component
     }
     public function seve()
     {
+        $evento = evento::select('id', 'nombre', 'fecha_evento')->where('estado', true)->orderBy('id', 'desc')->first();
+        $this->create_prenda['evento_id'] = $evento->id;
         $prenda = prenda::create([
             'evento_id' => $this->create_prenda['evento_id'],
             'prenda_category_id' => $this->create_prenda['prenda_category_id'],
@@ -117,7 +104,22 @@ class RegisFranela extends Component
     }
     public function render()
     {
-        $this->prendas = prenda::select('prendas.*', 'prenda_tallas.talla as prenda_talla', 'prenda_categories.nombre as prenda_categories_nombre')->join('prenda_tallas', 'prendas.prenda_talla_id', '=', 'prenda_tallas.id')->join('prenda_categories', 'prendas.prenda_category_id', '=', 'prenda_categories.id')->where('prendas.estado', true)->get();
-        return view('livewire.regis-franela',['prendas'=>$this->prendas]);
+        $prendas =  prenda::select('prendas.*', 'prenda_tallas.talla as prenda_talla', 'prenda_categories.nombre as prenda_categories_nombre')->join('prenda_tallas', 'prendas.prenda_talla_id', '=', 'prenda_tallas.id')->join('prenda_categories', 'prendas.prenda_category_id', '=', 'prenda_categories.id')
+            ->join('eventos', 'prendas.evento_id', '=', 'eventos.id')
+            ->where(function ($query) {
+                $query->orWhere('prenda_tallas.talla', 'like', '%' . $this->query . '%')
+                    ->orWhere('prenda_categories.nombre', 'like', '%' . $this->query . '%');
+            })
+            ->when($this->eventoId, function ($query) { // Add this when clause
+                $query->where('prendas.evento_id', $this->eventoId);
+            })->when($this->genero, function ($query) {
+                $query->where('prendas.sexo', $this->genero); // Especificar tabla para el género
+            })->where('prenda_categories.id','!=',1)
+            ->orderBy('prendas.id', 'desc')
+            ->paginate(4);
+
+        $eventos = \App\Models\Evento::all();
+
+        return view('livewire.regis-franela', ['users' => $prendas, 'eventos' => $eventos]);
     }
 }

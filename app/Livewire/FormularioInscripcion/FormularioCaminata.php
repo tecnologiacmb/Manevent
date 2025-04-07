@@ -86,8 +86,10 @@ class FormularioCaminata extends Component
         'dolar' => null,
         'bolivar_mixto' => null,
         'dolar_mixto' => null,
-        'monto' => null,
-        'monto_mixto' => null,
+        'monto_Bs' => null,
+        'monto_USD' => null,
+        'monto_mixto_Bs' => null,
+        'monto_mixto_USD' => null,
         'fecha' => null,
         'fecha_mixto' => null,
         'referencia' => null,
@@ -379,7 +381,7 @@ class FormularioCaminata extends Component
                 if (!is_null($this->create_inscripcion[$i]['monto_Bs'])) {
                     $rules["create_inscripcion.$i.monto_Bs"] = 'required|numeric';
                 } else {
-                    $rules["create_inscripcion.$i.monto_$"] = 'required|numeric';
+                    $rules["create_inscripcion.$i.monto_USD"] = 'required|numeric';
                 }
             } else {
 
@@ -393,7 +395,7 @@ class FormularioCaminata extends Component
                 if (!is_null($this->create_inscripcion[$i]['monto_mixto_Bs'])) {
                     $rules["create_inscripcion.$i.monto_mixto_Bs"] = 'required|numeric';
                 } else {
-                    $rules["create_inscripcion.$i.monto_mixto_$"] = 'required|numeric';
+                    $rules["create_inscripcion.$i.monto_mixto_USD"] = 'required|numeric';
                 }
             }
         }
@@ -511,7 +513,7 @@ class FormularioCaminata extends Component
                     ];
                 } else {
                     $datos_json += [
-                        'monto_$' => $this->create_inscripcion[$i]['monto_$'],
+                        'monto_USD' => $this->create_inscripcion[$i]['monto_USD'],
                     ];
                 }
                 if (!is_null($this->create_inscripcion[$i]['fecha_mixto'])) {
@@ -527,7 +529,7 @@ class FormularioCaminata extends Component
                         ];
                     } else {
                         $datos_json += [
-                            'monto_mixto_$' => $this->create_inscripcion[$i]['monto_mixto_$'],
+                            'monto_mixto_USD' => $this->create_inscripcion[$i]['monto_mixto_USD'],
                         ];
                     }
                 }
@@ -599,7 +601,7 @@ class FormularioCaminata extends Component
                     ];
                 } else {
                     $datos_json += [
-                        'monto_$' => $this->create_inscripcion[$i]['monto_$'],
+                        'monto_USD' => $this->create_inscripcion[$i]['monto_USD'],
                     ];
                 }
                 if (!is_null($this->create_inscripcion[$i]['fecha_mixto'])) {
@@ -615,7 +617,7 @@ class FormularioCaminata extends Component
                         ];
                     } else {
                         $datos_json += [
-                            'monto_mixto_$' => $this->create_inscripcion[$i]['monto_mixto_$'],
+                            'monto_mixto_USD' => $this->create_inscripcion[$i]['monto_mixto_USD'],
                         ];
                     }
                 }

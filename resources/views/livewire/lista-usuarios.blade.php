@@ -1,9 +1,28 @@
 <div>
-    <div class="bg-white shadow rounded-lg p-4 mb-4">
-        <h1 class="font-black text-xl text-gray-800 leading-tight text-normal">
-            Lista de participantes inscritos
+    <div class="bg-white shadow rounded-lg p-4 mb-2">
+        <h1 class="font-black text-xl text-gray-800 leading-tight text-normal text-center">
+            Lista de participantes
         </h1>
+
+        <div class="flex items-center">
+            <input type="text" wire:model.live="query" placeholder="Buscar..."
+                class="w-5/12 px-8 mt-2 py-2 border-2 border-slate-300 rounded-lg focus:outline-none focus:border-blue-200 transition duration-300" />
+            <label for="" class="ml-2">Inicio</label>
+            <input type="date" wire:model.live="startDate"
+                class="w-1/6 px-8 mt-2 ml-1 py-2 border-2 border-slate-300 rounded-lg focus:outline-none focus:border-blue-200 transition duration-300" />
+
+            <label for="" class="ml-2">Fin</label>
+            <input type="date" wire:model.live="endDate"
+                class="w-1/6 px-8 mt-2 ml-1 py-2 border-2 border-slate-300 rounded-lg focus:outline-none focus:border-blue-200 transition duration-300"
+                style="display: block" />
+
+            <input class="ml-2" type="radio" name="genero" wire:model.live="genero" value="1"> Hombre
+            <input class="ml-2" type="radio" name="genero" wire:model.live="genero" value="2"> Mujer
+            <x-button class="ml-2 bg-red-700 hover:bg-slate-300 " wire:click="limpiar()" type="reset">Cancelar</x-button>
+        </div>
     </div>
+
+
     <div
         class="relative flex flex-col w-full h-full overflow-scroll text-black bg-white shadow-md rounded-xl bg-clip-border overflow-x-auto overflow-y-hidden">
 
@@ -113,4 +132,5 @@
             {{ $user->links() }}
         </div>
     </div>
+
 </div>

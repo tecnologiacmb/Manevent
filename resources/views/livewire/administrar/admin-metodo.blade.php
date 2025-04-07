@@ -8,28 +8,28 @@
         </x-button>
     </div>
     <div
-        class="relative flex flex-col w-full h-full overflow-scroll text-black bg-white shadow-md rounded-xl bg-clip-border overflow-x-hidden overflow-y-hidden">
+        class="relative flex flex-col w-full h-full overflow-scroll text-black bg-white shadow-md rounded-xl bg-clip-border overflow-x-auto overflow-y-hidden">
 
 
-        <table class="w-full text-left table-auto min-w-max">
+        <table class="w-full text-center table-auto min-w-max">
             <thead>
                 <tr>
                     <th class="p-4 border-b border-blue-gray-100 bg-blue-gray-50">
                         <p
                             class="block font-sans text-sm antialiased font-normal leading-none text-blue-gray-900 opacity-70">
-                            ID
+                            Logo
                         </p>
                     </th>
                     <th class="p-4 border-b border-blue-gray-100 bg-blue-gray-50">
                         <p
                             class="block font-sans text-sm antialiased font-normal leading-none text-blue-gray-900 opacity-70">
-                            Banco
+                            Tipo
                         </p>
                     </th>
                     <th class="p-4 border-b border-blue-gray-100 bg-blue-gray-50">
                         <p
                             class="block font-sans text-sm antialiased font-normal leading-none text-blue-gray-900 opacity-70">
-                            Metodo Pago
+                            Cuenta
                         </p>
                     </th>
                     <th class="p-4 border-b border-blue-gray-100 bg-blue-gray-50">
@@ -41,56 +41,102 @@
                     <th class="p-4 border-b border-blue-gray-100 bg-blue-gray-50">
                         <p
                             class="block font-sans text-sm antialiased font-normal leading-none text-blue-gray-900 opacity-70">
+                            Acciones
                         </p>
                     </th>
                 </tr>
             </thead>
 
             <tbody>
-                @foreach ($banco as $ban)
-                    @foreach ($tipo_pago as $pago)
-                        @foreach ($posts as $post)
-                            @if ($post->banco_id == $ban->id && $post->tipo_pago_id == $pago->id)
-                                <tr>
-                                    <td class="p-4 border-b border-blue-gray-50">
-                                        <p
-                                            class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-                                            {{ $pago->id }}
-                                        </p>
-                                    </td>
-                                    <td class="p-4 border-b border-blue-gray-50">
-                                        <p
-                                            class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-                                            {{ $pago->nombre }}
-                                        </p>
-                                    </td>
+                @foreach ($posts as $metodo_pago)
+                    <tr>
+                        <td class="p-4 border-b border-blue-gray-50">
+                            <p
+                                class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
+                                <img src="data:image/jpeg;base64,{{ base64_encode($metodo_pago->logo) }}"
+                                    alt="Logo de {{ $metodo_pago->banco }}" width="90">
+                            </p>
+                        </td>
+                        <td class="p-4 border-b border-blue-gray-50">
+                            <p
+                                class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
+                                {{ $metodo_pago->tipo_pago }} -
+                                {{ $metodo_pago->banco }}
+                            </p>
 
-                                    <td class="p-4 border-b border-blue-gray-50">
-                                        <p
-                                            class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-                                            {{ $ban->nombre }} Bs
-                                        </p>
-                                    </td>
-                                    <td class="p-4 border-b border-blue-gray-50">
-                                        <p
-                                            class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-                                            {{ $post->estado }}
-                                        </p>
-                                    </td>
-
-                                    <td class="p-4 border-b border-blue-gray-50 space-x-8">
-                                        <x-button class="bg-blue-500" wire:click="edit({{ $post->id }})">
-                                            <i class="bi bi-pencil-square"></i>
-                                        </x-button>
-
-                                        <x-danger-button wire:click="confirm_delete({{ $post->id }})">
-                                            <i class="bi bi-trash-fill"></i>
-                                        </x-danger-button>
-                                    </td>
-                                </tr>
+                        </td>
+                        <td class="p-4 border-b border-blue-gray-50">
+                            @if ($metodo_pago->tipo_pago_id == 1 || $metodo_pago->tipo_pago_id == 5 || $metodo_pago->tipo_pago_id == 6)
+                                <p
+                                    class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
+                                    {{ $metodo_pago->propietario }}
+                                </p>
+                            @elseif ($metodo_pago->tipo_pago_id == 2)
+                                <p
+                                    class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
+                                    N°-C: {{ $metodo_pago->n°_cuenta }}
+                                </p>
+                                <p
+                                    class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
+                                    ABA: {{ $metodo_pago->ABA }}
+                                </p>
+                                <p
+                                    class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
+                                    SWIT: {{ $metodo_pago->SWIT }}
+                                </p>
+                                <p
+                                    class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
+                                    {{ $metodo_pago->propietario }}
+                                </p>
+                                <p
+                                    class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
+                                    {{ $metodo_pago->correo }}
+                                </p>
+                            @elseif ($metodo_pago->tipo_pago_id == 3)
+                                <p
+                                    class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
+                                    {{ $metodo_pago->telefono }}
+                                </p>
+                                <p
+                                    class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
+                                    C.I: {{ $metodo_pago->cedula }}
+                                </p>
+                                <p
+                                    class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
+                                    {{ $metodo_pago->propietario }}
+                                </p>
+                            @elseif ($metodo_pago->tipo_pago_id == 4)
+                                <p
+                                    class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
+                                    N°-C: {{ $metodo_pago->n°_cuenta }}
+                                </p>
+                                <p
+                                    class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
+                                    C.I: {{ $metodo_pago->cedula }}
+                                </p>
+                                <p
+                                    class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
+                                    {{ $metodo_pago->propietario }}
+                                </p>
                             @endif
-                        @endforeach
-                    @endforeach
+                        </td>
+                        <td class="p-4 border-b border-blue-gray-50">
+                            <p
+                                class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
+                                {{ $metodo_pago->estado }}
+                            </p>
+                        </td>
+
+                        <td class="p-4 border-b border-blue-gray-50">
+                            <x-button class="bg-blue-500" wire:click="edit({{ $metodo_pago->id }})">
+                                <i class="bi bi-pencil-square"></i>
+                            </x-button>
+
+                            <x-danger-button wire:click="confirm_delete({{ $metodo_pago->id }})">
+                                <i class="bi bi-trash-fill"></i>
+                            </x-danger-button>
+                        </td>
+                    </tr>
                 @endforeach
             </tbody>
         </table>
@@ -105,21 +151,22 @@
                 Actualizar Post
             </x-slot>
             <x-slot name="content">
-                <div class="mb-4">
-                    <x-label for="">Metodo</x-label>
-                    <x-select class="w-full" wire:model="post_create.tipo_pago_id"
-                        wire:click="changeEvent($event.target.value)">
-                        <option value=""> Metodo pago</option>
-                        @foreach ($tipo_pago as $pago)
-                            <option value="{{ $pago->id }}">{{ $pago->nombre }}</option>
-                        @endforeach
-                    </x-select>
-                    @error('post_create.tipo_pago_id')
-                        <span class="error text-red-500">{{ $message }}</span>
-                    @enderror
-                </div>
-
                 <div class="grid grid-cols-2 gap-4">
+                    <div class="mb-4">
+                        <x-label for="">Metodo</x-label>
+                        <x-select class="w-full" wire:model="post_create.tipo_pago_id"
+                            wire:click="changeEvent($event.target.value)">
+                            <option value=""> Metodo pago</option>
+                            @foreach ($tipo_pago as $pago)
+                                <option value="{{ $pago->id }}">{{ $pago->nombre }}</option>
+                            @endforeach
+                        </x-select>
+                        @error('post_create.tipo_pago_id')
+                            <span class="error text-red-500">{{ $message }}</span>
+                        @enderror
+                    </div>
+
+
                     @if ($metodo == 1)
                         <div class="mb-4">
                             <x-label for="">Banco</x-label>
@@ -133,10 +180,17 @@
                                 <span class="error text-red-500">{{ $message }}</span>
                             @enderror
                         </div>
+                        <div class="mb-4">
+                            <x-label for="">Propietario</x-label>
+                            <x-input class="w-full" wire:model="post_create.propietario" />
+                            @error('post_create.propietario')
+                                <span class="error text-red-500">{{ $message }}</span>
+                            @enderror
+                        </div>
                     @elseif ($metodo == 2)
                         <div class="mb-4">
                             <x-label for="">N° Cuenta</x-label>
-                            <x-input type="number" class="w-full" wire:model="post_create.N°_cuenta" />
+                            <x-input type="number" class="w-full" wire:model="post_create.n°_cuenta" />
                             @error('post_create.N°_cuenta')
                                 <span class="error text-red-500">{{ $message }}</span>
                             @enderror
@@ -225,7 +279,7 @@
                     @elseif ($metodo == 4)
                         <div class="mb-4">
                             <x-label for="">N° Cuenta</x-label>
-                            <x-input type="number" class="w-full" wire:model="post_create.N°_cuenta" />
+                            <x-input type="number" class="w-full" wire:model="post_create.n°_cuenta" />
                             @error('post_create.N°_cuenta')
                                 <span class="error text-red-500">{{ $message }}</span>
                             @enderror
@@ -259,7 +313,7 @@
                                 <span class="error text-red-500">{{ $message }}</span>
                             @enderror
                         </div>
-                    @elseif ($metodo == 5)
+                    @elseif ($metodo == 5 || $metodo == 6)
                         <div class="mb-4">
                             <x-label for="">Banco</x-label>
                             <x-select class="w-full" wire:model="post_create.banco_id">
@@ -269,6 +323,13 @@
                                 @endforeach
                             </x-select>
                             @error('post_create.banco_id')
+                                <span class="error text-red-500">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        <div class="mb-4">
+                            <x-label for="">Propietario</x-label>
+                            <x-input class="w-full" wire:model="post_create.propietario" />
+                            @error('post_create.propietario')
                                 <span class="error text-red-500">{{ $message }}</span>
                             @enderror
                         </div>
@@ -325,22 +386,24 @@
                 </div>
 
                 <div class="grid grid-cols-2 gap-4">
-                    @if ($metodo == 1)
+                    @if ($post_update['tipo_pago_id'] == 1)
                         <div class="mb-4">
                             <x-label for="">Banco</x-label>
                             <x-select class="w-full" wire:model="post_update.banco_id">
                                 <option value="" disabled>Seleccione un Banco</option>
-
                                 @foreach ($banco as $post)
                                     <option value="{{ $post->id }}">{{ $post->nombre }}</option>
                                 @endforeach
-
                             </x-select>
                         </div>
-                    @elseif ($metodo == 2)
+                        <div class="mb-4">
+                            <x-label for="">Propietario</x-label>
+                            <x-input class="w-full" wire:model="post_update.propietario" />
+                        </div>
+                    @elseif ($post_update['tipo_pago_id'] == 2)
                         <div class="mb-4">
                             <x-label for="">N° Cuenta</x-label>
-                            <x-input type="number" class="w-full" wire:model="post_update.N°_cuenta" />
+                            <x-input type="number" class="w-full" wire:model="post_update.n°_cuenta" />
                         </div>
 
                         <div class="mb-4">
@@ -374,7 +437,7 @@
 
                             </x-select>
                         </div>
-                    @elseif ($metodo == 3)
+                    @elseif ($post_update['tipo_pago_id'] == 3)
                         <div class="mb-4">
                             <x-label for="">Cedula</x-label>
                             <x-input type="number" class="w-full" wire:model="post_update.cedula" />
@@ -401,10 +464,10 @@
 
                             </x-select>
                         </div>
-                    @elseif ($metodo == 4)
+                    @elseif ($post_update['tipo_pago_id'] == 4)
                         <div class="mb-4">
                             <x-label for="">N° Cuenta</x-label>
-                            <x-input type="number" class="w-full" wire:model="post_update.N°_cuenta" />
+                            <x-input type="number" class="w-full" wire:model="post_update.n°_cuenta" />
                         </div>
 
                         <div class="mb-4">
@@ -428,18 +491,22 @@
 
                             </x-select>
                         </div>
-                    @elseif ($metodo == 5)
+                    @elseif ($post_update['tipo_pago_id'] == 5 || $post_update['tipo_pago_id'] == 6)
                         <div class="mb-4">
                             <x-label for="">Banco</x-label>
-                            <x-select class="w-full" wire:model="post_create.banco_id">
+                            <x-select class="w-full" wire:model="post_update.banco_id">
                                 <option value="">Seleccione un Banco</option>
                                 @foreach ($banco as $post)
                                     <option value="{{ $post->id }}">{{ $post->nombre }}</option>
                                 @endforeach
                             </x-select>
-                            @error('post_create.banco_id')
+                            @error('post_update.banco_id')
                                 <span class="error text-red-500">{{ $message }}</span>
                             @enderror
+                        </div>
+                        <div class="mb-4">
+                            <x-label for="">Propietario</x-label>
+                            <x-input class="w-full" wire:model="post_update.propietario" />
                         </div>
                     @endif
 

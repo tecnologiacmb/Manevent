@@ -54,8 +54,8 @@
             </thead>
 
             <tbody>
-                <tr>
-                    @foreach ($posts as $eventos)
+                @foreach ($posts as $eventos)
+                    <tr>
                         <td class="p-4 border-b border-blue-gray-50">
                             <p
                                 class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
@@ -97,8 +97,8 @@
                                 <i class="bi bi-trash-fill"></i>
                             </x-danger-button>
                         </td>
-                    @endforeach
-                </tr>
+                    </tr>
+                @endforeach
 
             </tbody>
 
@@ -130,23 +130,23 @@
                             <x-label for="">Lugar</x-label>
                             <x-input class="w-full" wire:model="post_create.lugar_evento" />
                             @error('post_create.lugar_evento')
-                            <span class="error text-red-500">{{ $message }}</span>
-                        @enderror
+                                <span class="error text-red-500">{{ $message }}</span>
+                            @enderror
                         </div>
                         <div class="mb-4">
                             <x-label for="">Inicia</x-label>
                             <x-input type="date" class="w-full" wire:model="post_create.fecha_inicio" />
                             @error('post_create.fecha_inicio')
-                            <span class="error text-red-500">{{ $message }}</span>
-                        @enderror
+                                <span class="error text-red-500">{{ $message }}</span>
+                            @enderror
                         </div>
 
                         <div class="mb-4">
                             <x-label for="">Finaliza</x-label>
                             <x-input type="date" class="w-full" wire:model="post_create.fecha_finalizacion" />
                             @error('post_create.fecha_finalizacion')
-                            <span class="error text-red-500">{{ $message }}</span>
-                        @enderror
+                                <span class="error text-red-500">{{ $message }}</span>
+                            @enderror
                         </div>
 
 
@@ -155,8 +155,8 @@
                             <x-label for="">Fecha de Realización</x-label>
                             <x-input type="date" class="w-full" wire:model="post_create.fecha_evento" />
                             @error('post_create.fecha_evento')
-                            <span class="error text-red-500">{{ $message }}</span>
-                        @enderror
+                                <span class="error text-red-500">{{ $message }}</span>
+                            @enderror
                         </div>
 
                         <div class="mb-4">
@@ -167,8 +167,8 @@
                                 <option value="1">Habilitado</option>
                             </x-select>
                             @error('post_create.estado')
-                            <span class="error text-red-500">{{ $message }}</span>
-                        @enderror
+                                <span class="error text-red-500">{{ $message }}</span>
+                            @enderror
                         </div>
                     </div>
                 </x-slot>
@@ -249,44 +249,44 @@
         </form>
 
         @push('js')
-        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-        <script>
-            Livewire.on('alert', function() {
-                Swal.fire({
-                    title: "Éxito!",
-                    text: "El registro ha sido exitoso!",
-                    icon: "success"
-                });
-            })
-            Livewire.on('alert_update', function() {
-                Swal.fire({
-                    title: "Éxito!",
-                    text: "Los datos han sido actualizados!",
-                    icon: "success"
-                });
-            })
-            Livewire.on('alert_delete', post_id => {
-                Swal.fire({
-                    title: "¿Estas seguro?",
-                    text: "¡No podras revertir esto!",
-                    icon: "warning",
-                    showCancelButton: true,
-                    confirmButtonColor: "#3085d6",
-                    cancelButtonColor: "#d33",
-                    confirmButtonText: "¿Si, eliminalo!"
-                }).then((result) => {
-                    if (result.isConfirmed) {
+            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+            <script>
+                Livewire.on('alert', function() {
+                    Swal.fire({
+                        title: "Éxito!",
+                        text: "El registro ha sido exitoso!",
+                        icon: "success"
+                    });
+                })
+                Livewire.on('alert_update', function() {
+                    Swal.fire({
+                        title: "Éxito!",
+                        text: "Los datos han sido actualizados!",
+                        icon: "success"
+                    });
+                })
+                Livewire.on('alert_delete', post_id => {
+                    Swal.fire({
+                        title: "¿Estas seguro?",
+                        text: "¡No podras revertir esto!",
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#3085d6",
+                        cancelButtonColor: "#d33",
+                        confirmButtonText: "¿Si, eliminalo!"
+                    }).then((result) => {
+                        if (result.isConfirmed) {
 
-                        Livewire.dispatch('delete',post_id)
-                        Swal.fire({
-                            title: "Borrado!",
-                            text: "Eliminacion exitosa.",
-                            icon: "success"
-                        });
-                    }
-                });
+                            Livewire.dispatch('delete', post_id)
+                            Swal.fire({
+                                title: "Borrado!",
+                                text: "Eliminacion exitosa.",
+                                icon: "success"
+                            });
+                        }
+                    });
 
-            })
-        </script>
-    @endpush
+                })
+            </script>
+        @endpush
     </div>

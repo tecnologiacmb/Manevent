@@ -1,11 +1,11 @@
  <div>
      <div class="bg-white shadow rounded-lg p-2 mb-4">
-         <h1 class="font-black text-2xl text-gray-800 leading-tight text-normal">
-             Agregar el Precio del Dolar
-         </h1>
-         <hr>
+
          <form wire:submit="save">
-             <div class="flex justify-center space-x-4 py-2">
+             <div class="flex space-x-4 py-2">
+                <h1 class="mt-2 font-black text-2xl text-gray-800 leading-tight text-normal">
+                    Agregar el Precio del Dolar
+                </h1>
                  <x-input placeholder="Precio del Dolar" type="number" step="0.01" wire:model="post_create.precio" />
                  <x-button>
                      agregar

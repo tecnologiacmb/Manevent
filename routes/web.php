@@ -22,10 +22,13 @@ Route::middleware([
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
+    Route::get('/reporte_fondo', function () {
+        return view('reportes/reporte_fondo');
+    })->name('reporte_fondo');
+
     Route::get('/dashboard', function () {
         return view('dashboard');
     })->name('dashboard');
-
     Route::get('/tasaDolar', function () {
         return view('tasaDolar');
     })->name('tasaDolar');
@@ -37,6 +40,9 @@ Route::middleware([
     Route::get('/evento', function () {
         return view('evento');
     })->name('evento');
+    Route::get('/banco', function () {
+        return view('banco');
+    })->name('banco');
 
 
     Route::controller(Registro_Usuario::class)->group(function () {

@@ -11,7 +11,9 @@ class AdminCategoria extends Component
 {
     use WithPagination;
 
-    public $categoria, $post_edit_id;
+    public $categoria;
+    public $query;
+    public $post_edit_id;
     public $open;
     protected $listeners = ['delete'];
     public $open_edit = false;
@@ -108,8 +110,11 @@ class AdminCategoria extends Component
     }
     public function render()
     {
-        $categoria = categoriaHabilitada::orderBy('created_at', 'desc')->paginate(5);
-
+        $categoria =  categoriaHabilitada::select('categoria_habilitadas.*')
+        ->where(function ($query) {
+            $query->orWhere('categoria_habilitadas.nombre', 'like', '%' . $this->query . '%');
+        })
+        ->orderBy('created_at', 'desc')->paginate(6);
         return view('livewire.administrar.admin-categoria', [
             'posts' => $categoria
         ]);

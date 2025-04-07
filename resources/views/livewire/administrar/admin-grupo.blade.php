@@ -7,20 +7,24 @@
             Agregar
         </x-button>
     </div>
-
+    <div class="bg-white shadow rounded-lg p-4 mb-2 px-8">
+        <input type="text" wire:model.live="query" placeholder="Buscar..."
+            class="w-2/4 px-8 mt-2 py-2 border-2 border-slate-300 rounded-lg focus:outline-none focus:border-blue-200 transition duration-300" />
+        <x-select wire:model.live="RecorridoId" class="ml-2 mt-2 w-1/4">
+            <option value="">Todos los Grupos</option>
+            @foreach ($recorridos as $recorrido)
+                <option value="{{ $recorrido->id }}">{{ $recorrido->nombre }}</option>
+            @endforeach
+        </x-select>
+        <x-button class="ml-6 bg-red-700 hover:bg-slate-300 " wire:click="limpiar()" type="reset">Cancelar</x-button>
+    </div>
     <div
         class="relative flex flex-col w-full h-full overflow-scroll text-black bg-white shadow-md rounded-xl bg-clip-border overflow-x-hidden overflow-y-hidden">
 
 
-        <table class="w-full text-left table-auto min-w-max">
+        <table class="w-full text-center table-auto min-w-max">
             <thead>
                 <tr>
-                    <th class="p-4 border-b border-blue-gray-100 bg-blue-gray-50">
-                        <p
-                            class="block font-sans text-sm antialiased font-normal leading-none text-blue-gray-900 opacity-70">
-                            Id
-                        </p>
-                    </th>
                     <th class="p-4 border-b border-blue-gray-100 bg-blue-gray-50">
                         <p
                             class="block font-sans text-sm antialiased font-normal leading-none text-blue-gray-900 opacity-70">
@@ -60,6 +64,7 @@
                     <th class="p-4 border-b border-blue-gray-100 bg-blue-gray-50">
                         <p
                             class="block font-sans text-sm antialiased font-normal leading-none text-blue-gray-900 opacity-70">
+                            Acciones
                         </p>
                     </th>
                 </tr>
@@ -71,12 +76,6 @@
                     @foreach ($recorridos as $recorrido)
                         @if ($post->recorrido_id == $recorrido->id)
                             <tr>
-                                <td class="p-4 border-b border-blue-gray-50">
-                                    <p
-                                        class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-                                        {{ $post->id }}
-                                    </p>
-                                </td>
                                 <td class="p-4 border-b border-blue-gray-50">
                                     <p
                                         class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
@@ -113,7 +112,7 @@
                                         {{ $post->estado }}
                                     </p>
                                 </td>
-                                <td class="p-4 border-b border-blue-gray-50 space-x-8">
+                                <td class="p-4 border-b border-blue-gray-50">
                                     <x-button class="bg-blue-500" wire:click="edit({{ $post->id }})">
                                         <i class="bi bi-pencil-square"></i>
                                     </x-button>

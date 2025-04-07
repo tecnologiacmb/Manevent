@@ -13,7 +13,9 @@ class banco extends Model
     protected $fillable = [
         'nombre',
         'codigo',
-        'estado'
+        'estado',
+        'logo'
+
     ];
 
     public function metodo_pago()

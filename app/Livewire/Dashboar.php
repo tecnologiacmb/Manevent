@@ -64,12 +64,12 @@ class Dashboar extends Component
     }
     public function calcularParticipanteHombre()
     {
-        $this->ParticipanteHombre = inscripcion::join('participantes', 'inscripcions.participante_id', '=', 'participantes.id')->join('eventos', 'inscripcions.evento_id', '=', 'eventos.id')->where('eventos.estado', true)->where('participantes.genero_id',1)->count('participante_id');
+        $this->ParticipanteHombre = inscripcion::join('participantes', 'inscripcions.participante_id', '=', 'participantes.id')->join('eventos', 'inscripcions.evento_id', '=', 'eventos.id')->where('eventos.estado', true)->where('participantes.genero_id', 1)->count('participante_id');
         $this->PorcentajeHombre = round(($this->ParticipanteHombre / $this->totalParticipantes) * 100, 3);
     }
     public function calcularParticipanteMujer()
     {
-        $this->ParticipanteMujer = inscripcion::join('participantes', 'inscripcions.participante_id', '=', 'participantes.id')->join('eventos', 'inscripcions.evento_id', '=', 'eventos.id')->where('eventos.estado', true)->where('participantes.genero_id',2)->count('participante_id');
+        $this->ParticipanteMujer = inscripcion::join('participantes', 'inscripcions.participante_id', '=', 'participantes.id')->join('eventos', 'inscripcions.evento_id', '=', 'eventos.id')->where('eventos.estado', true)->where('participantes.genero_id', 2)->count('participante_id');
         $this->PorcentajeMujer = round(($this->ParticipanteMujer / $this->totalParticipantes) * 100, 3);
     }
     public function calcularEventoCarrera()
@@ -84,34 +84,31 @@ class Dashboar extends Component
     }
     public function calcularFranelas()
     {
-        $this->Franelas_S = prenda::join('eventos', 'prendas.evento_id', '=', 'eventos.id')->where('eventos.estado', true)->where('prendas.prenda_category_id', 1)->where('prendas.prenda_talla_id', 1)->sum('restadas');
-        if ($this->Franelas_S==0) {
-            $this->Franelas_S = prenda::join('eventos', 'prendas.evento_id', '=', 'eventos.id')->where('eventos.estado', true)->where('prendas.prenda_category_id', 1)->where('prendas.prenda_talla_id', 1)->sum('cantidad');
+        $this->Franelas_S = prenda::join('eventos', 'prendas.evento_id', '=', 'eventos.id')->where('eventos.estado', true)->where('prendas.prenda_category_id', 2)->where('prendas.prenda_talla_id', 2)->sum('restadas');
+        if ($this->Franelas_S == 0) {
 
+            $this->Franelas_S = prenda::join('eventos', 'prendas.evento_id', '=', 'eventos.id')->where('eventos.estado', true)->where('prendas.prenda_category_id', 2)->where('prendas.prenda_talla_id', 2)->sum('cantidad');
         }
-        $this->Franelas_M = prenda::join('eventos', 'prendas.evento_id', '=', 'eventos.id')->where('eventos.estado', true)->where('prendas.prenda_category_id', 1)->where('prendas.prenda_talla_id', 2)->sum('restadas');
+        $this->Franelas_M = prenda::join('eventos', 'prendas.evento_id', '=', 'eventos.id')->where('eventos.estado', true)->where('prendas.prenda_category_id', 2)->where('prendas.prenda_talla_id', 3)->sum('restadas');
 
-        if ($this->Franelas_M==0) {
-            $this->Franelas_M = prenda::join('eventos', 'prendas.evento_id', '=', 'eventos.id')->where('eventos.estado', true)->where('prendas.prenda_category_id', 1)->where('prendas.prenda_talla_id', 2)->sum('cantidad');
-
+        if (is_null($this->Franelas_M)) {
+            $this->Franelas_M = prenda::join('eventos', 'prendas.evento_id', '=', 'eventos.id')->where('eventos.estado', true)->where('prendas.prenda_category_id', 2)->where('prendas.prenda_talla_id', 3)->sum('cantidad');
         }
-        $this->Franelas_L = prenda::join('eventos', 'prendas.evento_id', '=', 'eventos.id')->where('eventos.estado', true)->where('prendas.prenda_category_id', 1)->where('prendas.prenda_talla_id', 3)->sum('restadas');
-        if ($this->Franelas_L==0) {
-            $this->Franelas_L = prenda::join('eventos', 'prendas.evento_id', '=', 'eventos.id')->where('eventos.estado', true)->where('prendas.prenda_category_id', 1)->where('prendas.prenda_talla_id', 3)->sum('cantidad');
-
+        $this->Franelas_L = prenda::join('eventos', 'prendas.evento_id', '=', 'eventos.id')->where('eventos.estado', true)->where('prendas.prenda_category_id', 2)->where('prendas.prenda_talla_id', 4)->sum('restadas');
+        if ($this->Franelas_L == 0) {
+            $this->Franelas_L = prenda::join('eventos', 'prendas.evento_id', '=', 'eventos.id')->where('eventos.estado', true)->where('prendas.prenda_category_id', 2)->where('prendas.prenda_talla_id', 4)->sum('cantidad');
         }
-        $this->Franelas_XL = prenda::join('eventos', 'prendas.evento_id', '=', 'eventos.id')->where('eventos.estado', true)->where('prendas.prenda_category_id', 1)->where('prendas.prenda_talla_id', 4)->sum('restadas');
-        if ($this->Franelas_XL==0) {
-            $this->Franelas_XL = prenda::join('eventos', 'prendas.evento_id', '=', 'eventos.id')->where('eventos.estado', true)->where('prendas.prenda_category_id', 1)->where('prendas.prenda_talla_id', 4)->sum('cantidad');
-
+        $this->Franelas_XL = prenda::join('eventos', 'prendas.evento_id', '=', 'eventos.id')->where('eventos.estado', true)->where('prendas.prenda_category_id', 2)->where('prendas.prenda_talla_id', 5)->sum('restadas');
+        if ($this->Franelas_XL == 0) {
+            $this->Franelas_XL = prenda::join('eventos', 'prendas.evento_id', '=', 'eventos.id')->where('eventos.estado', true)->where('prendas.prenda_category_id', 2)->where('prendas.prenda_talla_id', 5)->sum('cantidad');
         }
     }
-    public function calculo($num)
+    public function calculo($totalMontoPagado)
     {
         if (isset($this->dolars)) {
             $ultimoDolar = $this->dolars->latest()->first();
             if (isset($ultimoDolar)) {
-                $this->total = $this->totalMontoPagado / $ultimoDolar->precio;
+                $this->total = $totalMontoPagado / $ultimoDolar->precio;
                 return $this->total;
             }
         } else {

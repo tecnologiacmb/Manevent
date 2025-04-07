@@ -53,9 +53,24 @@
                             <li class="flex w-full justify-between text-black cursor-pointer items-center mb-6">
                                 <div
                                     class="p-2.5 mt-0 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-black text-black  hover:text-white">
-                                    <svg class="w-6 h-6 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m7.171 12.906-2.153 6.411 2.672-.89 1.568 2.34 1.825-5.183m5.73-2.678 2.154 6.411-2.673-.89-1.568 2.34-1.825-5.183M9.165 4.3c.58.068 1.153-.17 1.515-.628a1.681 1.681 0 0 1 2.64 0 1.68 1.68 0 0 0 1.515.628 1.681 1.681 0 0 1 1.866 1.866c-.068.58.17 1.154.628 1.516a1.681 1.681 0 0 1 0 2.639 1.682 1.682 0 0 0-.628 1.515 1.681 1.681 0 0 1-1.866 1.866 1.681 1.681 0 0 0-1.516.628 1.681 1.681 0 0 1-2.639 0 1.681 1.681 0 0 0-1.515-.628 1.681 1.681 0 0 1-1.867-1.866 1.681 1.681 0 0 0-.627-1.515 1.681 1.681 0 0 1 0-2.64c.458-.361.696-.935.627-1.515A1.681 1.681 0 0 1 9.165 4.3ZM14 9a2 2 0 1 1-4 0 2 2 0 0 1 4 0Z"/>
-                                      </svg>
+                                    <i class="bi bi-house-fill"></i>
+                                    <div class="flex justify-between w-full items-center">
+                                        <h1 class="cursor-pointer px-3 text-xl rounded-md mt-1 hover:text-white">
+                                            <a href="{{ route('reporte_fondo') }}"
+                                                :active="request() - > routeIs('reporte_fondo')" class="ml-2">Reportes</a>
+                                        </h1>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="flex w-full justify-between text-black cursor-pointer items-center mb-6">
+                                <div
+                                    class="p-2.5 mt-0 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-black text-black  hover:text-white">
+                                    <svg class="w-6 h-6 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                        width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                            stroke-width="2"
+                                            d="m7.171 12.906-2.153 6.411 2.672-.89 1.568 2.34 1.825-5.183m5.73-2.678 2.154 6.411-2.673-.89-1.568 2.34-1.825-5.183M9.165 4.3c.58.068 1.153-.17 1.515-.628a1.681 1.681 0 0 1 2.64 0 1.68 1.68 0 0 0 1.515.628 1.681 1.681 0 0 1 1.866 1.866c-.068.58.17 1.154.628 1.516a1.681 1.681 0 0 1 0 2.639 1.682 1.682 0 0 0-.628 1.515 1.681 1.681 0 0 1-1.866 1.866 1.681 1.681 0 0 0-1.516.628 1.681 1.681 0 0 1-2.639 0 1.681 1.681 0 0 0-1.515-.628 1.681 1.681 0 0 1-1.867-1.866 1.681 1.681 0 0 0-.627-1.515 1.681 1.681 0 0 1 0-2.64c.458-.361.696-.935.627-1.515A1.681 1.681 0 0 1 9.165 4.3ZM14 9a2 2 0 1 1-4 0 2 2 0 0 1 4 0Z" />
+                                    </svg>
 
                                     <div class="flex justify-between w-full items-center">
                                         <h1 class="cursor-pointer px-3 text-xl rounded-md mt-1 hover:text-white">
@@ -81,9 +96,15 @@
                                             </span>
                                         </div>
                                     </div>
+
                                     <div hidden class="text-left text-sm mt-2 w-4/5 mx-auto text-black font-bold"
                                         id="submenu1">
-
+                                        <h1 class="cursor-pointer p-2 hover:bg-black rounded-md mt-1 hover:text-white">
+                                            <i class="bi bi-bank"></i>
+                                            <a href="{{ route('metodo-pago') }}"
+                                                :active="request() - > routeIs('metodo-pago')" class="ml-2">Metodo
+                                                Pago</a>
+                                        </h1>
                                         <h1 class="cursor-pointer p-2 hover:bg-black rounded-md mt-1 hover:text-white">
                                             <i class="bi bi-cash-coin"></i>
                                             <a href="{{ route('metodo-pago') }}"
@@ -95,7 +116,8 @@
                                                 :active="request() - > routeIs('categoria')" class="ml-2">Categoria</a>
                                         </h1>
                                         <h1 class="cursor-pointer p-2 hover:bg-black rounded-md mt-1 hover:text-white">
-                                            <i class="bi bi-collection-fill"></i> <a href="{{ route('grupo') }}"
+                                            <i class="bi bi-collection-fill"></i>
+                                            <a href="{{ route('grupo') }}"
                                                 :active="request() - > routeIs('grupo')" class="ml-2">Grupo</a>
                                         </h1>
                                     </div>
@@ -217,83 +239,7 @@
                                     </h1>
                                 </div>
                             </li>
-                            {{-- <li
-                                class="flex w-full justify-between text-black hover:text-black text-xl cursor-pointer items-center mb-6">
-                                <div
-                                    class="p-2.5 mt-0 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-black text-black hover:text-white">
-                                    <svg class="h-8 w-8" width="24" height="24" viewBox="0 0 24 24"
-                                        stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round"
-                                        stroke-linejoin="round">
-                                        <path stroke="none" d="M0 0h24v24H0z" />
-                                        <path
-                                            d="M15 4l6 2v5h-3v8a1 1 0 0 1 -1 1h-10a1 1 0 0 1 -1 -1v-8h-3v-5l6 -2a3 3 0 0 0 6 0" />
-                                    </svg>
-                                    <div class="flex justify-between w-full items-center">
 
-                                        <h1 class="cursor-pointer px-2 text-xl rounded-md mt-1 hover:text-white">
-                                            <a href="{{ route('franelas') }}"
-                                                :active="request() - > routeIs('franelas')">Franelas</a></span>
-                                        </h1>
-                                    </div>
-                                </div>
-
-                            </li>
-                             <li
-                                class="flex w-full justify-between text-black hover:text-black text-xl cursor-pointer items-center mb-6">
-                                <div
-                                    class="p-2.5 mt-0 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-black text-black
-                                hover:text-white">
-                                    <i class="bi bi-person-lines-fill"></i>
-                                    <div class="flex justify-between w-full items-center">
-                                        <h1 class="cursor-pointer px-2 text-xl rounded-md mt-1 hover:text-white">
-                                            <a href="{{ route('vista_usuarios') }}"
-                                                :active="request() - > routeIs('vista_usuarios')">Participantes</a></span>
-                                        </h1>
-                                    </div>
-                                </div>
-                            </li>
-                             <li
-                                class="flex w-full justify-between text-black hover:text-black text-xl cursor-pointer items-center mb-6">
-                                <div
-                                    class="p-2.5 mt-0 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-black text-black hover:text-white">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
-                                        class="size-6">
-                                        <path fill-rule="evenodd"
-                                            d="M7.502 6h7.128A3.375 3.375 0 0 1 18 9.375v9.375a3 3 0 0 0 3-3V6.108c0-1.505-1.125-2.811-2.664-2.94a48.972 48.972 0 0 0-.673-.05A3 3 0 0 0 15 1.5h-1.5a3 3 0 0 0-2.663 1.618c-.225.015-.45.032-.673.05C8.662 3.295 7.554 4.542 7.502 6ZM13.5 3A1.5 1.5 0 0 0 12 4.5h4.5A1.5 1.5 0 0 0 15 3h-1.5Z"
-                                            clip-rule="evenodd" />
-                                        <path fill-rule="evenodd"
-                                            d="M3 9.375C3 8.339 3.84 7.5 4.875 7.5h9.75c1.036 0 1.875.84 1.875 1.875v11.25c0 1.035-.84 1.875-1.875 1.875h-9.75A1.875 1.875 0 0 1 3 20.625V9.375ZM6 12a.75.75 0 0 1 .75-.75h.008a.75.75 0 0 1 .75.75v.008a.75.75 0 0 1-.75.75H6.75a.75.75 0 0 1-.75-.75V12Zm2.25 0a.75.75 0 0 1 .75-.75h3.75a.75.75 0 0 1 0 1.5H9a.75.75 0 0 1-.75-.75ZM6 15a.75.75 0 0 1 .75-.75h.008a.75.75 0 0 1 .75.75v.008a.75.75 0 0 1-.75.75H6.75a.75.75 0 0 1-.75-.75V15Zm2.25 0a.75.75 0 0 1 .75-.75h3.75a.75.75 0 0 1 0 1.5H9a.75.75 0 0 1-.75-.75ZM6 18a.75.75 0 0 1 .75-.75h.008a.75.75 0 0 1 .75.75v.008a.75.75 0 0 1-.75.75H6.75a.75.75 0 0 1-.75-.75V18Zm2.25 0a.75.75 0 0 1 .75-.75h3.75a.75.75 0 0 1 0 1.5H9a.75.75 0 0 1-.75-.75Z"
-                                            clip-rule="evenodd" />
-                                    </svg>
-
-                                    <div class="flex justify-between w-full items-center">
-                                        <h1 class="cursor-pointer px-2 text-xl rounded-md mt-1 hover:text-white">
-                                            <a href="{{ route('incripcion') }}"
-                                                :active="request() - > routeIs('incripcion')">Inscripcion</a></span>
-                                        </h1>
-                                    </div>
-                                </div>
-                            </li>
-                             <li
-                                class="flex w-full justify-between text-black hover:text-black text-xl cursor-pointer items-center mb-6">
-                                <div
-                                    class="p-2.5 mt-0 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-black text-black
-                                hover:text-white">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
-                                        class="size-6">
-                                        <path
-                                            d="M5.25 6.375a4.125 4.125 0 1 1 8.25 0 4.125 4.125 0 0 1-8.25 0ZM2.25 19.125a7.125 7.125 0 0 1 14.25 0v.003l-.001.119a.75.75 0 0 1-.363.63 13.067 13.067 0 0 1-6.761 1.873c-2.472 0-4.786-.684-6.76-1.873a.75.75 0 0 1-.364-.63l-.001-.122ZM18.75 7.5a.75.75 0 0 0-1.5 0v2.25H15a.75.75 0 0 0 0 1.5h2.25v2.25a.75.75 0 0 0 1.5 0v-2.25H21a.75.75 0 0 0 0-1.5h-2.25V7.5Z" />
-                                    </svg>
-
-                                    <div class="flex justify-between w-full items-center">
-                                        <h1 class="cursor-pointer px-2 text-xl rounded-md mt-1 hover:text-white">
-                                            <a href="{{ route('registro_usuario') }}"
-                                                :active="request() - > routeIs('registro_usuario')">
-                                                Usuarios</a></span>
-                                        </h1>
-                                    </div>
-                                </div>
-                            </li> --}}
                             <li
                                 class="flex w-full justify-between text-black hover:text-black text-xl cursor-pointer items-center mb-6">
                                 <div

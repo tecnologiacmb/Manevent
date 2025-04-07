@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string("nombre", 50);
             $table->string("codigo", 20);
             $table->boolean("estado");
+            $table->binary("logo")->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

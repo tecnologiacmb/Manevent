@@ -8,10 +8,14 @@ use App\Models\banco;
 use App\Models\tipo_pago;
 use Livewire\WithPagination;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Livewire\WithFileUploads;
 
 class AdminMetodo extends Component
 {
     use WithPagination;
+    use WithFileUploads;
+    public $blob;
+    public $logoUrl;
 
     public $nameMetodo;
     public $banco;
@@ -43,6 +47,7 @@ class AdminMetodo extends Component
         'SWIT' => "",
         'correo' => "",
         'estado' => "",
+
     ];
     protected $listeners = ['delete'];
     public function mount()
@@ -86,7 +91,6 @@ class AdminMetodo extends Component
         $this->open_edit = true;
         $this->post_edit_id = $edit_id;
         $post = metodo_pago::find($edit_id);
-
         $this->post_update["tipo_pago_id"] = $post->tipo_pago_id;
         $this->post_update["banco_id"] = $post->banco_id;
         $this->post_update["n°_cuenta"] = $post->n°_cuenta;
@@ -131,6 +135,7 @@ class AdminMetodo extends Component
         $rules["post_create.tipo_pago_id"] = 'required|regex:/^[0-9]+$/';
         $rules["post_create.banco_id"] = 'required|regex:/^[0-9]+$/';
         $rules["post_create.estado"] = 'required';
+        $rules["post_create.propietario"] = 'required|string|max:49|regex:/^[a-zA-Z\s]+$/';
 
         if ($this->post_create["tipo_pago_id"] == 2) {
             $rules["post_create.n°_cuenta"] = 'required|string|regex:/^[0-9]+$/';
@@ -138,11 +143,11 @@ class AdminMetodo extends Component
             $rules["post_create.ABA"] = 'required|string|regex:/^[0-9]+$/';
             $rules["post_create.SWIT"] = 'required|string|regex:/^[0-9]+$/';
             $rules["post_create.correo"] = 'required|email|max:60';
-        }elseif($this->post_create["tipo_pago_id"] == 3){
+        } elseif ($this->post_create["tipo_pago_id"] == 3) {
             $rules["post_create.propietario"] = 'required|string|max:49|regex:/^[a-zA-Z\s]+$/';
             $rules["post_create.cedula"] = 'required|string|digits:8|regex:/^[0-9]+$/';
             $rules["post_create.telefono"] = 'required|string|digits:11|regex:/^[0-9]+$/';
-        }elseif($this->post_create["tipo_pago_id"] == 4){
+        } elseif ($this->post_create["tipo_pago_id"] == 4) {
             $rules["post_create.n°_cuenta"] = 'required|regex:/^[0-9]+$/';
             $rules["post_create.propietario"] = 'required|string|max:49|regex:/^[a-zA-Z\s]+$/';
             $rules["post_create.cedula"] = 'required|string|digits:8|regex:/^[0-9]+$/';
@@ -186,7 +191,15 @@ class AdminMetodo extends Component
 
     public function render()
     {
-        $nameMetodo = metodo_pago::orderBy('created_at', 'desc')->paginate(5);
+        $nameMetodo = metodo_pago::select('metodo_pagos.*', 'tipo_pagos.nombre as tipo_pago', 'bancos.nombre as banco', 'bancos.logo as logo')->join('tipo_pagos', 'metodo_pagos.tipo_pago_id', '=', 'tipo_pagos.id')->join('bancos', 'metodo_pagos.banco_id', '=', 'bancos.id')
+            /*   ->where(function ($query) {
+                $query->orWhere('metodo_pagos.n°_cuenta', 'like', '%' . $this->metodo . '%')
+                    ->orWhere('metodo_pagos.propietario', 'like', '%' . $this->metodo . '%')
+                    ->orWhere('bancos.nombre', 'like', '%' . $this->metodo . '%')
+                    ->orWhere('tipos_pago.nombre', 'like', '%' . $this->metodo . '%');
+            }) */
+            ->orderBy('created_at', 'desc')->paginate(5);
+
         return view('livewire.administrar.admin-metodo', [
             'posts' => $nameMetodo
         ]);

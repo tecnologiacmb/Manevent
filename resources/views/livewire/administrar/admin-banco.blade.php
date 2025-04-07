@@ -1,20 +1,30 @@
 <div>
-    <div class="bg-white shadow rounded-lg p-2 mb-4 flex items-center justify-between">
+    <div class="bg-white shadow rounded-lg p-2 mb-2 flex items-center justify-between">
         <h1 class="font-black text-2xl text-gray-800 leading-tight text-normal">
-            Listado de usuarios
+            Lista de Bancos Registrados
         </h1>
         <x-button class="shadow" wire:click="crear">
-            Registrar
+            Agregar
         </x-button>
     </div>
-
+    <div class="bg-white shadow rounded-lg p-2 mb-2 px-8">
+        <input type="text" wire:model.live="query" placeholder="Buscar..."
+            class="w-2/4 px-8 mt-2 py-2 border-2 border-slate-300 rounded-lg focus:outline-none focus:border-blue-200 transition duration-300" />
+        <x-button class="ml-6 bg-red-700 hover:bg-slate-300 " wire:click="limpiar()" type="reset">Cancelar</x-button>
+    </div>
     <div
         class="relative flex flex-col w-full h-full overflow-scroll text-black bg-white shadow-md rounded-xl bg-clip-border overflow-x-auto overflow-y-hidden">
 
 
-        <table class="w-full text-center table-auto min-w-max">
+        <table class="w-full text-center table-auto min-w-max ">
             <thead>
                 <tr>
+                    <th class="p-4 border-b border-blue-gray-100 bg-blue-gray-50">
+                        <p
+                            class="block font-sans text-sm antialiased font-normal leading-none text-blue-gray-900 opacity-70">
+                            logo
+                        </p>
+                    </th>
                     <th class="p-4 border-b border-blue-gray-100 bg-blue-gray-50">
                         <p
                             class="block font-sans text-sm antialiased font-normal leading-none text-blue-gray-900 opacity-70">
@@ -24,107 +34,114 @@
                     <th class="p-4 border-b border-blue-gray-100 bg-blue-gray-50">
                         <p
                             class="block font-sans text-sm antialiased font-normal leading-none text-blue-gray-900 opacity-70">
-                            Correo
+                            Codigo
                         </p>
                     </th>
                     <th class="p-4 border-b border-blue-gray-100 bg-blue-gray-50">
                         <p
                             class="block font-sans text-sm antialiased font-normal leading-none text-blue-gray-900 opacity-70">
-                            Rol
+                            estado
                         </p>
                     </th>
                     <th class="p-4 border-b border-blue-gray-100 bg-blue-gray-50">
                         <p
                             class="block font-sans text-sm antialiased font-normal leading-none text-blue-gray-900 opacity-70">
-                            Acciones
                         </p>
                     </th>
                 </tr>
             </thead>
 
             <tbody>
-                @foreach ($users as $usuario)
-                    <tr>
+                <tr>
+                    @foreach ($posts as $post)
                         <td class="p-4 border-b border-blue-gray-50">
                             <p
                                 class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-                                {{ $usuario->name }}
+
+                                <img src="data:image/jpeg;base64,{{ base64_encode($post->logo) }}"
+                                    alt="Logo de {{ $post->nombre }}" width="90">
+
+                            </p>
+                        </td>
+
+                        <td class="p-4 border-b border-blue-gray-50">
+                            <p
+                                class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
+                                {{ $post->nombre }}
                             </p>
                         </td>
                         <td class="p-4 border-b border-blue-gray-50">
                             <p
                                 class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-                                {{ $usuario->email }}
+                                {{ $post->codigo }}
                             </p>
                         </td>
                         <td class="p-4 border-b border-blue-gray-50">
                             <p
                                 class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
-                                {{ $usuario->roles_name }}
+                                {{ $post->estado }}
                             </p>
                         </td>
-                        <td class="p-4 border-b border-blue-gray-50">
-                            <x-button class="bg-blue-500" wire:click="edit({{ $usuario->id }})">
+
+                        <td class="p-4 border-b border-blue-gray-50 space-x-8">
+                            <x-button class="bg-blue-500" wire:click="edit({{ $post->id }})">
                                 <i class="bi bi-pencil-square"></i>
                             </x-button>
-                            <x-danger-button wire:click="confirm_delete({{ $usuario->id }})">
+
+                            <x-danger-button wire:click="confirm_delete({{ $post->id }})">
                                 <i class="bi bi-trash-fill"></i>
                             </x-danger-button>
                         </td>
-                    </tr>
+                </tr>
                 @endforeach
 
             </tbody>
 
         </table>
         <div>
-            {{ $users->links() }}
+            {{ $posts->links() }}
         </div>
 
-        <form wire:submit="seve">
+        <form wire:submit="save">
             <x-dialog-modal wire:model="open">
                 <x-slot name="title">
-                    Registrar Usuario
+                    Actualizar Datos
                 </x-slot>
 
                 <x-slot name="content">
                     <div class="mb-4">
-                        <x-label for="">Nombre</x-label>
-                        <x-input class="w-full" wire:model="create_usuario.name" />
-                        @error('create_usuario.name')
+                        <x-label for="">Banco</x-label>
+                        <x-input class="w-full" wire:model="post_create.nombre" />
+                        @error('post_create.nombre')
                             <span class="error text-red-500">{{ $message }}</span>
                         @enderror
                     </div>
                     <div class="mb-4">
-                        <x-label for="">Correo</x-label>
-                        <x-input type="email" class="w-full" wire:model="create_usuario.email" />
-                        @error('create_usuario.email')
+                        <x-label for="">Codigo</x-label>
+                        <x-input type="number" class="w-full" wire:model="post_create.codigo" />
+                        @error('post_create.codigo')
                             <span class="error text-red-500">{{ $message }}</span>
                         @enderror
                     </div>
                     <div class="mb-4">
-                        <x-label for="">Contraseña</x-label>
-                        <x-input class="w-full" wire:model="create_usuario.password" />
-                        @error('create_usuario.email')
-                            <span class="error text-red-500">{{ $message }}</span>
-                        @enderror
+                        <x-label for="">logo</x-label>
+                        <x-input type="file" class="w-full" wire:model="post_create.logo" accept="image/*"
+                            required />
                     </div>
+                    @if ($post_create['logo'])
+                        <div>
+                            <h4>Vista Previa del Logo:</h4>
+                            <img src="{{ $post_create['logo']->temporaryUrl() }}" alt="Vista previa" width="100">
+                        </div>
+                    @endif
                     <div class="mb-4">
-                        <x-label for="">Confirmar Contraseña</x-label>
-                        <x-input class="w-full" wire:model="create_usuario.confirmar_password" />
-                        @error('create_usuario.confirmar_password')
-                            <span class="error text-red-500">{{ $message }}</span>
-                        @enderror
-                    </div>
-                    <div class="mb-4">
-                        <x-label for="">Rol</x-label>
-                        <x-select class="w-full" wire:model="create_rol">
-                            <option value="">Selecciona un Rol de acceso</option>
-                            @foreach ($roles as $rol)
-                                <option value="{{ $rol->id }}">{{ $rol->name }}</option>
-                            @endforeach
+                        <x-label for="">Estado</x-label>
+                        <x-select class="w-full" wire:model="post_create.estado">
+                            <option value="">Seleccione un Estado</option>
+                            <option value="0">Deshabilitado</option>
+                            <option value="1">Habilitado</option>
                         </x-select>
-                        @error('create_rol')
+                        @error('post_create.estado')
                             <span class="error text-red-500">{{ $message }}</span>
                         @enderror
                     </div>
@@ -137,44 +154,47 @@
                         </x-danger-button>
 
                         <x-button>
-                            Registrar
+                            Agregar
                         </x-button>
                     </div>
                 </x-slot>
             </x-dialog-modal>
         </form>
-        <form wire:submit="update">
+
+        <form wire:submit.prevent="update"> <!-- Cambiado a prevent para evitar la recarga de la página -->
             <x-dialog-modal wire:model="open_edit">
                 <x-slot name="title">
-                    Actualizar Usuario
+                    Actualizar Post
                 </x-slot>
 
                 <x-slot name="content">
                     <div class="mb-4">
-                        <x-label for="">Nombre</x-label>
-                        <x-input class="w-full" wire:model="create_usuario.name" />
-                        @error('create_usuario.name')
-                            <span class="error text-red-500">{{ $message }}</span>
-                        @enderror
+                        <x-label for="">Banco</x-label>
+                        <x-input class="w-full" wire:model="post_update.nombre" /> <!-- Asegúrate que el campo existe -->
                     </div>
                     <div class="mb-4">
-                        <x-label for="">Correo</x-label>
-                        <x-input type="email" class="w-full" wire:model="create_usuario.email" />
-                        @error('create_usuario.email')
-                            <span class="error text-red-500">{{ $message }}</span>
-                        @enderror
+                        <x-label for="">Código</x-label>
+                        <x-input type="number" class="w-full" wire:model="post_update.codigo" />
                     </div>
                     <div class="mb-4">
-                        <x-label for="">Rol</x-label>
-                        <x-select class="w-full" wire:model="create_rol">
-                            <option value="">Selecciona un Rol de acceso</option>
-                            @foreach ($roles as $rol)
-                                <option value="{{ $rol->id }}">{{ $rol->name }}</option>
-                            @endforeach
+                        <x-label for="">Logo</x-label>
+                        <x-input type="file" class="w-full" wire:model="post_update.logo" accept="image/*"
+                            required />
+                    </div>
+                    @if ($post_update['logo'])
+                        <!-- Asegúrate de que esto apunta correctamente -->
+                        <div>
+                            <h4>Vista Previa del Logo:</h4>
+                            <img src="{{ $post_update['logo']->temporaryUrl() }}" alt="Vista previa" width="100">
+                        </div>
+                    @endif
+                    <div class="mb-4">
+                        <x-label for="">Estado</x-label>
+                        <x-select class="w-full" wire:model="post_update.estado">
+                            <option value="">Seleccione un Estado</option>
+                            <option value="0">Deshabilitado</option>
+                            <option value="1">Habilitado</option>
                         </x-select>
-                        @error('create_rol')
-                            <span class="error text-red-500">{{ $message }}</span>
-                        @enderror
                     </div>
                 </x-slot>
 
@@ -185,7 +205,7 @@
                         </x-danger-button>
 
                         <x-button>
-                            Registrar
+                            Actualizar
                         </x-button>
                     </div>
                 </x-slot>
@@ -201,13 +221,6 @@
                     title: "Éxito!",
                     text: "El registro ha sido exitoso!",
                     icon: "success"
-                });
-            })
-            Livewire.on('alert_error', function() {
-                Swal.fire({
-                    title: "Error!",
-                    text: "¡No coincide la contraseña!",
-                    icon: "danger"
                 });
             })
             Livewire.on('alert_update', function() {

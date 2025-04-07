@@ -103,9 +103,9 @@ class FormularioMixto extends Component
         'bolivar_mixto' => null,
         'dolar_mixto' => null,
         'monto_Bs' => null,
-        'monto_$' => null,
+        'monto_USD' => null,
         'monto_mixto_Bs' => null,
-        'monto_mixto_$' => null,
+        'monto_mixto_USD' => null,
         'fecha' => null,
         'fecha_mixto' => null,
         'referencia' => null,
@@ -140,9 +140,9 @@ class FormularioMixto extends Component
         'bolivar_mixto' => null,
         'dolar_mixto' => null,
         'monto_Bs' => null,
-        'monto_$' => null,
+        'monto_USD' => null,
         'monto_mixto_Bs' => null,
-        'monto_mixto_$' => null,
+        'monto_mixto_USD' => null,
         'fecha' => null,
         'fecha_mixto' => null,
         'referencia' => null,
@@ -217,9 +217,9 @@ class FormularioMixto extends Component
                     'bolivar_mixto' => null,
                     'dolar_mixto' => null,
                     'monto_Bs' => null,
-                    'monto_$' => null,
+                    'monto_USD' => null,
                     'monto_mixto_Bs' => null,
-                    'monto_mixto_$' => null,
+                    'monto_mixto_USD' => null,
                     'fecha' => $this->fecha_actual,
                     'fecha_mixto' => $this->fecha_actual,
                     'referencia' => null,
@@ -273,9 +273,9 @@ class FormularioMixto extends Component
                     'bolivar_mixto' => null,
                     'dolar_mixto' => null,
                     'monto_Bs' => null,
-                    'monto_$' => null,
+                    'monto_USD' => null,
                     'monto_mixto_Bs' => null,
-                    'monto_mixto_$' => null,
+                    'monto_mixto_USD' => null,
                     'fecha' => $this->fecha_actual,
                     'fecha_mixto' => $this->fecha_actual,
                     'referencia' => null,
@@ -650,7 +650,7 @@ class FormularioMixto extends Component
                 if (!is_null($this->inscripcion_carrera[$i]['monto_Bs'])) {
                     $rules["inscripcion_carrera.$i.monto_Bs"] = 'required|numeric';
                 } else {
-                    $rules["inscripcion_carrera.$i.monto_$"] = 'required|numeric';
+                    $rules["inscripcion_carrera.$i.monto_USD"] = 'required|numeric';
                 }
             } else {
                 $rules["inscripcion_carrera.$i.fecha"] = 'required|date|before_or_equal:' . $this->fecha_actual;
@@ -663,7 +663,7 @@ class FormularioMixto extends Component
                 if (!is_null($this->inscripcion_carrera[$i]['monto_mixto_Bs'])) {
                     $rules["inscripcion_carrera.$i.monto_mixto_Bs"] = 'required|numeric';
                 } else {
-                    $rules["inscripcion_carrera.$i.monto_mixto_$"] = 'required|numeric';
+                    $rules["inscripcion_carrera.$i.monto_mixto_USD"] = 'required|numeric';
                 }
             }
         }
@@ -686,7 +686,7 @@ class FormularioMixto extends Component
                 if (!is_null($this->inscripcion_caminata[$j]['monto_Bs'])) {
                     $rules["inscripcion_caminata.$j.monto_Bs"] = 'required|numeric';
                 } else {
-                    $rules["inscripcion_caminata.$j.monto_$"] = 'required|numeric';
+                    $rules["inscripcion_caminata.$j.monto_USD"] = 'required|numeric';
                 }
             } else {
                 $rules["inscripcion_caminata.$j.fecha"] = 'required|date|before_or_equal:' . $this->fecha_actual;
@@ -699,7 +699,7 @@ class FormularioMixto extends Component
                 if (!is_null($this->inscripcion_caminata[$j]['monto_mixto_Bs'])) {
                     $rules["inscripcion_caminata.$j.monto_mixto_Bs"] = 'required|numeric';
                 } else {
-                    $rules["inscripcion_caminata.$j.monto_mixto_$"] = 'required|numeric';
+                    $rules["inscripcion_caminata.$j.monto_mixto_USD"] = 'required|numeric';
                 }
             }
         }
@@ -881,6 +881,82 @@ class FormularioMixto extends Component
         }
     }
 
+    public function asignar_prendas_carrera($value)
+    {
+        // Encuentra la prenda solo una vez
+        $prenda = prenda::select('cantidad', 'restadas')->find($value);
+        for ($i = 0; $i <= $this->cantidad_carrera - 1; $i++) {
+            $this->create_prendas_carrera[$i]['prendas'] = $value;
+
+            // Resta de cantidades dependiendo de si 'restadas' es null o no
+            if (is_null($prenda->restadas)) {
+                $resta = $prenda->cantidad - 1;
+                prenda::where('id', $value)->update(['restadas' => $resta]);
+            } else {
+                $resta = $prenda->restadas - 1;
+                prenda::where('id', $value)->update(['restadas' => $resta]);
+            }
+        }
+    }
+    public function asignar_prendas_caminata($value)
+    {
+        // Encuentra la prenda solo una vez
+        $prenda = prenda::select('cantidad', 'restadas')->find($value);
+        for ($i = 0; $i <= $this->cantidad_caminata - 1; $i++) {
+            $this->create_prendas_caminata[$i]['prendas'] = $value;
+
+            // Resta de cantidades dependiendo de si 'restadas' es null o no
+            if (is_null($prenda->restadas)) {
+                $resta = $prenda->cantidad - 1;
+                prenda::where('id', $value)->update(['restadas' => $resta]);
+            } else {
+                $resta = $prenda->restadas - 1;
+                prenda::where('id', $value)->update(['restadas' => $resta]);
+            }
+        }
+    }
+    public function update_prendas_caminata($index, $option)
+    {
+
+        if ($option === '1') {
+
+            $this->create_prendas_caminata[$index]['genero'] = 'Masculino';
+            $this->prendas_caminata[$index] = DB::table('prendas')
+                ->join('prenda_tallas', 'prendas.prenda_talla_id', '=', 'prenda_tallas.id')->join('prenda_categories', 'prendas.prenda_category_id', '=', 'prenda_categories.id')->select('prendas.*', 'prenda_tallas.talla as prenda_talla', 'prenda_categories.nombre as prenda_categories_nombre')->where('prendas.sexo', 'Masculino')->get();
+        } elseif ($option === '2') {
+            $this->create_prendas_caminata[$index]['genero'] = 'Femenino';
+            $this->prendas_caminata[$index] = DB::table('prendas')
+                ->join('prenda_tallas', 'prendas.prenda_talla_id', '=', 'prenda_tallas.id')->join('prenda_categories', 'prendas.prenda_category_id', '=', 'prenda_categories.id')->select('prendas.*', 'prenda_tallas.talla as prenda_talla', 'prenda_categories.nombre as prenda_categories_nombre')->where('prendas.sexo', 'Femenino')->get();
+        } elseif ($option === '') {
+            $this->create_prendas_caminata[$index]['genero'] = null;
+            $this->prendas_caminata = null;
+        }
+    }
+    public function update_prendas_carrera($index, $option)
+    {
+        // Asignar el género basado en la opción seleccionada
+        if ($option === '1') {
+            $this->create_prendas_carrera[$index]['genero'] = 'Masculino';
+            $this->prendas_carrera[$index] = DB::table('prendas')
+                ->join('prenda_tallas', 'prendas.prenda_talla_id', '=', 'prenda_tallas.id')
+                ->join('prenda_categories', 'prendas.prenda_category_id', '=', 'prenda_categories.id')
+                ->select('prendas.*', 'prenda_tallas.talla as prenda_talla', 'prenda_categories.nombre as prenda_categories_nombre')
+                ->where('prendas.sexo', 'Masculino')
+                ->get();
+        } elseif ($option === '2') {
+            $this->create_prendas_carrera[$index]['genero'] = 'Femenino';
+            $this->prendas_carrera[$index] = DB::table('prendas')
+                ->join('prenda_tallas', 'prendas.prenda_talla_id', '=', 'prenda_tallas.id')
+                ->join('prenda_categories', 'prendas.prenda_category_id', '=', 'prenda_categories.id')
+                ->select('prendas.*', 'prenda_tallas.talla as prenda_talla', 'prenda_categories.nombre as prenda_categories_nombre')
+                ->where('prendas.sexo', 'Femenino')
+                ->get();
+        } elseif ($option === '') {
+            $this->create_prendas_carrera[$index]['genero'] = null;
+            $this->prendas_carrera[$index] = null; // Cambia esto para que sea específico para el índice
+        }
+    }
+
     public function save()
     {
         $this->validate();
@@ -954,10 +1030,10 @@ class FormularioMixto extends Component
                         ];
                     } else {
                         $datos_json += [
-                            'monto_$' => $this->inscripcion_caminata[$i]['monto_$'],
+                            'monto_USD' => $this->inscripcion_caminata[$i]['monto_USD'],
                         ];
                     }
-                    if (!is_null($this->inscripcion_caminata[$i]['monto_mixto_Bs']) || !is_null($this->inscripcion_caminata[$i]['monto_mixto_$'])) {
+                    if (!is_null($this->inscripcion_caminata[$i]['monto_mixto_Bs']) || !is_null($this->inscripcion_caminata[$i]['monto_mixto_USD'])) {
                         $datos_json += [
                             'fecha_mixto' => $this->inscripcion_caminata[$i]['fecha_mixto'],
                             'referencia_mixto' => $this->inscripcion_caminata[$i]['referencia_mixto'],
@@ -968,9 +1044,9 @@ class FormularioMixto extends Component
                             $datos_json += [
                                 'monto_mixto_Bs' => $this->inscripcion_caminata[$i]['monto_mixto_Bs'],
                             ];
-                        } else if (!is_null($this->inscripcion_caminata[$i]['monto_mixto_$'])) {
+                        } else if (!is_null($this->inscripcion_caminata[$i]['monto_mixto_USD'])) {
                             $datos_json += [
-                                'monto_mixto_$' => $this->inscripcion_caminata[$i]['monto_mixto_$'],
+                                'monto_mixto_USD' => $this->inscripcion_caminata[$i]['monto_mixto_USD'],
                             ];
                         }
                     }
@@ -987,8 +1063,8 @@ class FormularioMixto extends Component
                     $this->inscripcion_caminata[$i]['nomenclatura'] = $this->nomenclatura;
                     $this->inscripcion_caminata[$i]['ip'] = $this->userIp;
                     $this->inscripcion_caminata[$i]['categoria_habilitada_id'] = 12;
-                    if (!is_null($this->create_prendas[$i]['prendas'])) {
-                        $this->inscripcion_caminata[$i]['prenda_id'] = $this->create_prendas[$i]['prendas'];
+                    if (!is_null($this->create_prendas_caminata[$i]['prendas'])) {
+                        $this->inscripcion_caminata[$i]['prenda_id'] = $this->create_prendas_caminata[$i]['prendas'];
                         $this->asignar_prendas_caminata($this->create_prendas_caminata[$i]['prendas']);
                     } else {
                         $this->inscripcion_caminata[$i]['prenda_id'] = 1;
@@ -1037,10 +1113,10 @@ class FormularioMixto extends Component
                         ];
                     } else {
                         $datos_json += [
-                            'monto_$' => $this->inscripcion_caminata[$i]['monto_$'],
+                            'monto_USD' => $this->inscripcion_caminata[$i]['monto_USD'],
                         ];
                     }
-                    if (!is_null($this->inscripcion_caminata[$i]['monto_mixto_Bs']) || !is_null($this->inscripcion_caminata[$i]['monto_mixto_$'])) {
+                    if (!is_null($this->inscripcion_caminata[$i]['monto_mixto_Bs']) || !is_null($this->inscripcion_caminata[$i]['monto_mixto_USD'])) {
                         $datos_json += [
                             'fecha_mixto' => $this->inscripcion_caminata[$i]['fecha_mixto'],
                             'referencia_mixto' => $this->inscripcion_caminata[$i]['referencia_mixto'],
@@ -1051,9 +1127,9 @@ class FormularioMixto extends Component
                             $datos_json += [
                                 'monto_mixto_Bs' => $this->inscripcion_caminata[$i]['monto_mixto_Bs'],
                             ];
-                        } else if (!is_null($this->inscripcion_caminata[$i]['monto_mixto_$'])) {
+                        } else if (!is_null($this->inscripcion_caminata[$i]['monto_mixto_USD'])) {
                             $datos_json += [
-                                'monto_mixto_$' => $this->inscripcion_caminata[$i]['monto_mixto_$'],
+                                'monto_mixto_USD' => $this->inscripcion_caminata[$i]['monto_mixto_USD'],
                             ];
                         }
                     }
@@ -1072,8 +1148,8 @@ class FormularioMixto extends Component
                     $this->inscripcion_caminata[$i]['nomenclatura'] = $this->nomenclatura;
                     $this->inscripcion_caminata[$i]['ip'] = $this->userIp;
                     $this->inscripcion_caminata[$i]['categoria_habilitada_id'] = 12;
-                    if (!is_null($this->create_prendas[$i]['prendas'])) {
-                        $this->inscripcion_caminata[$i]['prenda_id'] = $this->create_prendas[$i]['prendas'];
+                    if (!is_null($this->create_prendas_caminata[$i]['prendas'])) {
+                        $this->inscripcion_caminata[$i]['prenda_id'] = $this->create_prendas_caminata[$i]['prendas'];
                         $this->asignar_prendas_caminata($this->create_prendas_caminata[$i]['prendas']);
                     } else {
                         $this->inscripcion_caminata[$i]['prenda_id'] = 1;
@@ -1120,11 +1196,11 @@ class FormularioMixto extends Component
                         ];
                     } else {
                         $datos_json += [
-                            'monto_$' => $this->inscripcion_carrera[$i]['monto_$'],
+                            'monto_USD' => $this->inscripcion_carrera[$i]['monto_USD'],
                         ];
                     }
 
-                    if (!is_null($this->inscripcion_carrera[$i]['monto_mixto_Bs']) || !is_null($this->inscripcion_carrera[$i]['monto_mixto_$'])) {
+                    if (!is_null($this->inscripcion_carrera[$i]['monto_mixto_Bs']) || !is_null($this->inscripcion_carrera[$i]['monto_mixto_USD'])) {
                         $datos_json += [
                             'fecha_mixto' => $this->inscripcion_carrera[$i]['fecha_mixto'],
                             'referencia_mixto' => $this->inscripcion_carrera[$i]['referencia_mixto'],
@@ -1135,9 +1211,9 @@ class FormularioMixto extends Component
                             $datos_json += [
                                 'monto_mixto_Bs' => $this->inscripcion_carrera[$i]['monto_mixto_Bs'],
                             ];
-                        } else if (!is_null($this->inscripcion_carrera[$i]['monto_mixto_$'])) {
+                        } else if (!is_null($this->inscripcion_carrera[$i]['monto_mixto_USD'])) {
                             $datos_json += [
-                                'monto_mixto_$' => $this->inscripcion_carrera[$i]['monto_mixto_$'],
+                                'monto_mixto_USD' => $this->inscripcion_carrera[$i]['monto_mixto_USD'],
                             ];
                         }
                     }
@@ -1156,8 +1232,8 @@ class FormularioMixto extends Component
 
                     $this->inscripcion_carrera[$i]['nomenclatura'] = $this->nomenclatura;
                     $this->inscripcion_carrera[$i]['ip'] = $this->userIp;
-                    if (!is_null($this->create_prendas[$i]['prendas'])) {
-                        $this->inscripcion_carrera[$i]['prenda_id'] = $this->create_prendas[$i]['prendas'];
+                    if (!is_null($this->create_prendas_carrera[$i]['prendas'])) {
+                        $this->inscripcion_carrera[$i]['prenda_id'] = $this->create_prendas_carrera[$i]['prendas'];
                         $this->asignar_prendas_carrera($this->create_prendas_carrera[$i]['prendas']);
                     } else {
                         $this->inscripcion_carrera[$i]['prenda_id'] = 1;
@@ -1182,7 +1258,6 @@ class FormularioMixto extends Component
                     $ultima_inscripcion_id = inscripcion::latest('id')->first()->id;
                     $this->asignar_num_mesa_carrera($ultima_inscripcion_id, $this->participante_carrera[$i]['cedula']);
                 } else {
-
                     $participante = participante::create([
                         'ciudad_id' => $this->participante_carrera[$i]['ciudad_id'],
                         'cedula' => $this->participante_carrera[$i]['cedula'],
@@ -1209,7 +1284,7 @@ class FormularioMixto extends Component
                         ];
                     } else {
                         $datos_json += [
-                            'monto_$' => $this->inscripcion_carrera[$i]['monto_$'],
+                            'monto_USD' => $this->inscripcion_carrera[$i]['monto_USD'],
                         ];
                     }
 
@@ -1224,9 +1299,9 @@ class FormularioMixto extends Component
                             $datos_json += [
                                 'monto_mixto_Bs' => $this->inscripcion_carrera[$i]['monto_mixto_Bs'],
                             ];
-                        } else if (!is_null($this->inscripcion_carrera[$i]['monto_mixto_$'])) {
+                        } else if (!is_null($this->inscripcion_carrera[$i]['monto_mixto_USD'])) {
                             $datos_json += [
-                                'monto_mixto_$' => $this->inscripcion_carrera[$i]['monto_mixto_$'],
+                                'monto_mixto_USD' => $this->inscripcion_carrera[$i]['monto_mixto_USD'],
                             ];
                         }
                     }
@@ -1245,8 +1320,8 @@ class FormularioMixto extends Component
 
                     $this->inscripcion_carrera[$i]['nomenclatura'] = $this->nomenclatura;
                     $this->inscripcion_carrera[$i]['ip'] = $this->userIp;
-                    if (!is_null($this->create_prendas[$i]['prendas'])) {
-                        $this->inscripcion_carrera[$i]['prenda_id'] = $this->create_prendas[$i]['prendas'];
+                    if (!is_null($this->create_prendas_carrera[$i]['prendas'])) {
+                        $this->inscripcion_carrera[$i]['prenda_id'] = $this->create_prendas_carrera[$i]['prendas'];
                         $this->asignar_prendas_carrera($this->create_prendas_carrera[$i]['prendas']);
                     } else {
                         $this->inscripcion_carrera[$i]['prenda_id'] = 1;
@@ -1279,71 +1354,6 @@ class FormularioMixto extends Component
         $this->inscripcion_caminata = [];
         $this->participante_carrera = [];
         $this->inscripcion_carrera = [];
-    }
-
-    public function asignar_prendas_carrera($value)
-    {
-        // Encuentra la prenda solo una vez
-        $prenda = prenda::select('cantidad', 'restadas')->find($value);
-        for ($i = 0; $i <= $this->cantidad_carrera - 1; $i++) {
-            $this->create_prendas_carrera[$i]['prendas'] = $value;
-
-            // Resta de cantidades dependiendo de si 'restadas' es null o no
-            if (is_null($prenda->restadas)) {
-                $resta = $prenda->cantidad - 1;
-                prenda::where('id', $value)->update(['restadas' => $resta]);
-            } else {
-                $resta = $prenda->restadas - 1;
-                prenda::where('id', $value)->update(['restadas' => $resta]);
-            }
-        }
-    }
-    public function asignar_prendas_caminata($value)
-    {
-        // Encuentra la prenda solo una vez
-        $prenda = prenda::select('cantidad', 'restadas')->find($value);
-        for ($i = 0; $i <= $this->cantidad_caminata - 1; $i++) {
-            $this->create_prendas_caminata[$i]['prendas'] = $value;
-
-            // Resta de cantidades dependiendo de si 'restadas' es null o no
-            if (is_null($prenda->restadas)) {
-                $resta = $prenda->cantidad - 1;
-                prenda::where('id', $value)->update(['restadas' => $resta]);
-            } else {
-                $resta = $prenda->restadas - 1;
-                prenda::where('id', $value)->update(['restadas' => $resta]);
-            }
-        }
-    }
-    public function update_prendas_caminata($index, $option)
-    {
-
-        if ($option === '1') {
-
-            $this->create_prendas_caminata[$index]['genero'] = 'Masculino';
-            $this->prendas_caminata = DB::table('prendas')->join('prenda_tallas', 'prendas.prenda_talla_id', '=', 'prenda_tallas.id')->join('prenda_categories', 'prendas.prenda_category_id', '=', 'prenda_categories.id')->select('prendas.*', 'prenda_tallas.talla as prenda_talla', 'prenda_categories.nombre as prenda_categories_nombre')->where('prendas.sexo', 'Masculino')->get();
-        } elseif ($option === '2') {
-            $this->create_prendas_caminata[$index]['genero'] = 'Femenino';
-            $this->prendas_caminata = DB::table('prendas')->join('prenda_tallas', 'prendas.prenda_talla_id', '=', 'prenda_tallas.id')->join('prenda_categories', 'prendas.prenda_category_id', '=', 'prenda_categories.id')->select('prendas.*', 'prenda_tallas.talla as prenda_talla', 'prenda_categories.nombre as prenda_categories_nombre')->where('prendas.sexo', 'Femenino')->get();
-        } elseif ($option === '') {
-            $this->create_prendas_caminata[$index]['genero'] = null;
-            $this->prendas_caminata = null;
-        }
-    }
-    public function update_prendas_carrera($index, $option)
-    {
-
-        if ($option === '1') {
-
-            $this->create_prendas_carrera[$index]['genero'] = 'Masculino';
-            $this->prendas_carrera = DB::table('prendas')->join('prenda_tallas', 'prendas.prenda_talla_id', '=', 'prenda_tallas.id')->join('prenda_categories', 'prendas.prenda_category_id', '=', 'prenda_categories.id')->select('prendas.*', 'prenda_tallas.talla as prenda_talla', 'prenda_categories.nombre as prenda_categories_nombre')->where('prendas.sexo', 'Masculino')->get();
-        } elseif ($option === '2') {
-            $this->create_prendas_carrera[$index]['genero'] = 'Femenino';
-            $this->prendas_carrera = DB::table('prendas')->join('prenda_tallas', 'prendas.prenda_talla_id', '=', 'prenda_tallas.id')->join('prenda_categories', 'prendas.prenda_category_id', '=', 'prenda_categories.id')->select('prendas.*', 'prenda_tallas.talla as prenda_talla', 'prenda_categories.nombre as prenda_categories_nombre')->where('prendas.sexo', 'Femenino')->get();
-        } elseif ($option === '') {
-            $this->create_prendas_carrera[$index]['genero'] = null;
-            $this->prendas_carrera = null;
-        }
     }
     public function render()
     {
