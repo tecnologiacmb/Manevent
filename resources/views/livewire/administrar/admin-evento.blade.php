@@ -3,7 +3,7 @@
         <h1 class="font-black text-2xl text-gray-800 leading-tight text-normal">
             Eventos Registrados
         </h1>
-        <x-button class="shadow" wire:click="crear">
+        <x-button class="shadow hover:bg-slate-300 focus:bg-slate-300 active:bg-slate-300" wire:click="crear">
             Agregar
         </x-button>
     </div>
@@ -89,7 +89,8 @@
                             </p>
                         </td>
                         <td class="p-4 border-b border-blue-gray-50 space-x-8">
-                            <x-button class="bg-blue-500" wire:click="edit({{ $eventos->id }})">
+                            <x-button class="bg-blue-500 hover:bg-slate-300 focus:bg-slate-300 active:bg-slate-300"
+                                wire:click="edit({{ $eventos->id }})">
                                 <i class="bi bi-pencil-square"></i>
                             </x-button>
 
@@ -111,7 +112,7 @@
         <form wire:submit="seve">
             <x-dialog-modal wire:model="open">
                 <x-slot name="title">
-                    Actualizar Post
+                    Registrar
                 </x-slot>
 
                 <x-slot name="content">
@@ -162,7 +163,7 @@
                         <div class="mb-4">
                             <x-label for="">Estado</x-label>
                             <x-select class="w-full" wire:model="post_create.estado">
-                                <option value="" disabled>Seleccione un Estado</option>
+                                <option value="" >Seleccione un Estado</option>
                                 <option value="0">Deshabilitado</option>
                                 <option value="1">Habilitado</option>
                             </x-select>
@@ -179,8 +180,8 @@
                             Cancelar
                         </x-danger-button>
 
-                        <x-button>
-                            Agregar
+                        <x-button wire:click="validar1()">
+                            Registrar
                         </x-button>
                     </div>
                 </x-slot>
@@ -190,7 +191,7 @@
         <form wire:submit="update">
             <x-dialog-modal wire:model="open_edit">
                 <x-slot name="title">
-                    Actualizar Post
+                    Actualizar
                 </x-slot>
 
                 <x-slot name="content">
@@ -198,22 +199,32 @@
                     <div class="mb-4">
                         <x-label for="">Nombre del Evento</x-label>
                         <x-input class="w-full" wire:model="post_update.nombre" />
+                        @error('post_update.nombre')
+                            <span class="error text-red-500">{{ $message }}</span>
+                        @enderror
                     </div>
                     <div class="grid grid-cols-2 gap-4">
-
-
                         <div class="mb-4">
                             <x-label for="">Lugar</x-label>
                             <x-input class="w-full" wire:model="post_update.lugar_evento" />
+                            @error('post_update.lugar_evento')
+                                <span class="error text-red-500">{{ $message }}</span>
+                            @enderror
                         </div>
                         <div class="mb-4">
                             <x-label for="">Inicia</x-label>
                             <x-input type="date" class="w-full" wire:model="post_update.fecha_inicio" />
+                            @error('post_update.fecha_inicio')
+                                <span class="error text-red-500">{{ $message }}</span>
+                            @enderror
                         </div>
 
                         <div class="mb-4">
                             <x-label for="">Finaliza</x-label>
                             <x-input type="date" class="w-full" wire:model="post_update.fecha_finalizacion" />
+                            @error('post_update.fecha_finalizacion')
+                                <span class="error text-red-500">{{ $message }}</span>
+                            @enderror
                         </div>
 
 
@@ -221,15 +232,21 @@
                         <div class="mb-4">
                             <x-label for="">Fecha de Realización</x-label>
                             <x-input type="date" class="w-full" wire:model="post_update.fecha_evento" />
+                            @error('post_update.fecha_evento')
+                                <span class="error text-red-500">{{ $message }}</span>
+                            @enderror
                         </div>
 
                         <div class="mb-4">
                             <x-label for="">Estado</x-label>
                             <x-select class="w-full" wire:model="post_update.estado">
-                                <option value="" disabled>Seleccione un Estado</option>
+                                <option value="" >Seleccione un Estado</option>
                                 <option value="0">Deshabilitado</option>
                                 <option value="1">Habilitado</option>
                             </x-select>
+                            @error('post_update.estado')
+                                <span class="error text-red-500">{{ $message }}</span>
+                            @enderror
                         </div>
                     </div>
                 </x-slot>
@@ -240,7 +257,7 @@
                             Cancelar
                         </x-danger-button>
 
-                        <x-button>
+                        <x-button wire:click="validar2()">
                             Actualizar
                         </x-button>
                     </div>

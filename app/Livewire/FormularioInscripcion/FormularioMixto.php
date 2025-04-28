@@ -39,15 +39,14 @@ class FormularioMixto extends Component
     public $dolar = null;
     public $fecha_actual = null;
     public $fecha_evento;
-    public $cantidad_carrera;
-    public $cantidad_caminata;
+    public $cantidad_carrera = '';
+    public $cantidad_caminata = '';
     public $nomenclatura;
     public $nuevoNumeroOrden = null;
     public $userIp;
     public $generos;
     public $prendas_caminata;
     public $prendas_carrera;
-
     public $datos_json = [];
     public $inscripcion_validate_global = [];
     public $participantes_ids = [];
@@ -91,7 +90,7 @@ class FormularioMixto extends Component
         'categoria_habilitada_id' => null,
         'mesa_id' => null,
         'datos' => null,
-        'monto_pagado_bs' => null,
+        'monto_a_pagar_bs' => null,
         'ip' => "",
         'nomenclatura' => "",
         'metodo' => null,
@@ -115,6 +114,8 @@ class FormularioMixto extends Component
         'recorrido_id' => null,
         'recorrido_id_grupos' => null,
         'prenda_id' => null,
+        'pago_BS_USD' => null
+
     ];
     public $inscripcion_caminata = [
         'evento_id' => null,
@@ -128,7 +129,7 @@ class FormularioMixto extends Component
         'categoria_habilitada_id' => null,
         'mesa_id' => null,
         'datos' => null,
-        'monto_pagado_bs' => null,
+        'monto_a_pagar_bs' => null,
         'ip' => "",
         'nomenclatura' => "",
         'metodo' => null,
@@ -152,17 +153,24 @@ class FormularioMixto extends Component
         'recorrido_id' => null,
         'recorrido_id_grupos' => null,
         'prenda_id' => null,
+        'pago_BS_USD' => null
+
     ];
     public $create_prendas_carrera = [
         'prendas' => null,
-        'genero' => null
+        'genero' => null,
+        'prenda_genero' => null
+
     ];
     public $create_prendas_caminata = [
         'prendas' => null,
-        'genero' => null
+        'genero' => null,
+        'prenda_genero' => null
+
     ];
     public function mount($id = null, $cantidad_carrera, $cantidad_caminata)
     {
+
         if (!is_null($id)) {
             $this->cantidad_carrera = $cantidad_carrera;
             $this->cantidad_caminata = $cantidad_caminata;
@@ -192,6 +200,7 @@ class FormularioMixto extends Component
                     'direccion' => "",
                     'fecha_nacimiento' => "",
                     'genero_id' => null,
+
                 ];
                 $this->inscripcion_carrera[$i] = [
                     'evento_id' => $this->evento->id,
@@ -205,7 +214,7 @@ class FormularioMixto extends Component
                     'categoria_habilitada_id' => null,
                     'mesa_id' => null,
                     'datos' => null,
-                    'monto_pagado_bs' =>  $this->calculo($this->grupo->precio),
+                    'monto_a_pagar_bs' =>  $this->calculo($this->grupo->precio),
                     'ip' => "",
                     'nomenclatura' => "",
                     'metodo' => null,
@@ -229,10 +238,14 @@ class FormularioMixto extends Component
                     'recorrido_id' => null,
                     'recorrido_id_grupos' => null,
                     'prenda_id' => null,
+                    'pago_BS_USD' => null
+
                 ];
                 $this->create_prendas_carrera[$i] = [
                     'prendas' => null,
-                    'genero' => null
+                    'genero' => null,
+                    'prenda_genero' => null
+
                 ];
             }
             for ($j = 0; $j <= $this->cantidad_caminata - 1; $j++) {
@@ -261,7 +274,7 @@ class FormularioMixto extends Component
                     'categoria_habilitada_id' => null,
                     'mesa_id' => null,
                     'datos' => null,
-                    'monto_pagado_bs' =>  $this->calculo($this->grupo->precio),
+                    'monto_a_pagar_bs' =>  $this->calculo($this->grupo->precio),
                     'ip' => "",
                     'nomenclatura' => "",
                     'metodo' => null,
@@ -285,10 +298,14 @@ class FormularioMixto extends Component
                     'recorrido_id' => null,
                     'recorrido_id_grupos' => null,
                     'prenda_id' => null,
+                    'pago_BS_USD' => null
+
                 ];
                 $this->create_prendas_caminata[$j] = [
                     'prendas' => null,
-                    'genero' => null
+                    'genero' => null,
+                    'prenda_genero' => null
+
                 ];
             }
             $this->ciudad = ciudad::all();
@@ -299,6 +316,7 @@ class FormularioMixto extends Component
 
     public function subtractYears()
     {
+
         $this->fecha_evento = Carbon::parse($this->evento->fecha_evento)->subYears(15)->format('Y-m-d');
     }
     public function updatedParticipanteCarrera($value, $name)
@@ -319,7 +337,6 @@ class FormularioMixto extends Component
             $this->participante_caminata[$index]['ciudades'] = ciudad::where('estado_id', $value)->get();
         }
     }
-
     public function updated_pago_carrera($value, $name)
     {
         $parts = explode('.', $name);
@@ -372,28 +389,25 @@ class FormularioMixto extends Component
 
     public function update_pago_carrera($index, $option)
     {
-        if ($option === '1') {
-
-            $this->inscripcion_carrera[$index]['bolivar'] = '1';
+        if ($option === 'bolivar') {
+            $this->inscripcion_carrera[$index]['bolivar'] = 'bolivar';
             $this->inscripcion_carrera[$index]['dolar'] = null;
-        } elseif ($option === '2') {
+        } elseif ($option === 'dolar') {
             $this->inscripcion_carrera[$index]['bolivar'] = null;
-            $this->inscripcion_carrera[$index]['dolar'] = '2';
+            $this->inscripcion_carrera[$index]['dolar'] = 'dolar';
         } elseif ($option === '') {
             $this->inscripcion_carrera[$index]['bolivar'] = null;
             $this->inscripcion_carrera[$index]['dolar'] = null;
         }
     }
-
     public function update_pago_caminata($index, $option)
     {
-        if ($option === '1') {
-
-            $this->inscripcion_caminata[$index]['bolivar'] = '1';
+        if ($option === 'bolivar') {
+            $this->inscripcion_caminata[$index]['bolivar'] = 'bolivar';
             $this->inscripcion_caminata[$index]['dolar'] = null;
-        } elseif ($option === '2') {
+        } elseif ($option === 'dolar') {
             $this->inscripcion_caminata[$index]['bolivar'] = null;
-            $this->inscripcion_caminata[$index]['dolar'] = '2';
+            $this->inscripcion_caminata[$index]['dolar'] = 'dolar';
         } elseif ($option === '') {
             $this->inscripcion_caminata[$index]['bolivar'] = null;
             $this->inscripcion_caminata[$index]['dolar'] = null;
@@ -402,13 +416,12 @@ class FormularioMixto extends Component
 
     public function update_pago_mixto_carrera($index, $option)
     {
-        if ($option === '1') {
-
-            $this->inscripcion_carrera[$index]['bolivar_mixto'] = '1';
+        if ($option === 'bolivar_mixto') {
+            $this->inscripcion_carrera[$index]['bolivar_mixto'] = 'bolivar_mixto';
             $this->inscripcion_carrera[$index]['dolar_mixto'] = null;
-        } elseif ($option === '2') {
+        } elseif ($option === 'dolar_mixto') {
             $this->inscripcion_carrera[$index]['bolivar_mixto'] = null;
-            $this->inscripcion_carrera[$index]['dolar_mixto'] = '2';
+            $this->inscripcion_carrera[$index]['dolar_mixto'] = 'dolar_mixto';
         } elseif ($option === '') {
             $this->inscripcion_carrera[$index]['bolivar_mixto'] = null;
             $this->inscripcion_carrera[$index]['dolar_mixto'] = null;
@@ -417,13 +430,12 @@ class FormularioMixto extends Component
 
     public function update_pago_mixto_caminata($index, $option)
     {
-        if ($option === '1') {
-
-            $this->inscripcion_caminata[$index]['bolivar_mixto'] = '1';
+        if ($option === 'bolivar_mixto') {
+            $this->inscripcion_caminata[$index]['bolivar_mixto'] = 'bolivar_mixto';
             $this->inscripcion_caminata[$index]['dolar_mixto'] = null;
-        } elseif ($option === '2') {
+        } elseif ($option === 'dolar_mixto') {
             $this->inscripcion_caminata[$index]['bolivar_mixto'] = null;
-            $this->inscripcion_caminata[$index]['dolar_mixto'] = '2';
+            $this->inscripcion_caminata[$index]['dolar_mixto'] = 'dolar_mixto';
         } elseif ($option === '') {
             $this->inscripcion_caminata[$index]['bolivar_mixto'] = null;
             $this->inscripcion_caminata[$index]['dolar_mixto'] = null;
@@ -432,6 +444,7 @@ class FormularioMixto extends Component
 
     public function calculo($num)
     {
+
         $total = 0;
         $ultimoDolar = $this->dolars->latest()->first();
 
@@ -456,8 +469,8 @@ class FormularioMixto extends Component
 
     public function asignar_num_mesa_carrera($inscripcion_id, $cedula)
     {
-        $ultimo_digito = substr($cedula, -1);
 
+        $ultimo_digito = substr($cedula, -1);
         $this->inscripcion = inscripcion::find($inscripcion_id);
         if ($ultimo_digito == '0' || $ultimo_digito == '1') {
             $numero_id = numero::select('id')->where('disponible', true)->where('estado', true)->whereBetween('id', [1, 100])->orderBy('id', 'asc')->first();
@@ -575,8 +588,8 @@ class FormularioMixto extends Component
 
     public function asignar_num_mesa_caminata($inscripcion_id, $cedula)
     {
-        $ultimo_digito = substr($cedula, -1);
 
+        $ultimo_digito = substr($cedula, -1);
         $this->inscripcion = inscripcion::find($inscripcion_id);
         if ($ultimo_digito == '0' || $ultimo_digito == '1' || $ultimo_digito == '2' || $ultimo_digito == '3' || $ultimo_digito == '4') {
 
@@ -634,6 +647,7 @@ class FormularioMixto extends Component
         $rules = [];
         for ($i = 0; $i <= $this->cantidad_carrera - 1; $i++) {
             $rules["participante_carrera.$i.ciudad_id"] = 'required';
+            $rules["participante_carrera.$i.estado_id"] = 'required';
             $rules["participante_carrera.$i.cedula"] = 'required|string|max:8|regex:/^[0-9]+$/';
             $rules["participante_carrera.$i.nombre"] = 'required|string|max:25|regex:/^[a-zA-Z\s]+$/';
             $rules["participante_carrera.$i.apellido"] = 'required|string|max:25|regex:/^[a-zA-Z\s]+$/';
@@ -641,13 +655,17 @@ class FormularioMixto extends Component
             $rules["participante_carrera.$i.correo"] = 'required|email|max:60';
             $rules["participante_carrera.$i.direccion"] = 'required|string|max:60|regex:/^[a-zA-Z0-9\s]+$/';
             $rules["participante_carrera.$i.fecha_nacimiento"] = 'required|date|before_or_equal:' . $this->fecha_evento;
+            $rules["participante_carrera.$i.genero_id"] = 'required|integer';
+            $rules["create_prendas_carrera.$i.genero"] = 'required|integer';
+            $rules["create_prendas_carrera.$i.prendas"] = 'required|integer';
+            $rules["create_prendas_carrera.$i.prenda_genero"] = 'required|integer';
 
             if (!is_null($this->inscripcion_carrera[$i]['unico'])) {
                 $rules["inscripcion_carrera.$i.metodo_pago_id"] = 'required';
                 $rules["inscripcion_carrera.$i.fecha"] = 'required|date|before_or_equal:' . $this->fecha_actual;
                 $rules["inscripcion_carrera.$i.referencia"] = 'required|numeric|digits:6';
 
-                if (!is_null($this->inscripcion_carrera[$i]['monto_Bs'])) {
+                if ($this->inscripcion_carrera[$i]['pago_BS_USD']=='bolivar') {
                     $rules["inscripcion_carrera.$i.monto_Bs"] = 'required|numeric';
                 } else {
                     $rules["inscripcion_carrera.$i.monto_USD"] = 'required|numeric';
@@ -660,7 +678,7 @@ class FormularioMixto extends Component
                 $rules["inscripcion_carrera.$i.cuenta_mixto_1"] = 'required|string';
                 $rules["inscripcion_carrera.$i.cuenta_mixto_2"] = 'required|string';
 
-                if (!is_null($this->inscripcion_carrera[$i]['monto_mixto_Bs'])) {
+                if ($this->inscripcion_carrera[$i]['pago_BS_USD'] == 'bolivar') {
                     $rules["inscripcion_carrera.$i.monto_mixto_Bs"] = 'required|numeric';
                 } else {
                     $rules["inscripcion_carrera.$i.monto_mixto_USD"] = 'required|numeric';
@@ -670,6 +688,7 @@ class FormularioMixto extends Component
 
         for ($j = 0; $j <= $this->cantidad_caminata - 1; $j++) {
             $rules["participante_caminata.$j.ciudad_id"] = 'required';
+            $rules["participante_caminata.$j.estado_id"] = 'required';
             $rules["participante_caminata.$j.cedula"] = 'required|string|max:8|regex:/^[0-9]+$/';
             $rules["participante_caminata.$j.nombre"] = 'required|string|max:25|regex:/^[a-zA-Z\s]+$/';
             $rules["participante_caminata.$j.apellido"] = 'required|string|max:25|regex:/^[a-zA-Z\s]+$/';
@@ -677,13 +696,16 @@ class FormularioMixto extends Component
             $rules["participante_caminata.$j.correo"] = 'required|email|max:60';
             $rules["participante_caminata.$j.direccion"] = 'required|string|max:60|regex:/^[a-zA-Z0-9\s]+$/';
             $rules["participante_caminata.$j.fecha_nacimiento"] = 'required|date|before_or_equal:' . $this->fecha_evento;
-
+            $rules["participante_caminata.$j.genero_id"] = 'required|integer';
+            $rules["create_prendas_caminata.$j.genero"] = 'required|integer';
+            $rules["create_prendas_caminata.$j.prendas"] = 'required|integer';
+            $rules["create_prendas_caminata.$j.prenda_genero"] = 'required|integer';
             if (!is_null($this->inscripcion_caminata[$j]['unico'])) {
                 $rules["inscripcion_caminata.$j.metodo_pago_id"] = 'required';
                 $rules["inscripcion_caminata.$j.fecha"] = 'required|date|before_or_equal:' . $this->fecha_actual;
                 $rules["inscripcion_caminata.$j.referencia"] = 'required|numeric|digits:6';
 
-                if (!is_null($this->inscripcion_caminata[$j]['monto_Bs'])) {
+                if ($this->inscripcion_caminata[$j]['pago_BS_USD']=='bolivar') {
                     $rules["inscripcion_caminata.$j.monto_Bs"] = 'required|numeric';
                 } else {
                     $rules["inscripcion_caminata.$j.monto_USD"] = 'required|numeric';
@@ -710,6 +732,7 @@ class FormularioMixto extends Component
         $messages = [];
         for ($i = 0; $i <= $this->cantidad_carrera - 1; $i++) {
             $messages["participante_carrera.$i.ciudad_id.required"] = __('El campo ciudad es obligatorio.');
+            $messages["participante_carrera.$i.estado_id.required"] = __('El campo estado es obligatorio.');
             $messages["participante_carrera.$i.cedula.required"] = __('El campo cedula es obligatorio.');
             $messages["participante_carrera.$i.cedula.string"] = __('El campo cedula debe ser una cadena de texto numerico.');
             $messages["participante_carrera.$i.cedula.max"] = __('El campo cedula no debe ser mayor a 8 caracteres.');
@@ -737,13 +760,20 @@ class FormularioMixto extends Component
             $messages["participante_carrera.$i.fecha_nacimiento.date"] = __('El campo fecha de nacimiento debe ser de tipo fecha');
             $messages["participante_carrera.$i.fecha_nacimiento.before_or_equal"] = __('El campo fecha de nacimiento debe ser menor o igual a ' . Carbon::parse($this->fecha_evento)->format('d-m-Y'));
 
+            $messages["participante_carrera.$i.genero_id.required"] = __('El campo genero es obligatorio.');
+            $messages["participante_carrera.$i.genero_id.integer"] = __('Este campo solo acepta numeros.');
+            $messages["create_prendas_carrera.$i.genero.required"] = __('El campo genero es obligatorio.');
+            $messages["create_prendas_carrera.$i.genero.integer"] = __('Este campo solo acepta numeros.');
+            $messages["create_prendas_carrera.$i.prendas.required"] = __('El campo prenda es obligatorio.');
+            $messages["create_prendas_carrera.$i.prendas.integer"] = __('Este campo solo acepta numeros.');
+            $messages["create_prendas_carrera.$i.prenda_genero.required"] = __('El campo talla es obligatorio.');
+            $messages["create_prendas_carrera.$i.prenda_genero.integer"] = __('Este campo solo acepta numeros');
+
             $messages["inscripcion_carrera.$i.metodo_pago_id.required"] = __('El campo cuentas es obligatorio.');
-
-            $messages["inscripcion_carrera.$i.monto_Bs.required"] = __('El campo monto es obligatorio.');
-            $messages["inscripcion_carrera.$i.monto_Bs.numeric"] = __('El campo monto solo permite numeros.');
-            $messages["inscripcion_carrera.$i.monto_$.required"] = __('El campo monto es obligatorio.');
-            $messages["inscripcion_carrera.$i.monto_$.numeric"] = __('El campo monto solo permite numeros.');
-
+            $messages["inscripcion_carrera.$i.monto_Bs.required"] = __('El campo monto Bs es obligatorio.');
+            $messages["inscripcion_carrera.$i.monto_Bs.numeric"] = __('El campo monto Bs solo permite numeros.');
+            $messages["inscripcion_carrera.$i.monto_USD.required"] = __('El campo monto USD es obligatorio.');
+            $messages["inscripcion_carrera.$i.monto_USD.numeric"] = __('El campo monto USD solo permite numeros.');
 
             $messages["inscripcion_carrera.$i.fecha.required"] = __('El campo fecha de pago es obligatorio.');
             $messages["inscripcion_carrera.$i.fecha.date"] = __('El campo fecha de pago debe tener la sintaxis correcta.');
@@ -751,12 +781,10 @@ class FormularioMixto extends Component
             $messages["inscripcion_carrera.$i.referencia.required"] = __('El campo referencia es obligatorio.');
             $messages["inscripcion_carrera.$i.referencia.numeric"] = __('El campo referencia solo permite numeros.');
             $messages["inscripcion_carrera.$i.referencia.digits"] = __('El campo referencia solo admite 6 digitos');
-
-
-            $messages["inscripcion_carrera.$i.monto_mixto_Bs.required"] = __('El campo monto es obligatorio.');
-            $messages["inscripcion_carrera.$i.monto_mixto_Bs.numeric"] = __('El campo monto solo permite numeros.');
-            $messages["inscripcion_carrera.$i.monto_mixto_$.required"] = __('El campo monto es obligatorio.');
-            $messages["inscripcion_carrera.$i.monto_mixto_$.numeric"] = __('El campo monto solo permite numeros.');
+            $messages["inscripcion_carrera.$i.monto_mixto_Bs.required"] = __('El campo monto Bs es obligatorio.');
+            $messages["inscripcion_carrera.$i.monto_mixto_Bs.numeric"] = __('El campo monto Bs solo permite numeros.');
+            $messages["inscripcion_carrera.$i.monto_mixto_USD.required"] = __('El campo monto USD es obligatorio.');
+            $messages["inscripcion_carrera.$i.monto_mixto_USD.numeric"] = __('El campo monto USD solo permite numeros.');
             $messages["inscripcion_carrera.$i.fecha_mixto.required"] = __('El campo fecha de pago es obligatorio.');
             $messages["inscripcion_carrera.$i.fecha_mixto.date"] = __('El campo fecha de pago debe tener la sintaxis correcta.');
             $messages["inscripcion_carrera.$i.fecha_mixto.before_or_equal"] = __('El campo fecha de pago debe ser menor o igual a ' . Carbon::parse($this->fecha_actual)->format('d-m-Y'));
@@ -771,9 +799,9 @@ class FormularioMixto extends Component
             $messages["inscripcion_carrera.$i.cuenta_mixto_2.required"] = __('El campo cuenta es obligatorio.');
             $messages["inscripcion_carrera.$i.cuenta_mixto_2.string"] = __('El campo cuenta debe ser una cadena de texto. ');
         }
-
         for ($j = 0; $j <= $this->grupo->cantidad - 1; $j++) {
             $messages["participante_caminata.$j.ciudad_id.required"] = __('El campo ciudad es obligatorio.');
+            $messages["participante_caminata.$j.estado_id.required"] = __('El campo estado es obligatorio.');
             $messages["participante_caminata.$j.cedula.required"] = __('El campo cedula es obligatorio.');
             $messages["participante_caminata.$j.cedula.string"] = __('El campo cedula debe ser una cadena de texto numerico.');
             $messages["participante_caminata.$j.cedula.max"] = __('El campo cedula no debe ser mayor a 8 caracteres.');
@@ -800,35 +828,36 @@ class FormularioMixto extends Component
             $messages["participante_caminata.$j.fecha_nacimiento.required"] = __('El campo fecha de nacimiento es obligatorio.');
             $messages["participante_caminata.$j.fecha_nacimiento.date"] = __('El campo fecha de nacimiento debe ser de tipo fecha');
             $messages["participante_caminata.$j.fecha_nacimiento.before_or_equal"] = __('El campo fecha de nacimiento debe ser menor o igual a ' . Carbon::parse($this->fecha_evento)->format('d-m-Y'));
+            $messages["participante_caminata.$j.genero_id.required"] = __('El campo genero es obligatorio.');
+            $messages["participante_caminata.$j.genero_id.integer"] = __('Este campo solo acepta numeros.');
+            $messages["create_prendas_caminata.$j.genero.required"] = __('El campo genero es obligatorio.');
+            $messages["create_prendas_caminata.$j.genero.integer"] = __('Este campo solo acepta numeros.');
+            $messages["create_prendas_caminata.$j.prendas.required"] = __('El campo prenda es obligatorio.');
+            $messages["create_prendas_caminata.$j.prendas.integer"] = __('Este campo solo acepta numeros.');
+            $messages["create_prendas_caminata.$j.prenda_genero.required"] = __('El campo talla es obligatorio.');
+            $messages["create_prendas_caminata.$j.prenda_genero.integer"] = __('Este campo solo acepta numeros');
 
             $messages["inscripcion_caminata.$j.metodo_pago_id.required"] = __('El campo cuentas es obligatorio.');
-
-            $messages["inscripcion_caminata.$j.monto_Bs.required"] = __('El campo monto es obligatorio.');
-            $messages["inscripcion_caminata.$j.monto_Bs.numeric"] = __('El campo monto solo permite numeros.');
-            $messages["inscripcion_caminata.$j.monto_$.required"] = __('El campo monto es obligatorio.');
-            $messages["inscripcion_caminata.$j.monto_$.numeric"] = __('El campo monto solo permite numeros.');
-
+            $messages["inscripcion_caminata.$j.monto_Bs.required"] = __('El campo monto Bs es obligatorio.');
+            $messages["inscripcion_caminata.$j.monto_Bs.numeric"] = __('El campo monto Bs solo permite numeros.');
+            $messages["inscripcion_caminata.$j.monto_USD.required"] = __('El campo monto USD es obligatorio.');
+            $messages["inscripcion_caminata.$j.monto_USD.numeric"] = __('El campo monto USD solo permite numeros.');
             $messages["inscripcion_caminata.$j.fecha.required"] = __('El campo fecha de pago es obligatorio.');
             $messages["inscripcion_caminata.$j.fecha.date"] = __('El campo fecha de pago debe tener la sintaxis correcta.');
             $messages["inscripcion_caminata.$j.fecha.before_or_equal"] = __('El campo fecha de pago debe ser menor o igual a ' . Carbon::parse($this->fecha_evento)->format('d-m-Y'));
             $messages["inscripcion_caminata.$j.referencia.required"] = __('El campo referencia es obligatorio.');
             $messages["inscripcion_caminata.$j.referencia.numeric"] = __('El campo referencia solo permite numeros.');
             $messages["inscripcion_caminata.$j.referencia.digits"] = __('El campo referencia solo admite 6 digitos');
-
-
-            $messages["inscripcion_caminata.$j.monto_mixto_Bs.required"] = __('El campo monto es obligatorio.');
-            $messages["inscripcion_caminata.$j.monto_mixto_Bs.numeric"] = __('El campo monto solo permite numeros.');
-            $messages["inscripcion_caminata.$j.monto_mixto_$.required"] = __('El campo monto es obligatorio.');
-            $messages["inscripcion_caminata.$j.monto_mixto_$.numeric"] = __('El campo monto solo permite numeros.');
+            $messages["inscripcion_caminata.$j.monto_mixto_Bs.required"] = __('El campo monto Bs es obligatorio.');
+            $messages["inscripcion_caminata.$j.monto_mixto_Bs.numeric"] = __('El campo monto Bs solo permite numeros.');
+            $messages["inscripcion_caminata.$j.monto_mixto_USD.required"] = __('El campo monto USD es obligatorio.');
+            $messages["inscripcion_caminata.$j.monto_mixto_USD.numeric"] = __('El campo monto USD solo permite numeros.');
             $messages["inscripcion_caminata.$j.fecha_mixto.required"] = __('El campo fecha de pago es obligatorio.');
             $messages["inscripcion_caminata.$j.fecha_mixto.date"] = __('El campo fecha de pago debe tener la sintaxis correcta.');
             $messages["inscripcion_caminata.$j.fecha_mixto.before_or_equal"] = __('El campo fecha de pago debe ser menor o igual a ' . Carbon::parse($this->fecha_actual)->format('d-m-Y'));
-
             $messages["inscripcion_caminata.$j.referencia_mixto.required"] = __('El campo referencia es obligatorio.');
             $messages["inscripcion_caminata.$j.referencia_mixto.numeric"] = __('El campo referencia solo permite numeros.');
             $messages["inscripcion_caminata.$j.referencia_mixto.digits"] = __('El campo referencia solo admite los ultimos 6 digitos');
-
-
             $messages["inscripcion_caminata.$j.cuenta_mixto_1.required"] = __('El campo cuenta es obligatorio.');
             $messages["inscripcion_caminata.$j.cuenta_mixto_1.string"] = __('El campo cuenta debe ser una cadena de texto. ');
             $messages["inscripcion_caminata.$j.cuenta_mixto_2.required"] = __('El campo cuenta es obligatorio.');
@@ -839,6 +868,7 @@ class FormularioMixto extends Component
 
     public function buscarCedula_carrera()
     {
+
         for ($i = 0; $i <= $this->cantidad_carrera - 1; $i++) {
             $this->carrera_participante[$i] = participante::select('participantes.*', 'estados.id as estado_id')->where('cedula', $this->participante_carrera[$i]["cedula"])->join('ciudads', 'participantes.ciudad_id', '=', 'ciudads.id')->join('estados', 'ciudads.estado_id', '=', 'estados.id')->first();
 
@@ -861,6 +891,7 @@ class FormularioMixto extends Component
 
     public function buscarCedula_caminata()
     {
+
         for ($i = 0; $i <= $this->cantidad_caminata - 1; $i++) {
             $this->caminata_participante[$i] = participante::select('participantes.*', 'estados.id as estado_id')->where('cedula', $this->participante_caminata[$i]["cedula"])->join('ciudads', 'participantes.ciudad_id', '=', 'ciudads.id')->join('estados', 'ciudads.estado_id', '=', 'estados.id')->first();
 
@@ -884,6 +915,7 @@ class FormularioMixto extends Component
     public function asignar_prendas_carrera($value)
     {
         // Encuentra la prenda solo una vez
+
         $prenda = prenda::select('cantidad', 'restadas')->find($value);
         for ($i = 0; $i <= $this->cantidad_carrera - 1; $i++) {
             $this->create_prendas_carrera[$i]['prendas'] = $value;
@@ -901,6 +933,7 @@ class FormularioMixto extends Component
     public function asignar_prendas_caminata($value)
     {
         // Encuentra la prenda solo una vez
+
         $prenda = prenda::select('cantidad', 'restadas')->find($value);
         for ($i = 0; $i <= $this->cantidad_caminata - 1; $i++) {
             $this->create_prendas_caminata[$i]['prendas'] = $value;
@@ -935,6 +968,7 @@ class FormularioMixto extends Component
     public function update_prendas_carrera($index, $option)
     {
         // Asignar el género basado en la opción seleccionada
+
         if ($option === '1') {
             $this->create_prendas_carrera[$index]['genero'] = 'Masculino';
             $this->prendas_carrera[$index] = DB::table('prendas')
@@ -960,12 +994,12 @@ class FormularioMixto extends Component
     public function save()
     {
         $this->validate();
-        $evento = evento::select('id', 'nombre', 'fecha_evento')->where('estado', true)->orderBy('id', 'desc')->first();
 
+
+        $evento = evento::select('id', 'nombre', 'fecha_evento')->where('estado', true)->orderBy('id', 'desc')->first();
         $ultimoNumeroOrden = Inscripcion::max('id');
         $this->nuevoNumeroOrden = $ultimoNumeroOrden ? $ultimoNumeroOrden + 1 : 1;
         $this->nomenclatura = 'GRMX' . '-' . $this->grupo->cantidad . $this->nuevoNumeroOrden;
-
         for ($i = 0; $i <= $this->cantidad_caminata - 1; $i++) {
             if (!empty($this->caminata_participante[$i]) && !is_null($this->caminata_participante[$i])) {
                 if (isset($this->caminata_participante[$i]->id)) {
@@ -988,7 +1022,6 @@ class FormularioMixto extends Component
                 $this->inscripcion_validate_global = [];
             }
         }
-
         if (!empty($this->inscripcion_validate_global)) {
             for ($i = 0; $i <= $this->cantidad_caminata - 1; $i++) {
                 $this->cedula = $this->inscripcion_validate_global[$i]['cedula'];
@@ -1056,10 +1089,10 @@ class FormularioMixto extends Component
                     if (is_null($this->inscripcion_caminata[$i]['metodo_pago_id'])) {
                         $this->inscripcion_caminata[$i]['metodo_pago_id'] = 1;
                     }
-                    if (is_null($this->inscripcion_caminata[$i]['recorrido_id'])) {
-                        $this->inscripcion_caminata[$i]['recorrido_id'] = 1;
+                    if (is_null($this->inscripcion_caminata[$i]['recorrido_id_grupos'])) {
+                        $this->inscripcion_caminata[$i]['recorrido_id_grupos'] = 1;
                     }
-                    $this->inscripcion_caminata[$i]['recorrido_id_grupos'] = $this->grupo->recorrido_id;
+                    $this->inscripcion_caminata[$i]['recorrido_id'] = $this->grupo->recorrido_id;
                     $this->inscripcion_caminata[$i]['nomenclatura'] = $this->nomenclatura;
                     $this->inscripcion_caminata[$i]['ip'] = $this->userIp;
                     $this->inscripcion_caminata[$i]['categoria_habilitada_id'] = 12;
@@ -1079,7 +1112,7 @@ class FormularioMixto extends Component
                         'categoria_habilitada_id' => $this->inscripcion_caminata[$i]['categoria_habilitada_id'],
                         'mesa_id' => $this->inscripcion_caminata[$i]['mesa_id'],
                         'datos' => $this->inscripcion_caminata[$i]['datos'],
-                        'monto_pagado_bs' => $this->inscripcion_caminata[$i]['monto_pagado_bs'],
+                        'monto_a_pagar_bs' => $this->inscripcion_caminata[$i]['monto_a_pagar_bs'],
                         'ip' => $this->inscripcion_caminata[$i]['ip'],
                         'nomenclatura' => $this->inscripcion_caminata[$i]['nomenclatura'],
                         'recorrido_id' => $this->inscripcion_caminata[$i]['recorrido_id'],
@@ -1140,10 +1173,10 @@ class FormularioMixto extends Component
                     if (is_null($this->inscripcion_caminata[$i]['metodo_pago_id'])) {
                         $this->inscripcion_caminata[$i]['metodo_pago_id'] = 1;
                     }
-                    if (is_null($this->inscripcion_caminata[$i]['recorrido_id'])) {
-                        $this->inscripcion_caminata[$i]['recorrido_id'] = 1;
+                    if (is_null($this->inscripcion_caminata[$i]['recorrido_id_grupos'])) {
+                        $this->inscripcion_caminata[$i]['recorrido_id_grupos'] = 1;
                     }
-                    $this->inscripcion_caminata[$i]['recorrido_id_grupos'] = $this->grupo->recorrido_id;
+                    $this->inscripcion_caminata[$i]['recorrido_id'] = $this->grupo->recorrido_id;
 
                     $this->inscripcion_caminata[$i]['nomenclatura'] = $this->nomenclatura;
                     $this->inscripcion_caminata[$i]['ip'] = $this->userIp;
@@ -1165,7 +1198,7 @@ class FormularioMixto extends Component
                         'categoria_habilitada_id' => $this->inscripcion_caminata[$i]['categoria_habilitada_id'],
                         'mesa_id' => $this->inscripcion_caminata[$i]['mesa_id'],
                         'datos' => $this->inscripcion_caminata[$i]['datos'],
-                        'monto_pagado_bs' => $this->inscripcion_caminata[$i]['monto_pagado_bs'],
+                        'monto_a_pagar_bs' => $this->inscripcion_caminata[$i]['monto_a_pagar_bs'],
                         'ip' => $this->inscripcion_caminata[$i]['ip'],
                         'nomenclatura' => $this->inscripcion_caminata[$i]['nomenclatura'],
                         'recorrido_id' => $this->inscripcion_caminata[$i]['recorrido_id'],
@@ -1225,10 +1258,10 @@ class FormularioMixto extends Component
                     if (is_null($this->inscripcion_carrera[$i]['metodo_pago_id'])) {
                         $this->inscripcion_carrera[$i]['metodo_pago_id'] = 1;
                     }
-                    if (is_null($this->inscripcion_carrera[$i]['recorrido_id'])) {
-                        $this->inscripcion_carrera[$i]['recorrido_id'] = 2;
+                    if (is_null($this->inscripcion_carrera[$i]['recorrido_id_grupos'])) {
+                        $this->inscripcion_carrera[$i]['recorrido_id_grupos'] = 2;
                     }
-                    $this->inscripcion_carrera[$i]['recorrido_id_grupos'] = $this->grupo->recorrido_id;
+                    $this->inscripcion_carrera[$i]['recorrido_id'] = $this->grupo->recorrido_id;
 
                     $this->inscripcion_carrera[$i]['nomenclatura'] = $this->nomenclatura;
                     $this->inscripcion_carrera[$i]['ip'] = $this->userIp;
@@ -1248,7 +1281,7 @@ class FormularioMixto extends Component
                         'categoria_habilitada_id' => $this->inscripcion_carrera[$i]['categoria_habilitada_id'] ?? null,
                         'mesa_id' => $this->inscripcion_carrera[$i]['mesa_id'] ?? null,
                         'datos' => $this->inscripcion_carrera[$i]['datos'],
-                        'monto_pagado_bs' => $this->inscripcion_carrera[$i]['monto_pagado_bs'],
+                        'monto_a_pagar_bs' => $this->inscripcion_carrera[$i]['monto_a_pagar_bs'],
                         'ip' => $this->inscripcion_carrera[$i]['ip'],
                         'nomenclatura' => $this->inscripcion_carrera[$i]['nomenclatura'],
                         'recorrido_id' => $this->inscripcion_carrera[$i]['recorrido_id'],
@@ -1288,7 +1321,7 @@ class FormularioMixto extends Component
                         ];
                     }
 
-                    if (!is_null($this->inscripcion_carrera[$i]['monto_mixto_Bs']) || !is_null($this->inscripcion_carrera[$i]['monto_mixto_$'])) {
+                    if (!is_null($this->inscripcion_carrera[$i]['monto_mixto_Bs']) || !is_null($this->inscripcion_carrera[$i]['monto_mixto_USD'])) {
                         $datos_json += [
                             'fecha_mixto' => $this->inscripcion_carrera[$i]['fecha_mixto'],
                             'referencia_mixto' => $this->inscripcion_carrera[$i]['referencia_mixto'],
@@ -1313,10 +1346,10 @@ class FormularioMixto extends Component
                     if (is_null($this->inscripcion_carrera[$i]['metodo_pago_id'])) {
                         $this->inscripcion_carrera[$i]['metodo_pago_id'] = 1;
                     }
-                    if (is_null($this->inscripcion_carrera[$i]['recorrido_id'])) {
-                        $this->inscripcion_carrera[$i]['recorrido_id'] = 2;
+                    if (is_null($this->inscripcion_carrera[$i]['recorrido_id_grupos'])) {
+                        $this->inscripcion_carrera[$i]['recorrido_id_grupos'] = 2;
                     }
-                    $this->inscripcion_carrera[$i]['recorrido_id_grupos'] = $this->grupo->recorrido_id;
+                    $this->inscripcion_carrera[$i]['recorrido_id'] = $this->grupo->recorrido_id;
 
                     $this->inscripcion_carrera[$i]['nomenclatura'] = $this->nomenclatura;
                     $this->inscripcion_carrera[$i]['ip'] = $this->userIp;
@@ -1337,7 +1370,7 @@ class FormularioMixto extends Component
                         'categoria_habilitada_id' => $this->inscripcion_carrera[$i]['categoria_habilitada_id'] ?? null,
                         'mesa_id' => $this->inscripcion_carrera[$i]['mesa_id'] ?? null,
                         'datos' => $this->inscripcion_carrera[$i]['datos'],
-                        'monto_pagado_bs' => $this->inscripcion_carrera[$i]['monto_pagado_bs'],
+                        'monto_a_pagar_bs' => $this->inscripcion_carrera[$i]['monto_a_pagar_bs'],
                         'ip' => $this->inscripcion_carrera[$i]['ip'],
                         'nomenclatura' => $this->inscripcion_carrera[$i]['nomenclatura'],
                         'recorrido_id' => $this->inscripcion_carrera[$i]['recorrido_id'],

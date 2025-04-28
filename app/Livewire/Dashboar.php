@@ -8,6 +8,7 @@ use App\Models\participante;
 use App\Models\prenda;
 use Carbon\Carbon;
 use Livewire\Component;
+use Illuminate\Support\Facades\DB;
 
 class Dashboar extends Component
 {
@@ -55,7 +56,11 @@ class Dashboar extends Component
 
     public function calcularTotalMontoPagado()
     {
-        $this->totalMontoPagado = inscripcion::join('eventos', 'inscripcions.evento_id', '=', 'eventos.id')->where('eventos.estado', true)->sum('monto_pagado_bs');
+        $this->totalMontoPagado = inscripcion::select(
+            DB::raw('count(inscripcions.nomenclatura) as cantidad'),
+            'inscripcions.nomenclatura',
+            DB::raw('MIN(inscripcions.monto_a_pagar_bs) as monto_pagado_bs'),
+        )->join('eventos', 'inscripcions.evento_id', '=', 'eventos.id')->where('eventos.estado', true)->groupBy('inscripcions.nomenclatura')->get()->sum('monto_pagado_bs');
     }
     public function calcularParticipanteEvento()
     {

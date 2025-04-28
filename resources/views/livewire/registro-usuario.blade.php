@@ -1,44 +1,39 @@
 <div>
+
     <div class="bg-white shadow rounded-lg p-2 mb-4 flex items-center justify-between">
         <h1 class="font-black text-2xl text-gray-800 leading-tight text-normal">
             Listado de usuarios
         </h1>
-        <x-button class="shadow" wire:click="crear">
+        <x-button class="shadow hover:bg-slate-300 focus:bg-slate-300 active:bg-slate-300" wire:click="crear">
             Registrar
         </x-button>
     </div>
-
     <div
         class="relative flex flex-col w-full h-full overflow-scroll text-black bg-white shadow-md rounded-xl bg-clip-border overflow-x-auto overflow-y-hidden">
-
-
         <table class="w-full text-center table-auto min-w-max">
             <thead>
                 <tr>
                     <th class="p-4 border-b border-blue-gray-100 bg-blue-gray-50">
                         <p
                             class="block font-sans text-sm antialiased font-normal leading-none text-blue-gray-900 opacity-70">
-                            nombre
-                        </p>
+                            Nombre</p>
                     </th>
                     <th class="p-4 border-b border-blue-gray-100 bg-blue-gray-50">
                         <p
                             class="block font-sans text-sm antialiased font-normal leading-none text-blue-gray-900 opacity-70">
-                            Correo
-                        </p>
+                            Correo</p>
                     </th>
                     <th class="p-4 border-b border-blue-gray-100 bg-blue-gray-50">
                         <p
                             class="block font-sans text-sm antialiased font-normal leading-none text-blue-gray-900 opacity-70">
-                            Rol
-                        </p>
+                            Rol</p>
                     </th>
                     <th class="p-4 border-b border-blue-gray-100 bg-blue-gray-50">
                         <p
                             class="block font-sans text-sm antialiased font-normal leading-none text-blue-gray-900 opacity-70">
-                            Acciones
-                        </p>
+                            Acciones</p>
                     </th>
+
                 </tr>
             </thead>
 
@@ -64,13 +59,19 @@
                             </p>
                         </td>
                         <td class="p-4 border-b border-blue-gray-50">
-                            <x-button class="bg-blue-500" wire:click="edit({{ $usuario->id }})">
+                            <x-button class="bg-blue-500 hover:bg-slate-300 focus:bg-slate-300 active:bg-slate-300"
+                                wire:click="edit({{ $usuario->id }})">
                                 <i class="bi bi-pencil-square"></i>
                             </x-button>
-                            <x-danger-button wire:click="confirm_delete({{ $usuario->id }})">
+                            <x-danger-button class="bg-red-700" wire:click="confirm_delete({{ $usuario->id }})">
                                 <i class="bi bi-trash-fill"></i>
                             </x-danger-button>
+                            <x-button
+                                class=" bg-yellow-500 hover:bg-yellow-400 focus:bg-yellow-400 active:bg-yellow-400"
+                                wire:click="contraseña({{ $usuario->id }})">
+                                <i class="bi bi-exclamation-triangle-fill"></i> </x-button>
                         </td>
+
                     </tr>
                 @endforeach
 
@@ -105,7 +106,7 @@
                     <div class="mb-4">
                         <x-label for="">Contraseña</x-label>
                         <x-input class="w-full" wire:model="create_usuario.password" />
-                        @error('create_usuario.email')
+                        @error('create_usuario.password')
                             <span class="error text-red-500">{{ $message }}</span>
                         @enderror
                     </div>
@@ -136,7 +137,7 @@
                             Cancelar
                         </x-danger-button>
 
-                        <x-button>
+                        <x-button wire:click="validar_registro()">
                             Registrar
                         </x-button>
                     </div>
@@ -152,27 +153,27 @@
                 <x-slot name="content">
                     <div class="mb-4">
                         <x-label for="">Nombre</x-label>
-                        <x-input class="w-full" wire:model="create_usuario.name" />
-                        @error('create_usuario.name')
+                        <x-input class="w-full" wire:model="update_usuario.name" />
+                        @error('update_usuario.name')
                             <span class="error text-red-500">{{ $message }}</span>
                         @enderror
                     </div>
                     <div class="mb-4">
                         <x-label for="">Correo</x-label>
-                        <x-input type="email" class="w-full" wire:model="create_usuario.email" />
-                        @error('create_usuario.email')
+                        <x-input type="email" class="w-full" wire:model="update_usuario.email" />
+                        @error('update_usuario.email')
                             <span class="error text-red-500">{{ $message }}</span>
                         @enderror
                     </div>
                     <div class="mb-4">
                         <x-label for="">Rol</x-label>
-                        <x-select class="w-full" wire:model="create_rol">
+                        <x-select class="w-full" wire:model="update_rol">
                             <option value="">Selecciona un Rol de acceso</option>
                             @foreach ($roles as $rol)
                                 <option value="{{ $rol->id }}">{{ $rol->name }}</option>
                             @endforeach
                         </x-select>
-                        @error('create_rol')
+                        @error('update_rol')
                             <span class="error text-red-500">{{ $message }}</span>
                         @enderror
                     </div>
@@ -184,8 +185,54 @@
                             Cancelar
                         </x-danger-button>
 
-                        <x-button>
-                            Registrar
+                        <x-button wire:click="validar_actualizacion()">
+                            Actualizar
+                        </x-button>
+                    </div>
+                </x-slot>
+            </x-dialog-modal>
+        </form>
+        <form wire:submit="update_contraseña">
+            <x-dialog-modal wire:model="open_contraseña">
+                <x-slot name="title">
+                    Cambiar Contraseña
+                </x-slot>
+
+                <x-slot name="content">
+
+                    <div class="mb-4">
+                        <x-label for="password">Contraseña</x-label>
+                        <div class="relative">
+                            <x-input type="{{ $showPassword ? 'text' : 'password' }}" class="w-full"
+                                wire:model="update_contraseña_users.password" id="password" />
+                        </div>
+                        @error('update_contraseña_users.password')
+                            <span class="error text-red-500">{{ $message }}</span>
+                        @enderror
+                    </div>
+                    <div class="mb-4">
+                        <x-label for="confirm_password">Confirmar Contraseña</x-label>
+                        <div class="relative">
+                            <x-input type="{{ $showPassword ? 'text' : 'password' }}" class="w-full"
+                                wire:model="update_contraseña_users.confirmar_password" id="confirm_password" />
+                        </div>
+                        @error('update_contraseña_users.confirmar_password')
+                            <span class="error text-red-500">{{ $message }}</span>
+                        @enderror
+                    </div>
+                    <h1 class="text-center text-xl text-red-800">
+                        ¿ Estas seguro de querer cambiar la contraseña ?
+                    </h1>
+                </x-slot>
+
+                <x-slot name="footer">
+                    <div class="flex justify-end">
+                        <x-danger-button class="mr-2" wire:click="$set('open_contraseña',false)">
+                            NO
+                        </x-danger-button>
+
+                        <x-button type="submit" wire:click="validar_cambio_contraseña()">
+                            SI
                         </x-button>
                     </div>
                 </x-slot>
@@ -194,7 +241,6 @@
 
     </div>
     @push('js')
-        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <script>
             Livewire.on('alert', function() {
                 Swal.fire({
@@ -214,6 +260,13 @@
                 Swal.fire({
                     title: "Éxito!",
                     text: "Los datos han sido actualizados!",
+                    icon: "success"
+                });
+            })
+            Livewire.on('alert_update_contraseña', function() {
+                Swal.fire({
+                    title: "Éxito!",
+                    text: "La contraseña ha sido actualizados!",
                     icon: "success"
                 });
             })

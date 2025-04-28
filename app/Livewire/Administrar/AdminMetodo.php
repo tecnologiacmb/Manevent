@@ -24,6 +24,9 @@ class AdminMetodo extends Component
     public $open_edit = false;
     public $open = false;
     public $post_edit_id;
+    public $actualizar = false;
+    public $registrar = false;
+
     public $post_create = [
         'tipo_pago_id' => "",
         'banco_id' => "",
@@ -104,6 +107,7 @@ class AdminMetodo extends Component
     }
     public function update()
     {
+        $this->validate();
         $posts = metodo_pago::find($this->post_edit_id);
         $posts->update([
             'tipo_pago_id' => $this->post_update['tipo_pago_id'],
@@ -130,74 +134,146 @@ class AdminMetodo extends Component
         $post = metodo_pago::find($delete_id);
         $post->delete();
     }
+    public function validar1()
+    {
+        $this->registrar = true;
+        $this->actualizar = false;
+    }
+    public function validar2()
+    {
+        $this->actualizar = true;
+        $this->registrar = false;
+    }
     public function rules(): array
     {
-        $rules["post_create.tipo_pago_id"] = 'required|regex:/^[0-9]+$/';
-        $rules["post_create.banco_id"] = 'required|regex:/^[0-9]+$/';
-        $rules["post_create.estado"] = 'required';
-        $rules["post_create.propietario"] = 'required|string|max:49|regex:/^[a-zA-Z\s]+$/';
+        if ($this->registrar == true) {
+            $this->actualizar = false;
+            $rules = [];
+            $rules["post_create.tipo_pago_id"] = 'required|integer';
+            $rules["post_create.banco_id"] = 'required|integer';
+            $rules["post_create.estado"] = 'required';
+            $rules["post_create.propietario"] = 'required|string|max:49|regex:/^[a-zA-Z\s]+$/';
 
-        if ($this->post_create["tipo_pago_id"] == 2) {
-            $rules["post_create.n°_cuenta"] = 'required|string|regex:/^[0-9]+$/';
-            $rules["post_create.propietario"] = 'required|string|max:49|regex:/^[a-zA-Z\s]+$/';
-            $rules["post_create.ABA"] = 'required|string|regex:/^[0-9]+$/';
-            $rules["post_create.SWIT"] = 'required|string|regex:/^[0-9]+$/';
-            $rules["post_create.correo"] = 'required|email|max:60';
-        } elseif ($this->post_create["tipo_pago_id"] == 3) {
-            $rules["post_create.propietario"] = 'required|string|max:49|regex:/^[a-zA-Z\s]+$/';
-            $rules["post_create.cedula"] = 'required|string|digits:8|regex:/^[0-9]+$/';
-            $rules["post_create.telefono"] = 'required|string|digits:11|regex:/^[0-9]+$/';
-        } elseif ($this->post_create["tipo_pago_id"] == 4) {
-            $rules["post_create.n°_cuenta"] = 'required|regex:/^[0-9]+$/';
-            $rules["post_create.propietario"] = 'required|string|max:49|regex:/^[a-zA-Z\s]+$/';
-            $rules["post_create.cedula"] = 'required|string|digits:8|regex:/^[0-9]+$/';
+            if ($this->post_create["tipo_pago_id"] == 2) {
+                $rules["post_create.n°_cuenta"] = 'required|string|regex:/^[0-9]+$/';
+                $rules["post_create.propietario"] = 'required|string|max:49|regex:/^[a-zA-Z\s]+$/';
+                $rules["post_create.ABA"] = 'required|string|regex:/^[0-9]+$/';
+                $rules["post_create.SWIT"] = 'required|string|regex:/^[0-9]+$/';
+                $rules["post_create.correo"] = 'required|email|max:60';
+            } elseif ($this->post_create["tipo_pago_id"] == 3) {
+                $rules["post_create.propietario"] = 'required|string|max:49|regex:/^[a-zA-Z\s]+$/';
+                $rules["post_create.cedula"] = 'required|string|digits:8|regex:/^[0-9]+$/';
+                $rules["post_create.telefono"] = 'required|string|digits:11|regex:/^[0-9]+$/';
+            } elseif ($this->post_create["tipo_pago_id"] == 4) {
+                $rules["post_create.n°_cuenta"] = 'required|regex:/^[0-9]+$/';
+                $rules["post_create.propietario"] = 'required|string|max:49|regex:/^[a-zA-Z\s]+$/';
+                $rules["post_create.cedula"] = 'required|string|digits:8|regex:/^[0-9]+$/';
+            }
+            return $rules;
+        } else if ($this->actualizar == true) {
+            $this->registrar = false;
+            $rules = [];
+            $rules["post_update.tipo_pago_id"] = 'required|integer';
+            $rules["post_update.banco_id"] = 'required|integer';
+            $rules["post_update.estado"] = 'required';
+            $rules["post_update.propietario"] = 'required|string|max:49|regex:/^[a-zA-Z\s]+$/';
+
+            if ($this->post_update["tipo_pago_id"] == 2) {
+                $rules["post_update.n°_cuenta"] = 'required|string|regex:/^[0-9]+$/';
+                $rules["post_update.propietario"] = 'required|string|max:49|regex:/^[a-zA-Z\s]+$/';
+                $rules["post_update.ABA"] = 'required|string|regex:/^[0-9]+$/';
+                $rules["post_update.SWIT"] = 'required|string|regex:/^[0-9]+$/';
+                $rules["post_update.correo"] = 'required|email|max:60';
+            } elseif ($this->post_update["tipo_pago_id"] == 3) {
+                $rules["post_update.propietario"] = 'required|string|max:49|regex:/^[a-zA-Z\s]+$/';
+                $rules["post_update.cedula"] = 'required|string|digits:8|regex:/^[0-9]+$/';
+                $rules["post_update.telefono"] = 'required|string|digits:11|regex:/^[0-9]+$/';
+            } elseif ($this->post_update["tipo_pago_id"] == 4) {
+                $rules["post_update.n°_cuenta"] = 'required|regex:/^[0-9]+$/';
+                $rules["post_update.propietario"] = 'required|string|max:49|regex:/^[a-zA-Z\s]+$/';
+                $rules["post_update.cedula"] = 'required|string|digits:8|regex:/^[0-9]+$/';
+            }
+            return $rules;
+        } else {
+            return [];
         }
-        return $rules;
     }
     public function messages(): array
     {
-        $messages["post_create.tipo_pago_id.required"] = __('El campo Metodo es obligatorio.');
-        $messages["post_create.tipo_pago_id.regex"] = __('El campo Metodo debe ser una cadena de texto .');
-        $messages["post_create.banco_id.required"] = __('El campo nombre no debe ser mayor a 49 letras.');
-        $messages["post_create.banco_id.regex"] = __('El campo nombre solo acepta letras.');
-        $messages["post_create.estado.required"] = __('Este campo es obligatorio.');
-        $messages["post_create.n°_cuenta.required"] = __('El n° de cuenta es obligatorio.');
-        $messages["post_create.n°_cuenta.string"] = __('El n° de cuenta debe ser una cadena de texto.');
-        $messages["post_create.n°_cuenta.regex"] = __('Este campo solo acepta numeros.');
-        $messages["post_create.propietario.required"] = __('El campo propietario es obligatorio.');
-        $messages["post_create.propietario.string"] = __('El campo propietario debe ser una cadena de texto.');
-        $messages["post_create.propietario.max"] = __('El campo propietario de debe ser mayor a 49 digitos.');
-        $messages["post_create.propietario.regex"] = __('El campo cantidad solo acepta letras.');
-        $messages["post_create.ABA.required"] = __('El ABA es obligatorio.');
-        $messages["post_create.ABA.string"] = __('El ABA debe ser una cadena de texto.');
-        $messages["post_create.ABA.regex"] = __('Este campo solo acepta numeros.');
-        $messages["post_create.SWIT.required"] = __('El SWIT es obligatorio.');
-        $messages["post_create.SWIT.string"] = __('El SWIT debe ser una cadena de texto.');
-        $messages["post_create.SWIT.regex"] = __('Este campo solo acepta numeros.');
-        $messages["post_create.correo.required"] = __('El campo correo es obligatorio.');
-        $messages["post_create.correo.email"] = __('El campo correo debe tener la sintaxis correcta.');
+        if ($this->registrar) {
+            $messages["post_create.tipo_pago_id.required"] = __('El campo Metodo es obligatorio.');
+            $messages["post_create.tipo_pago_id.integer"] = __('El campo Metodo debe ser un numero .');
+            $messages["post_create.banco_id.required"] = __('El campo Banco no debe ser mayor a 49 letras.');
+            $messages["post_create.banco_id.integer"] = __('El campo Banco debe ser un numero');
+            $messages["post_create.estado.required"] = __('Este campo es obligatorio.');
+            $messages["post_create.n°_cuenta.required"] = __('El n° de cuenta es obligatorio.');
+            $messages["post_create.n°_cuenta.string"] = __('El n° de cuenta debe ser una cadena de texto.');
+            $messages["post_create.n°_cuenta.regex"] = __('Este campo solo acepta numeros.');
+            $messages["post_create.propietario.required"] = __('El campo propietario es obligatorio.');
+            $messages["post_create.propietario.string"] = __('El campo propietario debe ser una cadena de texto.');
+            $messages["post_create.propietario.max"] = __('El campo propietario de debe ser mayor a 49 digitos.');
+            $messages["post_create.propietario.regex"] = __('El campo cantidad solo acepta letras.');
+            $messages["post_create.ABA.required"] = __('El ABA es obligatorio.');
+            $messages["post_create.ABA.string"] = __('El ABA debe ser una cadena de texto.');
+            $messages["post_create.ABA.regex"] = __('Este campo solo acepta numeros.');
+            $messages["post_create.SWIT.required"] = __('El SWIT es obligatorio.');
+            $messages["post_create.SWIT.string"] = __('El SWIT debe ser una cadena de texto.');
+            $messages["post_create.SWIT.regex"] = __('Este campo solo acepta numeros.');
+            $messages["post_create.correo.required"] = __('El campo correo es obligatorio.');
+            $messages["post_create.correo.email"] = __('El campo correo debe tener la sintaxis correcta.');
 
-        $messages["post_create.cedula.required"] = __('El campo cedula es obligatorio.');
-        $messages["post_create.cedula.string"] = __('El campo cedula debe ser una cadena de texto.');
-        $messages["post_create.cedula.regex"] = __('Este campo solo acepta numeros.');
-        $messages["post_create.cedula.max"] = __('El campo cedula no debe ser mayor a 8 digitos.');
+            $messages["post_create.cedula.required"] = __('El campo cedula es obligatorio.');
+            $messages["post_create.cedula.string"] = __('El campo cedula debe ser una cadena de texto.');
+            $messages["post_create.cedula.regex"] = __('Este campo solo acepta numeros.');
+            $messages["post_create.cedula.max"] = __('El campo cedula no debe ser mayor a 8 digitos.');
 
-        $messages["post_create.telefono.required"] = __('El campo telefono es obligatorio.');
-        $messages["post_create.telefono.string"] = __('El campo telefono debe ser una cadena de texto.');
-        $messages["post_create.telefono.regex"] = __('Este campo solo acepta numeros.');
-        $messages["post_create.telefono.max"] = __('El campo telefono no debe ser mayor a 11 digitos.');
-        return $messages;
+            $messages["post_create.telefono.required"] = __('El campo telefono es obligatorio.');
+            $messages["post_create.telefono.string"] = __('El campo telefono debe ser una cadena de texto.');
+            $messages["post_create.telefono.regex"] = __('Este campo solo acepta numeros.');
+            $messages["post_create.telefono.max"] = __('El campo telefono no debe ser mayor a 11 digitos.');
+            return $messages;
+        } else if ($this->actualizar ) {
+
+            $messages["post_update.tipo_pago_id.required"] = __('El campo Metodo es obligatorio.');
+            $messages["post_update.tipo_pago_id.integer"] = __('El campo Metodo debe ser un numero .');
+            $messages["post_update.banco_id.required"] = __('El campo Banco no debe ser mayor a 49 letras.');
+            $messages["post_update.banco_id.integer"] = __('El campo Banco debe ser un numero.');
+            $messages["post_update.estado.required"] = __('Este campo es obligatorio.');
+            $messages["post_update.n°_cuenta.required"] = __('El n° de cuenta es obligatorio.');
+            $messages["post_update.n°_cuenta.string"] = __('El n° de cuenta debe ser una cadena de texto.');
+            $messages["post_update.n°_cuenta.regex"] = __('Este campo solo acepta numeros.');
+            $messages["post_update.propietario.required"] = __('El campo propietario es obligatorio.');
+            $messages["post_update.propietario.string"] = __('El campo propietario debe ser una cadena de texto.');
+            $messages["post_update.propietario.max"] = __('El campo propietario de debe ser mayor a 49 digitos.');
+            $messages["post_update.propietario.regex"] = __('El campo cantidad solo acepta letras.');
+            $messages["post_update.ABA.required"] = __('El ABA es obligatorio.');
+            $messages["post_update.ABA.string"] = __('El ABA debe ser una cadena de texto.');
+            $messages["post_update.ABA.regex"] = __('Este campo solo acepta numeros.');
+            $messages["post_update.SWIT.required"] = __('El SWIT es obligatorio.');
+            $messages["post_update.SWIT.string"] = __('El SWIT debe ser una cadena de texto.');
+            $messages["post_update.SWIT.regex"] = __('Este campo solo acepta numeros.');
+            $messages["post_update.correo.required"] = __('El campo correo es obligatorio.');
+            $messages["post_update.correo.email"] = __('El campo correo debe tener la sintaxis correcta.');
+
+            $messages["post_update.cedula.required"] = __('El campo cedula es obligatorio.');
+            $messages["post_update.cedula.string"] = __('El campo cedula debe ser una cadena de texto.');
+            $messages["post_update.cedula.regex"] = __('Este campo solo acepta numeros.');
+            $messages["post_update.cedula.max"] = __('El campo cedula no debe ser mayor a 8 digitos.');
+
+            $messages["post_update.telefono.required"] = __('El campo telefono es obligatorio.');
+            $messages["post_update.telefono.string"] = __('El campo telefono debe ser una cadena de texto.');
+            $messages["post_update.telefono.regex"] = __('Este campo solo acepta numeros.');
+            $messages["post_update.telefono.max"] = __('El campo telefono no debe ser mayor a 11 digitos.');
+            return $messages;
+        } else {
+            return [];
+        }
     }
 
     public function render()
     {
         $nameMetodo = metodo_pago::select('metodo_pagos.*', 'tipo_pagos.nombre as tipo_pago', 'bancos.nombre as banco', 'bancos.logo as logo')->join('tipo_pagos', 'metodo_pagos.tipo_pago_id', '=', 'tipo_pagos.id')->join('bancos', 'metodo_pagos.banco_id', '=', 'bancos.id')
-            /*   ->where(function ($query) {
-                $query->orWhere('metodo_pagos.n°_cuenta', 'like', '%' . $this->metodo . '%')
-                    ->orWhere('metodo_pagos.propietario', 'like', '%' . $this->metodo . '%')
-                    ->orWhere('bancos.nombre', 'like', '%' . $this->metodo . '%')
-                    ->orWhere('tipos_pago.nombre', 'like', '%' . $this->metodo . '%');
-            }) */
+
             ->orderBy('created_at', 'desc')->paginate(5);
 
         return view('livewire.administrar.admin-metodo', [

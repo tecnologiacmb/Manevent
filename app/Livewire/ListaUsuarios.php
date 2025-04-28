@@ -16,7 +16,7 @@ class ListaUsuarios extends Component
     public $ciudad;
     public $query = '';
     public $selectedDate = '';
-
+    public $ParticipanteEvento;
     public $startDate;
     public $endDate;
     public $genero;
@@ -25,6 +25,7 @@ class ListaUsuarios extends Component
     {
         $this->estados = estado::all();
         $this->ciudad = ciudad::all();
+        $this->calcularParticipanteEvento();
     }
     public function limpiar()
     {
@@ -32,7 +33,10 @@ class ListaUsuarios extends Component
         $this->startDate = '';
         $this->endDate = '';
     }
-
+    public function calcularParticipanteEvento()
+    {
+        $this->ParticipanteEvento = participante::select('id')->where('deleted_at', null)->count('id');
+    }
     public function render()
     {
         $adjustedEndDate = date('Y-m-d', strtotime($this->endDate . ' +1 day'));

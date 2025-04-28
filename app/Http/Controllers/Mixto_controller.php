@@ -15,6 +15,9 @@ class Mixto_controller extends Controller
     /**
      * Display a listing of the resource.
      */
+    public $id;
+    public $cantidad_carrera;
+    public $cantidad_caminata;
     public function index(Request $request)
     {
         try {
@@ -27,15 +30,26 @@ class Mixto_controller extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function create(Request $request, $id, $cantidad_carrera, $cantidad_caminata)
+    public function create(Request $request, $id='', $cantidad_carrera='', $cantidad_caminata='')
     {
+        $id = $request->input('id', $id);
+        $cantidad_carrera = $request->input('cantidad_carrera', $cantidad_carrera);
+        $cantidad_caminata = $request->input('cantidad_caminata', $cantidad_caminata);
+        $this->id = $id;
+        $this->cantidad_carrera = $cantidad_carrera;
+        $this->cantidad_caminata = $cantidad_caminata;
         $resultado = $cantidad_carrera + $cantidad_caminata;
+
         try {
             $grupo = grupo::findOrFail($id);
-            if ($resultado == $grupo->cantidad) {
-                return view('mixto-inscripcion', ['grupo' => $grupo, 'id' => $id ,'cantidad_carrera' =>  $cantidad_carrera, 'cantidad_caminata' => $cantidad_caminata]);
-            }
-            else{
+            if ($cantidad_carrera!=0 && $cantidad_caminata!=0) {
+                if ($resultado == $grupo->cantidad) {
+                    return view('mixto-inscripcion', compact('id','cantidad_carrera','cantidad_caminata' ));
+                }
+                else{
+                    return view('dashboard');
+                }
+            }else{
                 return view('dashboard');
             }
         } catch (\Throwable $th) {

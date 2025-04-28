@@ -59,14 +59,14 @@
                     <x-label for="">Genero</x-label>
                     <x-select class="w-full" wire:model.change="post_update.genero_id">
                         <option value="">Seleccione su Genero</option>
-                    @foreach ($generos as $genero)
-                            <option value="{{ $genero->id}}"> {{ $genero->genero }}</option>
+                        @foreach ($generos as $genero)
+                            <option value="{{ $genero->id }}"> {{ $genero->genero }}</option>
                         @endforeach
                     </x-select>
                 </div>
                 <div class="mb-4">
                     <x-label for="">Fecha de nacimineto</x-label>
-                    <x-input type="date" class="w-full" wire:model="post_update.fecha_nacimiento" />
+                    <x-input type="date" class="w-full" max="{{$this->fecha_evento}}" wire:model="post_update.fecha_nacimiento" />
                     @error('post_update.fecha_nacimiento')
                         <span class="error text-red-500">{{ $message }}</span>
                     @enderror
@@ -79,6 +79,9 @@
                             <option value="{{ $estado->id }}"> {{ $estado->estado }}</option>
                         @endforeach
                     </x-select>
+                    @error('post_update.estado_id')
+                        <span class="error text-red-500">{{ $message }}</span>
+                    @enderror
                 </div>
                 <div class="mb-4">
                     <x-label for="">Ciudad </x-label>
@@ -92,6 +95,9 @@
                             @endforeach
                         @endif
                     </x-select>
+                    @error('post_update.ciudad_id')
+                        <span class="error text-red-500">{{ $message }}</span>
+                    @enderror
                 </div>
             </div>
             <div class="flex justify-end">
@@ -99,7 +105,7 @@
                     <i class="bi bi-trash-fill"></i>
                 </x-danger-button>
 
-                <x-button>
+                <x-button class="hover:bg-slate-300 focus:bg-slate-300 active:bg-slate-300">
                     Actualizar
                 </x-button>
             </div>

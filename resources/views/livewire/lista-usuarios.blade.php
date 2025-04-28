@@ -1,24 +1,24 @@
 <div>
     <div class="bg-white shadow rounded-lg p-4 mb-2">
-        <h1 class="font-black text-xl text-gray-800 leading-tight text-normal text-center">
-            Lista de participantes
+        <h1 class="mx-2 font-black text-xl text-gray-800 leading-tight text-normal text-stard">
+           Participantes Inscritos: {{ $ParticipanteEvento }}
         </h1>
 
         <div class="flex items-center">
             <input type="text" wire:model.live="query" placeholder="Buscar..."
-                class="w-5/12 px-8 mt-2 py-2 border-2 border-slate-300 rounded-lg focus:outline-none focus:border-blue-200 transition duration-300" />
+                class="w-5/12 px-4 mt-2 py-2 border-2 border-slate-300 rounded-lg focus:outline-none focus:border-blue-200 transition duration-300" />
             <label for="" class="ml-2">Inicio</label>
             <input type="date" wire:model.live="startDate"
-                class="w-1/6 px-8 mt-2 ml-1 py-2 border-2 border-slate-300 rounded-lg focus:outline-none focus:border-blue-200 transition duration-300" />
+                class="w-1/6 px-4 mt-2 ml-1 py-2 border-2 border-slate-300 rounded-lg focus:outline-none focus:border-blue-200 transition duration-300" />
 
             <label for="" class="ml-2">Fin</label>
             <input type="date" wire:model.live="endDate"
-                class="w-1/6 px-8 mt-2 ml-1 py-2 border-2 border-slate-300 rounded-lg focus:outline-none focus:border-blue-200 transition duration-300"
+                class="w-1/6 px-4 mt-2 ml-1 py-2 border-2 border-slate-300 rounded-lg focus:outline-none focus:border-blue-200 transition duration-300"
                 style="display: block" />
 
             <input class="ml-2" type="radio" name="genero" wire:model.live="genero" value="1"> Hombre
             <input class="ml-2" type="radio" name="genero" wire:model.live="genero" value="2"> Mujer
-            <x-button class="ml-2 bg-red-700 hover:bg-slate-300 " wire:click="limpiar()" type="reset">Cancelar</x-button>
+            <x-danger-button class="ml-2 bg-red-700" wire:click="limpiar()" type="reset">Cancelar</x-danger-button>
         </div>
     </div>
 
@@ -117,7 +117,7 @@
                             </p>
                         </td>
                         <td class="p-4 border-b border-blue-gray-50">
-                            <x-button class="bg-blue-500">
+                            <x-button class="bg-blue-500 hover:bg-slate-300 focus:bg-slate-300 active:bg-slate-300">
                                 <a href="/vista_usuarios/detalle/{{ $participante->id }}">
                                     <i class="bi bi-eye-fill"></i>
                                 </a>

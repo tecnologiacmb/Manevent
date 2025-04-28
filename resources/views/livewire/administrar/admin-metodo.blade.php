@@ -3,14 +3,12 @@
         <h1 class="font-black text-2xl text-gray-800 leading-tight text-normal">
             Lista de los Metodos de Pagos Registrados
         </h1>
-        <x-button class="shadow" wire:click="crear">
+        <x-button class="shadow hover:bg-slate-300 focus:bg-slate-300 active:bg-slate-300" wire:click="crear">
             Agregar
         </x-button>
     </div>
     <div
         class="relative flex flex-col w-full h-full overflow-scroll text-black bg-white shadow-md rounded-xl bg-clip-border overflow-x-auto overflow-y-hidden">
-
-
         <table class="w-full text-center table-auto min-w-max">
             <thead>
                 <tr>
@@ -46,7 +44,6 @@
                     </th>
                 </tr>
             </thead>
-
             <tbody>
                 @foreach ($posts as $metodo_pago)
                     <tr>
@@ -128,7 +125,8 @@
                         </td>
 
                         <td class="p-4 border-b border-blue-gray-50">
-                            <x-button class="bg-blue-500" wire:click="edit({{ $metodo_pago->id }})">
+                            <x-button class="bg-blue-500 hover:bg-slate-300 focus:bg-slate-300 active:bg-slate-300"
+                                wire:click="edit({{ $metodo_pago->id }})">
                                 <i class="bi bi-pencil-square"></i>
                             </x-button>
 
@@ -148,7 +146,7 @@
     <form wire:submit="seve">
         <x-dialog-modal wire:model="open">
             <x-slot name="title">
-                Actualizar Post
+                Registrar
             </x-slot>
             <x-slot name="content">
                 <div class="grid grid-cols-2 gap-4">
@@ -191,7 +189,7 @@
                         <div class="mb-4">
                             <x-label for="">N° Cuenta</x-label>
                             <x-input type="number" class="w-full" wire:model="post_create.n°_cuenta" />
-                            @error('post_create.N°_cuenta')
+                            @error('post_create.n°_cuenta')
                                 <span class="error text-red-500">{{ $message }}</span>
                             @enderror
                         </div>
@@ -280,7 +278,7 @@
                         <div class="mb-4">
                             <x-label for="">N° Cuenta</x-label>
                             <x-input type="number" class="w-full" wire:model="post_create.n°_cuenta" />
-                            @error('post_create.N°_cuenta')
+                            @error('post_create.n°_cuenta')
                                 <span class="error text-red-500">{{ $message }}</span>
                             @enderror
                         </div>
@@ -347,17 +345,14 @@
                         @enderror
                     </div>
                 </div>
-
             </x-slot>
-
             <x-slot name="footer">
                 <div class="flex justify-end">
                     <x-danger-button class="mr-2" wire:click="$set('open',false)">
                         Cancelar
                     </x-danger-button>
-
-                    <x-button>
-                        Agregar
+                    <x-button wire:click="validar1()">
+                        Registrar
                     </x-button>
                 </div>
             </x-slot>
@@ -367,7 +362,7 @@
     <form wire:submit="update">
         <x-dialog-modal wire:model="open_edit">
             <x-slot name="title">
-                Actualizar Post
+                Actualizar
             </x-slot>
 
             <x-slot name="content">
@@ -376,13 +371,14 @@
                     <x-label for="">Metodo</x-label>
                     <x-select class="w-full" wire:model="post_update.tipo_pago_id"
                         wire:click="changeEvent($event.target.value)">
-                        <option value="" disabled> Metodo pago</option>
-
+                        <option value="" > Metodo pago</option>
                         @foreach ($tipo_pago as $pago)
                             <option value="{{ $pago->id }}">{{ $pago->nombre }}</option>
                         @endforeach
-
                     </x-select>
+                    @error('post_update.tipo_pago_id')
+                        <span class="error text-red-500">{{ $message }}</span>
+                    @enderror
                 </div>
 
                 <div class="grid grid-cols-2 gap-4">
@@ -395,89 +391,130 @@
                                     <option value="{{ $post->id }}">{{ $post->nombre }}</option>
                                 @endforeach
                             </x-select>
+                            @error('post_update.banco_id')
+                                <span class="error text-red-500">{{ $message }}</span>
+                            @enderror
                         </div>
                         <div class="mb-4">
                             <x-label for="">Propietario</x-label>
                             <x-input class="w-full" wire:model="post_update.propietario" />
+                            @error('post_update.propietario')
+                                <span class="error text-red-500">{{ $message }}</span>
+                            @enderror
                         </div>
                     @elseif ($post_update['tipo_pago_id'] == 2)
                         <div class="mb-4">
                             <x-label for="">N° Cuenta</x-label>
                             <x-input type="number" class="w-full" wire:model="post_update.n°_cuenta" />
+                            @error('post_update.n°_cuenta')
+                                <span class="error text-red-500">{{ $message }}</span>
+                            @enderror
                         </div>
 
                         <div class="mb-4">
                             <x-label for="">Propietario</x-label>
                             <x-input class="w-full" wire:model="post_update.propietario" />
+                            @error('post_update.propietario')
+                                <span class="error text-red-500">{{ $message }}</span>
+                            @enderror
                         </div>
 
                         <div class="mb-4">
                             <x-label for="">ABA</x-label>
                             <x-input type="number" class="w-full" wire:model="post_update.ABA" />
+                            @error('post_update.ABA')
+                                <span class="error text-red-500">{{ $message }}</span>
+                            @enderror
                         </div>
 
                         <div class="mb-4">
                             <x-label for="">SWIT</x-label>
-                            <x-input class="w-full" wire:model="post_update.SWIT" />
+                            <x-input class="w-full" wire:model="post_update." />
+                            @error('post_update.SWIT')
+                                <span class="error text-red-500">{{ $message }}</span>
+                            @enderror
                         </div>
 
                         <div class="mb-4">
                             <x-label for="">Correo</x-label>
                             <x-input type="email" class="w-full" wire:model="post_update.correo" />
+                            @error('post_update.correo')
+                                <span class="error text-red-500">{{ $message }}</span>
+                            @enderror
                         </div>
 
                         <div class="mb-4">
                             <x-label for="">Banco</x-label>
                             <x-select class="w-full" wire:model="post_update.banco_id">
                                 <option value="" disabled>Seleccione un Banco</option>
-
                                 @foreach ($banco as $post)
                                     <option value="{{ $post->id }}">{{ $post->nombre }}</option>
                                 @endforeach
-
                             </x-select>
+                            @error('post_update.banco_id')
+                                <span class="error text-red-500">{{ $message }}</span>
+                            @enderror
                         </div>
                     @elseif ($post_update['tipo_pago_id'] == 3)
                         <div class="mb-4">
                             <x-label for="">Cedula</x-label>
                             <x-input type="number" class="w-full" wire:model="post_update.cedula" />
+                            @error('post_update.cedula')
+                                <span class="error text-red-500">{{ $message }}</span>
+                            @enderror
                         </div>
 
                         <div class="mb-4">
                             <x-label for="">Telefono</x-label>
                             <x-input type="number" class="w-full" wire:model="post_update.telefono" />
+                            @error('post_update.telefono')
+                                <span class="error text-red-500">{{ $message }}</span>
+                            @enderror
                         </div>
 
                         <div class="mb-4">
                             <x-label for="">Propietario</x-label>
                             <x-input class="w-full" wire:model="post_update.propietario" />
+                            @error('post_update.propietario')
+                                <span class="error text-red-500">{{ $message }}</span>
+                            @enderror
                         </div>
 
                         <div class="mb-4">
                             <x-label for="">Banco</x-label>
                             <x-select class="w-full" wire:model="post_update.banco_id">
                                 <option value="" disabled>Seleccione un Banco</option>
-
                                 @foreach ($banco as $post)
                                     <option value="{{ $post->id }}">{{ $post->nombre }}</option>
                                 @endforeach
-
                             </x-select>
+                            @error('post_update.banco_id')
+                                <span class="error text-red-500">{{ $message }}</span>
+                            @enderror
                         </div>
                     @elseif ($post_update['tipo_pago_id'] == 4)
                         <div class="mb-4">
                             <x-label for="">N° Cuenta</x-label>
                             <x-input type="number" class="w-full" wire:model="post_update.n°_cuenta" />
+                            @error('post_update.n°_cuenta')
+                                <span class="error text-red-500">{{ $message }}</span>
+                            @enderror
                         </div>
 
                         <div class="mb-4">
                             <x-label for="">Cedula</x-label>
                             <x-input type="number" class="w-full" wire:model="post_update.cedula" />
+                            @error('post_update.cedula')
+                                <span class="error text-red-500">{{ $message }}</span>
+                            @enderror
                         </div>
 
                         <div class="mb-4">
                             <x-label for="">Propietario</x-label>
                             <x-input class="w-full" wire:model="post_update.propietario" />
+                            @error('post_update.propietario')
+                                <span class="error text-red-500">{{ $message }}</span>
+                            @enderror
                         </div>
 
                         <div class="mb-4">
@@ -490,6 +527,9 @@
                                 @endforeach
 
                             </x-select>
+                            @error('post_update.banco_id')
+                                <span class="error text-red-500">{{ $message }}</span>
+                            @enderror
                         </div>
                     @elseif ($post_update['tipo_pago_id'] == 5 || $post_update['tipo_pago_id'] == 6)
                         <div class="mb-4">
@@ -507,6 +547,9 @@
                         <div class="mb-4">
                             <x-label for="">Propietario</x-label>
                             <x-input class="w-full" wire:model="post_update.propietario" />
+                            @error('post_update.propietario')
+                                <span class="error text-red-500">{{ $message }}</span>
+                            @enderror
                         </div>
                     @endif
 
@@ -516,7 +559,9 @@
                             <option value="">Seleccione un Estado</option>
                             <option value="0">Deshabilitado</option>
                             <option value="1">Habilitado</option>
-                        </x-select>
+                        </x-select> @error('post_update.estado')
+                            <span class="error text-red-500">{{ $message }}</span>
+                        @enderror
                     </div>
                 </div>
 
@@ -528,7 +573,7 @@
                         Cancelar
                     </x-danger-button>
 
-                    <x-button>
+                    <x-button wire:click="validar2()">
                         Actualizar
                     </x-button>
                 </div>

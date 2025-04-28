@@ -19,6 +19,8 @@ class Inscritos extends Component
     public $endDate;
     public $eventos;
     public $eventoId;
+    public $cantidad_inscripcion;
+
 
     public function mount()
     {
@@ -32,9 +34,16 @@ class Inscritos extends Component
     }
     // Add this line
 
-
+    public function calcularInscripcion()
+    {
+        $this->cantidad_inscripcion = inscripcion::join('eventos', 'inscripcions.evento_id', '=', 'eventos.id')->when($this->eventoId, function ($query) { // Add this when clause
+            $query->where('inscripcions.evento_id', $this->eventoId);
+        })->count('inscripcions.id');
+    }
     public function render()
     {
+        $this->calcularInscripcion();
+
         $adjustedEndDate = date('Y-m-d', strtotime($this->endDate . ' +1 day'));
 
         $inscripcions = inscripcion::select(
@@ -67,8 +76,8 @@ class Inscritos extends Component
             ->orderBy('inscripcions.id', 'desc')
             ->paginate(6);
 
-        $eventos = \App\Models\Evento::all();
 
-        return view('livewire.inscritos', ['inscripciones' => $inscripcions, 'eventos' => $eventos]);
+
+        return view('livewire.inscritos', ['inscripciones' => $inscripcions,]);
     }
 }

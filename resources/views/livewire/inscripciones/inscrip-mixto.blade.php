@@ -86,10 +86,8 @@
                             </td>
 
                             <td class="p-4 border-b border-blue-gray-50">
-                                <x-button class="bg-blue-500" wire:click="crear">
-
-                                        Seleccionar
-
+                                <x-button class="bg-blue-500 hover:bg-slate-300 focus:bg-slate-300 active:bg-slate-300" wire:click="crear({{$grupo->id}})">
+                                    Seleccionar
                                 </x-button>
                             </td>
                         </tr>
@@ -98,28 +96,46 @@
             </tbody>
         </table>
     </div>
+    <style>
+        @keyframes titleBlink {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0;
+            }
+        }
 
-    <form wire:submit="">
+        .animate-title {
+            animation: titleBlink 1s infinite;
+        }
+        </style>
+    <form wire:submit="enlace">
+
         <x-dialog-modal wire:model="open">
             <x-slot name="title">
-                Cantidades para la inscripción
-              <p>cantidad {{$grupo->cantidad}}</p>
+                <div class="flex justify-center">
+                    <h1 class="text-center"> Cantidad de Formulario:</h1>
+
+                    <h1 class="text-center animate-title ml-2 text-red-800">
+                        {{ $grupo->cantidad }}
+                    </h1>
+                </div>
+                <p class=" text-red-800 text-center">Aca debe especificar cuantos registros son para la Carrera y Caminata</p>
             </x-slot>
 
             <x-slot name="content">
 
-                <div class="w-full ">
+                <div class="w-full mx-16">
                     <div class="mb-4">
-                        <x-label for="">Carrera{{$cantidad_carrera}}</x-label>
-                        <x-input type="number" class="w-full" wire:model.live="cantidad_carrera"/>
+                        <x-label for="">Carrera</x-label>
+                        <x-input type="number" class="w-9/12" wire:model="cantidad_carrera" />
                     </div>
 
-
-
                     <div class="mb-4">
-                        <x-label for="">Caminata{{$cantidad_caminata}}</x-label>
+                        <x-label for="">Caminata</x-label>
 
-                        <x-input type="number" class="w-full" wire:model.live="cantidad_caminata" />
+                        <x-input type="number" class="w-9/12" wire:model="cantidad_caminata" />
                     </div>
                 </div>
             </x-slot>
@@ -130,11 +146,8 @@
                         Cancelar
                     </x-danger-button>
 
-                    <x-button>
-                        <a href="/mixto/inscripcion/{{ $grupo->id }}/carrera/{{$cantidad_carrera}}/caminata/{{$cantidad_caminata}} "
-                            class="block font-sans text-sm antialiased font-medium leading-normal text-blue-gray-900">
-                            Procesar
-                        </a>
+                    <x-button type="submit">
+                        Procesar
                     </x-button>
                 </div>
             </x-slot>

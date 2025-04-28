@@ -20,6 +20,8 @@ class AdminBanco extends Component
     public $query;
     public $logoUrl;
     protected $listeners = ['delete'];
+    public $actualizar = false;
+    public $registrar = false;
 
     public $post_create = [
         'nombre' => null,
@@ -42,29 +44,50 @@ class AdminBanco extends Component
         $this->open = true;
     }
 
+    public function validar1()
+    {
+        $this->registrar = true;
+        $this->actualizar = false;
+    }
+    public function validar2()
+    {
+        $this->actualizar = true;
+        $this->registrar = false;
+    }
     public function edit($edit_id)
     {
         $this->open_edit = true;
         $this->post_edit_id = $edit_id;
+
+        // Obtener el post basado en el ID proporcionado
         $post = banco::find($edit_id);
 
+        // Asegúrate de que el post exista
+        if (!$post) {
+            // Manejar el caso donde no se encuentra el post
+            return; // O redirigir con un mensaje de error
+        }
+
+        // Llenar los campos que se van a editar
         $this->post_update["nombre"] = $post->nombre;
         $this->post_update["codigo"] = $post->codigo;
         $this->post_update["estado"] = $post->estado;
-        // $this->post_update["logo"] = $post->logo; // Remove this line
 
-        // Convert binary data to Data URL
+        // Verificar y convertir logo
         if ($post->logo) {
-            $this->logoUrl = 'data:image/png;base64,' . base64_encode($this->post_update["logo"]); // Assuming PNG, adjust if needed
+            // Asume que $post->logo contiene datos binarios
+            $this->logoUrl = 'data:image/png;base64,' . base64_encode($post->logo); // Cambia "png" si usas otro formato
+
         } else {
-            $this->logoUrl = null;
+            $this->logoUrl = null; // No hay logo disponible
         }
     }
 
     public function update()
     {
-
+        $this->validate();
         $post = banco::find($this->post_edit_id);
+
         if ($this->post_update['logo']) {
             $this->blob = file_get_contents($this->post_update['logo']->getRealPath());
             if ($post) {
@@ -75,7 +98,17 @@ class AdminBanco extends Component
                     'logo' => $this->blob,
                 ]);
 
-                $this->reset(['post_edit_id', 'open_edit','blob','post_update']);
+                $this->reset(['post_edit_id', 'open_edit', 'blob', 'post_update']);
+                $this->dispatch('alert_update');
+            }
+        } else {
+            if ($post) {
+                $post->update([
+                    'nombre' => $this->post_update['nombre'],
+                    'codigo' => $this->post_update['codigo'],
+                    'estado' => $this->post_update['estado'],
+                ]);
+                $this->reset(['post_edit_id', 'open_edit', 'blob', 'post_update']);
                 $this->dispatch('alert_update');
             }
         }
@@ -116,28 +149,59 @@ class AdminBanco extends Component
 
     public function rules(): array
     {
-        return [
-            "post_create.nombre" => 'required|string|max:25|regex:/^[a-zA-Z\s]+$/',
-            "post_create.codigo" => 'required|string|max:8|regex:/^[0-9]+$/',
-            "post_create.estado" => 'required',
-            "post_create.logo" => 'image|max:1024',
-        ];
+        if ($this->registrar == true) {
+            $this->actualizar =false;
+            return [
+                "post_create.nombre" => 'required|string|max:60',
+                "post_create.codigo" => 'required|string|max:8|regex:/^[0-9]+$/',
+                "post_create.estado" => 'required',
+                "post_create.logo" => 'image|max:1024',
+            ];
+        } else if ($this->actualizar == true) {
+            $this->registrar =false;
+
+            return [
+                "post_update.nombre" => 'required|string|max:60',
+                "post_update.codigo" => 'required|string|max:8|regex:/^[0-9]+$/',
+                "post_update.estado" => 'required',
+            ];
+        } else {
+            return [];
+        }
     }
 
     public function messages(): array
     {
-        return [
-            "post_create.nombre.required" => __('El campo nombre es obligatorio.'),
-            "post_create.nombre.string" => __('El campo nombre debe ser una cadena de texto.'),
-            "post_create.nombre.max" => __('El campo nombre no debe ser mayor a 25 letras.'),
-            "post_create.nombre.regex" => __('El campo nombre solo acepta letras.'),
-            "post_create.codigo.required" => __('El campo codigo es obligatorio.'),
-            "post_create.codigo.string" => __('El campo codigo debe ser una cadena de texto.'),
-            "post_create.codigo.max" => __('El campo codigo no debe ser mayor a 8 digitos.'),
-            "post_create.codigo.regex" => __('El campo codigo solo acepta numeros.'),
-            "post_create.estado.required" => __('El campo estado es obligatorio.'),
-            "post_create.logo.image" => __('El campo logo debe ser una imagen.'),
-        ];
+      if ($this->registrar == true) {
+            $this->actualizar =false;
+            return [
+                "post_create.nombre.required" => __('El campo nombre es obligatorio.'),
+                "post_create.nombre.string" => __('El campo nombre debe ser una cadena de texto.'),
+                "post_create.nombre.max" => __('El campo nombre no debe ser mayor a 25 letras.'),
+
+                "post_create.codigo.required" => __('El campo codigo es obligatorio.'),
+                "post_create.codigo.string" => __('El campo codigo debe ser una cadena de texto.'),
+                "post_create.codigo.max" => __('El campo codigo no debe ser mayor a 8 digitos.'),
+                "post_create.codigo.regex" => __('El campo codigo solo acepta numeros.'),
+                "post_create.estado.required" => __('El campo estado es obligatorio.'),
+                "post_create.logo.image" => __('El campo logo debe ser una imagen.'),
+            ];
+        }else if ($this->actualizar == true) {
+            $this->registrar =false;
+            return [
+                "post_update.nombre.required" => __('El campo nombre es obligatorio.'),
+                "post_update.nombre.string" => __('El campo nombre debe ser una cadena de texto.'),
+                "post_update.nombre.max" => __('El campo nombre no debe ser mayor a 25 letras.'),
+
+                "post_update.codigo.required" => __('El campo codigo es obligatorio.'),
+                "post_update.codigo.string" => __('El campo codigo debe ser una cadena de texto.'),
+                "post_update.codigo.max" => __('El campo codigo no debe ser mayor a 8 digitos.'),
+                "post_update.codigo.regex" => __('El campo codigo solo acepta numeros.'),
+                "post_update.estado.required" => __('El campo estado es obligatorio.'),
+            ];
+        }else{
+            return [];
+        }
     }
 
     public function render()

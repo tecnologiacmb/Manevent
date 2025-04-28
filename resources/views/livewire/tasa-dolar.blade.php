@@ -1,52 +1,28 @@
  <div>
      <div class="bg-white shadow rounded-lg p-2 mb-4">
-
          <form wire:submit="save">
              <div class="flex space-x-4 py-2">
-                <h1 class="mt-2 font-black text-2xl text-gray-800 leading-tight text-normal">
-                    Agregar el Precio del Dolar
-                </h1>
-                 <x-input placeholder="Precio del Dolar" type="number" step="0.01" wire:model="post_create.precio" />
-                 <x-button>
-                     agregar
+                 <h1 class="mt-2 font-black text-2xl text-gray-800 leading-tight text-normal">
+                     Registrar Precio del Dolar
+                 </h1>
+                 <x-input placeholder="Precio del Dolar" type="number" step="0.01"
+                     wire:model.live="post_create.precio" />
+
+                 <x-button class="hover:bg-gray-300 focus:bg-gray-300 active:bg-gray-300" wire:click="validar_registro()">
+                     Registrar
                  </x-button>
+
+             </div>
+             <div class="flex justify-center mr-28">
+                 @error('post_create.precio')
+                     <span class="text-center error text-red-500">{{ $message }}</span>
+                 @enderror
              </div>
          </form>
-
-         <form wire:submit="update">
-             <x-dialog-modal wire:model="open_edit">
-                 <x-slot name="title">
-                     Actualizar Post
-                 </x-slot>
-
-                 <x-slot name="content">
-                     <div class="mb-4" style="display: flex; justify-content: center; align-items: center;">
-                         <x-label for="">Precio del dolar </x-label>
-                         <x-input placeholder="Precio del Dolar" type="number" step="0.01"
-                             wire:model="post_update.precio" />
-                     </div>
-                 </x-slot>
-
-                 <x-slot name="footer">
-                     <div class="flex justify-end">
-                         <x-danger-button class="mr-2" wire:click="$set('open_edit',false)">
-                             Cancelar
-                         </x-danger-button>
-
-                         <x-button>
-                             Actualizar
-                         </x-button>
-                     </div>
-                 </x-slot>
-             </x-dialog-modal>
-         </form>
      </div>
-
      <div
          class="relative flex flex-col w-full h-full overflow-scroll text-black bg-white shadow-md rounded-xl bg-clip-border overflow-x-hidden overflow-y-hidden">
-
-
-         <table class="w-full text-left table-auto min-w-max">
+         <table class="w-full text-center table-auto min-w-max">
              <thead>
                  <tr>
                      <th class="p-4 border-b border-blue-gray-100 bg-blue-gray-50">
@@ -75,7 +51,6 @@
                              </p>
                          </th>
                      @endcan
-
                  </tr>
              </thead>
 
@@ -88,7 +63,6 @@
                                  {{ $post->id }}
                              </p>
                          </td>
-
                          <td class="p-4 border-b border-blue-gray-50">
                              <p
                                  class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
@@ -102,16 +76,14 @@
                              </p>
                          </td>
                          @can('ver-admin')
-                             <td class="p-4 border-b border-blue-gray-50 space-x-8">
-                                 <x-button class="bg-blue-500" wire:click="edit({{ $post->id }})">
+                             <td class="p-4 border-b border-blue-gray-50 mx-2">
+                                 <x-button class="bg-blue-500 hover:bg-gray-300 focus:bg-gray-300 active:bg-gray-300"
+                                     wire:click="edit({{ $post->id }})">
                                      <i class="bi bi-pencil-square"></i>
                                  </x-button>
-
-
                                  <x-danger-button wire:click="confirm_delete({{ $post->id }})">
                                      <i class="bi bi-trash-fill"></i>
                                  </x-danger-button>
-
                              </td>
                          @endcan
                  </tr>
@@ -119,11 +91,34 @@
              </tbody>
          </table>
      </div>
-
      <div>
          {{ $posts->links() }}
      </div>
-
+     <form wire:submit="update">
+         <x-dialog-modal wire:model="open_edit">
+             <x-slot name="title">
+                 Actualizar Dolar
+             </x-slot>
+             <x-slot name="content">
+                 <div class="mb-4">
+                     <x-label for="">Precio del dolar </x-label>
+                     <x-input class="w-full" placeholder="Precio del Dolar" type="number" step="0.01"
+                         wire:model="post_update.precio" />
+                 </div>
+             </x-slot>
+             <x-slot name="footer">
+                 <div class="flex justify-end">
+                     <x-danger-button class="mr-2" wire:click="$set('open_edit',false)">
+                         Cancelar
+                     </x-danger-button>
+                     <x-button class="hover:bg-slate-300 focus:bg-slate-300 active:bg-slate-300"
+                         wire:click="validar_actualizacion()">
+                         Actualizar
+                     </x-button>
+                 </div>
+             </x-slot>
+         </x-dialog-modal>
+     </form>
      @push('js')
          <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
          <script>

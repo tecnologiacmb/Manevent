@@ -30,7 +30,7 @@ class inscripcion extends Model
         'categoria_habilitada_id',
         'mesa_id',
         'datos',
-        'monto_pagado_bs',
+        'monto_a_pagar_bs',
         'ip',
         'nomenclatura',
         'recorrido_id',

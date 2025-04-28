@@ -1,18 +1,15 @@
 <div>
-
     <div class="bg-white shadow rounded-lg p-2 mb-2 flex items-center justify-between">
         <h1 class="font-black text-2xl text-gray-800 leading-tight text-center py-2 ml-4">
             Listado de prendas
         </h1>
         <div class="justify-items-end pr-12">
-            <x-button class="shadow" wire:click="crear">
-                Agregar
-            </x-button>
+
         </div>
     </div>
-    <div class="bg-white shadow rounded-lg p-4 mb-2 px-8">
+    <div class="bg-white shadow rounded-lg p-4 mb-2 px-4">
         <input type="text" wire:model.live="query" placeholder="Buscar..."
-            class="w-1/3 px-8 mt-2 py-2 border-2 border-slate-300 rounded-lg focus:outline-none focus:border-blue-200 transition duration-300" />
+            class="w-1/4 px-2 mt-2 py-2 border-2 border-slate-300 rounded-lg focus:outline-none focus:border-blue-200 transition duration-300" />
         <x-select wire:model.live="eventoId" class="ml-2 mt-2">
             <option value="">Todos los eventos</option>
             @foreach ($eventos as $evento)
@@ -21,7 +18,10 @@
         </x-select>
         <input class="ml-4" type="radio" name="genero" wire:model.live="genero" value="Masculino"> Masculino
         <input class="ml-4" type="radio" name="genero" wire:model.live="genero" value="Femenino"> Femenino
-        <x-button class="ml-6 bg-red-700 hover:bg-slate-300 " wire:click="limpiar()" type="reset">Cancelar</x-button>
+        <x-danger-button class="ml-4 bg-red-700" wire:click="limpiar()" type="reset">Cancelar</x-danger-button>
+        <x-button class="ml-2 hover:bg-slate-300 focus:bg-slate-300 active:bg-slate-300" wire:click="crear">
+            Registrar
+        </x-button>
     </div>
     <div
         class="relative flex flex-col w-full h-full overflow-scroll text-black bg-white shadow-md rounded-xl bg-clip-border overflow-x-auto overflow-y-hidden">
@@ -98,9 +98,14 @@
                         </td>
                         <td class="p-4 border-b border-blue-gray-50">
 
-                            <x-button class="bg-blue-500 shadow" wire:click="edit({{ $prenda->id }})">
-                                Agregar
+                            <x-button
+                                class="bg-blue-500 hover:bg-slate-300 focus:bg-slate-300 active:bg-slate-300 shadow"
+                                wire:click="edit({{ $prenda->id }})">
+                                <i class="bi bi-pencil-square"></i>
                             </x-button>
+                            <x-danger-button class="bg-red-700" wire:click="confirm_delete({{$prenda->id }})">
+                                <i class="bi bi-trash-fill"></i>
+                            </x-danger-button>
                         </td>
                     </tr>
                 @endforeach
@@ -191,77 +196,75 @@
                         Cancelar
                     </x-danger-button>
 
-                    <x-button>
-                        Agregar
+                    <x-button wire:click="validar_registro()">
+                        Registrar
                     </x-button>
                 </div>
             </x-slot>
         </x-dialog-modal>
     </form>
 
-    <form wire:submit="update">
+    <form wire:submit="actualizar">
         <x-dialog-modal wire:model="open_update">
             <x-slot name="title">
                 Actualizar Datos
             </x-slot>
-
             <x-slot name="content">
                 <div class="grid grid-cols-2 gap-4">
-
                     <div class="mb-4">
-                        <x-label for="">Categoria {{ $create_prenda['prenda_category_id'] }}</x-label>
-                        <x-select class="w-full" wire:model="create_prenda.prenda_category_id">
+                        <x-label for="">Categoria</x-label>
+                        <x-select class="w-full" wire:model="actualizar_prenda.prenda_category_id">
                             <option value="">Seleccione un Estado</option>
                             @foreach ($categorias as $categoria)
                                 <option value="{{ $categoria->id }}">{{ $categoria->nombre }}
                                 </option>
                             @endforeach
                         </x-select>
-                        @error('create_prenda.prenda_category_id')
+                        @error('actualizar_prenda.prenda_category_id')
                             <span class="error text-red-500">{{ $message }}</span>
                         @enderror
                     </div>
                     <div class="mb-4">
-                        <x-label for="">Talla {{ $create_prenda['prenda_talla_id'] }}</x-label>
-                        <x-select class="w-full" wire:model="create_prenda.prenda_talla_id">
+                        <x-label for="">Talla</x-label>
+                        <x-select class="w-full" wire:model="actualizar_prenda.prenda_talla_id">
                             <option value="">Seleccione un Estado</option>
                             @foreach ($tallas as $talla)
                                 <option value="{{ $talla->id }}">{{ $talla->talla }}
                                 </option>
                             @endforeach
                         </x-select>
-                        @error('create_prenda.prenda_talla_id')
+                        @error('actualizar_prenda.prenda_talla_id')
                             <span class="error text-red-500">{{ $message }}</span>
                         @enderror
                     </div>
                     <div class="mb-4">
                         <x-label for="">Cantidad </x-label>
-                        <x-input class="w-full" type="number" wire:model="create_prenda.cantidad" />
-                        @error('create_prenda.cantidad')
+                        <x-input class="w-full" type="number" wire:model="actualizar_prenda.cantidad" />
+                        @error('actualizar_prenda.cantidad')
                             <span class="error text-red-500">{{ $message }}</span>
                         @enderror
                     </div>
                     <div class="mb-4">
                         <x-label for="">Sexo</x-label>
-                        <x-select class="w-full" wire:model="create_prenda.sexo"
+                        <x-select class="w-full" wire:model="actualizar_prenda.sexo"
                             wire:change="select_sexo($event.target.value)">
                             <option value="">Seleccione un Estado</option>
                             <option value="Femenino">Femenino</option>
                             <option value="Masculino">Masculino</option>
 
                         </x-select>
-                        @error('create_prenda.sexo')
+                        @error('actualizar_prenda.sexo')
                             <span class="error text-red-500">{{ $message }}</span>
                         @enderror
                     </div>
                     <div class="mb-4">
                         <x-label for="">Estado</x-label>
-                        <x-select class="w-full" wire:model="create_prenda.estado">
+                        <x-select class="w-full" wire:model="actualizar_prenda.estado">
                             <option value="">Seleccione un Estado</option>
                             <option value="0">Deshabilitado</option>
                             <option value="1">Habilitado</option>
                         </x-select>
-                        @error('create_prenda.estado')
+                        @error('actualizar_prenda.estado')
                             <span class="error text-red-500">{{ $message }}</span>
                         @enderror
                     </div>
@@ -275,8 +278,8 @@
                         Cancelar
                     </x-danger-button>
 
-                    <x-button>
-                        Agregar
+                    <x-button wire:click="validar_actualizacion()">
+                        Actualizar
                     </x-button>
                 </div>
             </x-slot>

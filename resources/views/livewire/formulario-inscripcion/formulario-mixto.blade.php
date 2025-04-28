@@ -88,6 +88,9 @@
                                 <option value="{{ $estado->id }}"> {{ $estado->estado }}</option>
                             @endforeach
                         </x-select>
+                        @error("participante_caminata.$j.estado_id")
+                            <span class="error text-red-500">{{ $message }}</span>
+                        @enderror
                     </div>
                     <div class="mb-4">
                         <x-label for="">Ciudad </x-label>
@@ -138,19 +141,24 @@
                             @foreach ($generos as $genero)
                                 <option value="{{ $genero->id }}">{{ $genero->genero }}</option>
                             @endforeach
-
                         </x-select>
+                        @error("participante_caminata.$j.genero_id")
+                            <span class="error text-red-500 ">{{ $message }}</span>
+                        @enderror
                     </div>
                     @if (!str_contains($grupo->nombre, 'sin franela'))
-
                         <div>
                             <x-label for="">Prendas</x-label>
                             <x-select class="w-full"
+                                wire:model="create_prendas_caminata.{{ $j }}.prenda_genero"
                                 wire:change="update_prendas_caminata({{ $j }},$event.target.value)">
                                 <option value="">Seleccionar prenda</option>
                                 <option value="1">Masculino</option>
                                 <option value="2">Femenino</option>
                             </x-select>
+                            @error("create_prendas_caminata.$j.prenda_genero")
+                                <span class="error text-red-500 ">{{ $message }}</span>
+                            @enderror
                         </div>
 
                         @if ($this->create_prendas_caminata[$j]['genero'] == 'Masculino')
@@ -167,6 +175,9 @@
                                         </option>
                                     @endforeach
                                 </x-select>
+                                @error("create_prendas_caminata.$j.prendas")
+                                    <span class="error text-red-500 ">{{ $message }}</span>
+                                @enderror
                             </div>
                         @elseif ($this->create_prendas_caminata[$j]['genero'] == 'Femenino')
                             <div>
@@ -182,6 +193,9 @@
                                         </option>
                                     @endforeach
                                 </x-select>
+                                @error("create_prendas_caminata.$j.prendas")
+                                    <span class="error text-red-500 ">{{ $message }}</span>
+                                @enderror
                             </div>
                         @endif
 
@@ -197,10 +211,11 @@
                             <div>
                                 <x-label for="">Pagos</x-label>
                                 <x-select class="w-full"
+                                    wire:model="inscripcion_caminata.{{ $j }}.pago_BS_USD"
                                     wire:change="update_pago_caminata({{ $j }},$event.target.value)">
                                     <option value="">Seleccione un pago</option>
-                                    <option value="1">Bolivares Bs</option>
-                                    <option value="2">Dolares $</option>
+                                    <option value="bolivar">Bolivares Bs</option>
+                                    <option value="dolar">Dolares $</option>
                                 </x-select>
                             </div>
                             <div class="mb-4">
@@ -221,7 +236,7 @@
                         </div>
                         <div class="grid grid-cols-3 gap-4">
                             {{-- si pago en $ --}}
-                            @if ($this->inscripcion_caminata[$j]['bolivar'] == '1')
+                            @if ($this->inscripcion_caminata[$j]['bolivar'] == 'bolivar')
                                 <div class="mb-4">
                                     <x-label for="">Fecha del pago</x-label>
                                     <x-input type="date" class="w-full" max="{{ $this->fecha_actual }}"
@@ -250,7 +265,7 @@
                                     </div>
                                 </div>
                                 {{-- si pago en bs --}}
-                            @elseif($this->inscripcion_caminata[$j]['dolar'] == '2')
+                            @elseif($this->inscripcion_caminata[$j]['dolar'] == 'dolar')
                                 <div class="mb-4">
                                     <x-label for="">Fecha del pago</x-label>
                                     <x-input type="date" class="w-full" max="{{ $this->fecha_actual }}"
@@ -293,10 +308,11 @@
                             <div>
                                 <x-label for="">Pagos</x-label>
                                 <x-select class="w-full"
+                                    wire:model="inscripcion_caminata.{{ $j }}.pago_BS_USD"
                                     wire:change="update_pago_caminata({{ $j }},$event.target.value)">
                                     <option value="">Seleccione un pago</option>
-                                    <option value="1">Bolivares Bs</option>
-                                    <option value="2">Dolares $</option>
+                                    <option value="bolivar">Bolivares Bs</option>
+                                    <option value="dolar">Dolares $</option>
                                 </x-select>
                             </div>
                             <div class="mb-4">
@@ -318,7 +334,7 @@
                         </div>
                         <div class="grid grid-cols-3 gap-4">
                             {{-- si pago en $ --}}
-                            @if ($this->inscripcion_caminata[$j]['bolivar'] == '1')
+                            @if ($this->inscripcion_caminata[$j]['bolivar'] == 'bolivar')
                                 <div class="mb-4">
                                     <x-label for="">Fecha del pago</x-label>
                                     <x-input type="date" class="w-full" max="{{ $this->fecha_actual }}"
@@ -347,7 +363,7 @@
                                     </div>
                                 </div>
                                 {{-- si pago en bs --}}
-                            @elseif($this->inscripcion_caminata[$j]['dolar'] == '2')
+                            @elseif($this->inscripcion_caminata[$j]['dolar'] == 'dolar')
                                 <div class="mb-4">
                                     <x-label for="">Fecha del pago</x-label>
                                     <x-input type="date" class="w-full" max="{{ $this->fecha_actual }}"
@@ -386,8 +402,8 @@
                                 <x-select class="w-full"
                                     wire:change="update_pago_mixto_caminata({{ $j }},$event.target.value)">
                                     <option value="">Seleccione un pago</option>
-                                    <option value="1">Bolivares Bs</option>
-                                    <option value="2">Dolares $</option>
+                                    <option value="bolivar_mixto">Bolivares Bs</option>
+                                    <option value="dolar_mixto">Dolares $</option>
                                 </x-select>
                             </div>
                             <div class="mb-4">
@@ -409,7 +425,7 @@
                             {{-- si pago en $ --}}
                         </div>
                         <div class="grid grid-cols-3 gap-4">
-                            @if ($this->inscripcion_caminata[$j]['bolivar_mixto'] == '1')
+                            @if ($this->inscripcion_caminata[$j]['bolivar_mixto'] == 'bolivar_mixto')
                                 <div class="mb-4">
                                     <x-label for="">Fecha del pago</x-label>
                                     <x-input type="date" class="w-full" max="{{ $this->fecha_actual }}"
@@ -438,7 +454,7 @@
                                     </div>
                                 </div>
                                 {{-- si pago en bs --}}
-                            @elseif($this->inscripcion_caminata[$j]['dolar_mixto'] == '2')
+                            @elseif($this->inscripcion_caminata[$j]['dolar_mixto'] == 'dolar_mixto')
                                 <div class="mb-4">
                                     <x-label for="">Fecha del pago</x-label>
                                     <x-input type="date" class="w-full" max="{{ $this->fecha_actual }}"
@@ -532,6 +548,9 @@
                                 <option value="{{ $estado->id }}"> {{ $estado->estado }}</option>
                             @endforeach
                         </x-select>
+                        @error("participante_carrera.$i.estado_id")
+                            <span class="error text-red-500">{{ $message }}</span>
+                        @enderror
                     </div>
                     <div class="mb-4">
                         <x-label for="">Ciudad </x-label>
@@ -580,18 +599,24 @@
                             @foreach ($generos as $genero)
                                 <option value="{{ $genero->id }}">{{ $genero->genero }}</option>
                             @endforeach
-
                         </x-select>
+                        @error("participante_carrera.$i.genero_id")
+                            <span class="error text-red-500">{{ $message }}</span>
+                        @enderror
                     </div>
                     @if (!str_contains($grupo->nombre, 'sin franela'))
                         <div>
                             <x-label for="">Prendas</x-label>
                             <x-select class="w-full"
+                                wire:model="create_prendas_carrera.{{ $i }}.prenda_genero"
                                 wire:change="update_prendas_carrera({{ $i }},$event.target.value)">
                                 <option value="">Seleccionar prenda</option>
                                 <option value="1">Masculino</option>
                                 <option value="2">Femenino</option>
                             </x-select>
+                            @error("create_prendas_carrera.$i.prenda_genero")
+                                <span class="error text-red-500">{{ $message }}</span>
+                            @enderror
                         </div>
 
                         @if ($this->create_prendas_carrera[$i]['genero'] == 'Masculino')
@@ -608,6 +633,9 @@
                                         </option>
                                     @endforeach
                                 </x-select>
+                                @error("create_prendas_carrera.$i.prendas")
+                                    <span class="error text-red-500">{{ $message }}</span>
+                                @enderror
                             </div>
                         @elseif ($this->create_prendas_carrera[$i]['genero'] == 'Femenino')
                             <div>
@@ -623,6 +651,9 @@
                                         </option>
                                     @endforeach
                                 </x-select>
+                                @error("create_prendas_carrera.$i.prendas")
+                                    <span class="error text-red-500">{{ $message }}</span>
+                                @enderror
                             </div>
                         @endif
                     @endif
@@ -636,10 +667,11 @@
                             <div>
                                 <x-label for="">Pagos</x-label>
                                 <x-select class="w-full"
+                                    wire:model="inscripcion_carrera.{{ $i }}.pago_BS_USD"
                                     wire:change="update_pago_carrera({{ $i }},$event.target.value)">
                                     <option value="">Seleccione un pago</option>
-                                    <option value="1">Bolivares Bs</option>
-                                    <option value="2">Dolares $</option>
+                                    <option value="bolivar">Bolivares Bs</option>
+                                    <option value="dolar">Dolares $</option>
                                 </x-select>
                             </div>
                             <div class="mb-4">
@@ -660,7 +692,7 @@
                         </div>
                         <div class="grid grid-cols-3 gap-4">
                             {{-- si pago en $ --}}
-                            @if ($this->inscripcion_carrera[$i]['bolivar'] == '1')
+                            @if ($this->inscripcion_carrera[$i]['bolivar'] == 'bolivar')
                                 <div class="mb-4">
                                     <x-label for="">Fecha del pago</x-label>
                                     <x-input type="date" class="w-full" max="{{ $this->fecha_actual }}"
@@ -689,7 +721,7 @@
                                     </div>
                                 </div>
                                 {{-- si pago en bs --}}
-                            @elseif($this->inscripcion_carrera[$i]['dolar'] == '2')
+                            @elseif($this->inscripcion_carrera[$i]['dolar'] == 'dolar')
                                 <div class="mb-4">
                                     <x-label for="">Fecha del pago</x-label>
                                     <x-input type="date" class="w-full" max="{{ $this->fecha_actual }}"
@@ -732,10 +764,11 @@
                             <div>
                                 <x-label for="">Pagos</x-label>
                                 <x-select class="w-full"
+                                    wire:model="inscripcion_carrera.{{ $i }}.pago_BS_USD"
                                     wire:change="update_pago_carrera({{ $i }},$event.target.value)">
                                     <option value="">Seleccione un pago</option>
-                                    <option value="1">Bolivares Bs</option>
-                                    <option value="2">Dolares $</option>
+                                    <option value="bolivar">Bolivares Bs</option>
+                                    <option value="dolar">Dolares $</option>
                                 </x-select>
                             </div>
                             <div class="mb-4">
@@ -757,7 +790,7 @@
                         </div>
                         <div class="grid grid-cols-3 gap-4">
                             {{-- si pago en $ --}}
-                            @if ($this->inscripcion_carrera[$i]['bolivar'] == '1')
+                            @if ($this->inscripcion_carrera[$i]['bolivar'] == 'bolivar')
                                 <div class="mb-4">
                                     <x-label for="">Fecha del pago</x-label>
                                     <x-input type="date" class="w-full" max="{{ $this->fecha_actual }}"
@@ -786,7 +819,7 @@
                                     </div>
                                 </div>
                                 {{-- si pago en bs --}}
-                            @elseif($this->inscripcion_carrera[$i]['dolar'] == '2')
+                            @elseif($this->inscripcion_carrera[$i]['dolar'] == 'dolar')
                                 <div class="mb-4">
                                     <x-label for="">Fecha del pago</x-label>
                                     <x-input type="date" class="w-full" max="{{ $this->fecha_actual }}"
@@ -825,8 +858,8 @@
                                 <x-select class="w-full"
                                     wire:click="update_pago_mixto_carrera({{ $i }},$event.target.value)">
                                     <option value="">Seleccione un pago</option>
-                                    <option value="1">Bolivares Bs</option>
-                                    <option value="2">Dolares $</option>
+                                    <option value="bolivar_mixto">Bolivares Bs</option>
+                                    <option value="dolar_mixto">Dolares $</option>
                                 </x-select>
                             </div>
                             <div class="mb-4">
@@ -848,7 +881,7 @@
                             {{-- si pago en $ --}}
                         </div>
                         <div class="grid grid-cols-3 gap-4">
-                            @if ($this->inscripcion_carrera[$i]['bolivar_mixto'] == '1')
+                            @if ($this->inscripcion_carrera[$i]['bolivar_mixto'] == 'bolivar_mixto')
                                 <div class="mb-4">
                                     <x-label for="">Fecha del pago</x-label>
                                     <x-input type="date" class="w-full" max="{{ $this->fecha_actual }}"
@@ -877,7 +910,7 @@
                                     </div>
                                 </div>
                                 {{-- si pago en bs --}}
-                            @elseif($this->inscripcion_carrera[$i]['dolar_mixto'] == '2')
+                            @elseif($this->inscripcion_carrera[$i]['dolar_mixto'] == 'dolar_mixto')
                                 <div class="mb-4">
                                     <x-label for="">Fecha del pago</x-label>
                                     <x-input type="date" class="w-full" max="{{ $this->fecha_actual }}"
@@ -913,7 +946,7 @@
             <br>
         @endfor
         <div class="flex justify-end">
-            <x-button>
+            <x-button class="hover:bg-slate-300 focus:bg-slate-300 active:bg-slate-300">
                 Agregar
             </x-button>
         </div>

@@ -4,6 +4,7 @@ use App\Http\Controllers\Caminata_controller;
 use App\Http\Controllers\Carrera_controller;
 use App\Http\Controllers\Mixto_controller;
 use App\Http\Controllers\Categoria_Controller;
+use App\Http\Controllers\ExportPDF;
 use App\Http\Controllers\Grupo_Controller;
 use App\Http\Controllers\Inscrippcion_Controller;
 use App\Http\Controllers\Metodo_pago_Controller;
@@ -14,7 +15,7 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('auth.login');
 });
 
 Route::middleware([
@@ -22,10 +23,6 @@ Route::middleware([
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
-    Route::get('/reporte_fondo', function () {
-        return view('reportes/reporte_fondo');
-    })->name('reporte_fondo');
-
     Route::get('/dashboard', function () {
         return view('dashboard');
     })->name('dashboard');
@@ -45,6 +42,15 @@ Route::middleware([
     })->name('banco');
 
 
+    Route::controller(ExportPDF::class)->group(function () {
+        Route::group(['prefix' => 'reportes/reporte_fondo'], function () {
+            Route::get('', 'index')->name('reporte_fondo');
+            Route::get('/detalle/', 'reportPDF')->name('reportes.ReporteFondoPDF.detalle');
+            Route::get('/Excel/', 'reportExcel')->name('reportes.ReporteExcel.Excel');
+            Route::get('/ExcelGlobal/', 'reportGlobalExcel')->name('reportes.ReporteGlobalExcel.ExcelGlobal');
+            Route::get('/reporte_global', 'reportGlobalPDF')->name('reportes.ReporteGlobalPDF.reporte_global');
+        });
+    });
     Route::controller(Registro_Usuario::class)->group(function () {
         Route::group(['prefix' => 'registro_usuario',], function () {
             Route::get('',  "index")->name('registro_usuario');
@@ -95,8 +101,7 @@ Route::middleware([
     Route::controller(Mixto_controller::class)->group(function () {
         Route::group(['prefix' => 'mixto',], function () {
             Route::get('',  "index")->name('mixto');
-            Route::get('/inscripcion/{id}/carrera/{cantidad_carrera}/caminata/{cantidad_caminata}',  "create")->name('mixto/inscripcion/{id}/carrera/{cantidad_carrera}/caminata/{cantidad_caminata}');
-            Route::get('/editar/{id}', "edit")->name('inmobiliaria/editar/{id}');
+            Route::get('/inscripcion/{id}/{cantidad_carrera}/{cantidad_caminata}',  "create")->name('mixto/inscripcion/{id}/{cantidad_carrera}/{cantidad_caminata}');
         });
     });
 });

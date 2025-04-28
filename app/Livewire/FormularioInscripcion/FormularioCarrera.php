@@ -15,18 +15,9 @@ use App\Models\estado;
 use App\Models\ciudad;
 use App\Models\categoriaHabilitada;
 use App\Models\mesa;
-use App\Models\tipo_pago;
-use App\Models\banco;
 use App\Models\prenda;
 use App\Models\genero;
-
-
-
-
-
 use App\Enum\Mesas_enum;
-use App\Models\metodo_pago;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class FormularioCarrera extends Component
 {
@@ -39,13 +30,10 @@ class FormularioCarrera extends Component
     public $estados;
     public $ciudad;
     public $participantes_ids = [];
-
     public $tipo_pago;
     public $cantidad;
-
     public $groupId = null;
     public $generos;
-
     public $ultimoParticipante;
     public $categoria_habilitada;
     public $inscripcion;
@@ -80,7 +68,7 @@ class FormularioCarrera extends Component
         'numero_id' => null,
         'mesa_id' => null,
         'datos' => null,
-        'monto_pagado_bs' => "",
+        'monto_a_pagar_bs' => "",
         'ip' => "",
         'nomenclatura' => "",
         'metodo' => null,
@@ -104,11 +92,12 @@ class FormularioCarrera extends Component
         'recorrido_id' => null,
         'recorrido_id_grupos' => null,
         'prenda_id' => null,
-
+        'pago_BS_USD' => null
     ];
     public $create_prendas = [
         'prendas' => null,
-        'genero' => null
+        'genero' => null,
+        'prenda_genero' => null
     ];
     public $prendas;
     public $cedula = null;
@@ -118,29 +107,23 @@ class FormularioCarrera extends Component
 
     public function mount($id = null)
     {
-        if (!is_null($id)) {
 
+        if (!is_null($id)) {
             $this->userIp = request()->ip();
             $this->generos = genero::all();
             $this->fecha_actual = Carbon::now()->format('Y-m-d');
             $this->evento = evento::select('id', 'nombre', 'fecha_evento')->where('estado', true)->orderBy('id', 'desc')->first();
             $this->subtractYears();
-
             $this->categoria_habilitada = categoriaHabilitada::all();
-
             $this->grupo = grupo::find($id);
             $this->dolars = dolar::select('id', 'precio')->whereDate('created_at', Carbon::today())->latest()->first();
-
             if (!$this->dolars) {
                 $this->dolars = dolar::latest()->first();
             }
-
             $this->numeros = numero::all();
             $this->estados = estado::all();
-
             $this->cantidad = $this->grupo->cantidad;
             for ($i = 0; $i <= $this->cantidad - 1; $i++) {
-
                 $this->create_participante[$i] = [
                     'ciudad_id' => null,
                     'estado_id' => null,
@@ -154,9 +137,7 @@ class FormularioCarrera extends Component
                     'fecha_nacimiento' => "",
                     'genero_id' => null,
                 ];
-
                 $this->participante[$i] = [];
-
                 $this->create_inscripcion[$i] = [
                     'evento_id' => $this->evento->id,
                     'cedula' => "",
@@ -168,7 +149,7 @@ class FormularioCarrera extends Component
                     'numero_id' => null,
                     'mesa_id' => null,
                     'datos' => null,
-                    'monto_pagado_bs' =>  $this->calculo($this->grupo->precio),
+                    'monto_a_pagar_bs' =>  $this->calculo($this->grupo->precio),
                     'ip' => "",
                     'nomenclatura' => "",
                     'metodo' => null,
@@ -192,26 +173,29 @@ class FormularioCarrera extends Component
                     'recorrido_id' => null,
                     'recorrido_id_grupos' => null,
                     'prenda_id' => null,
+                    'pago_BS_USD' => null
+
                 ];
                 $this->create_prendas[$i] = [
                     'prendas' => null,
-                    'genero' => null
+                    'genero' => null,
+                    'prenda_genero' => null
+
                 ];
             }
-
             $this->ciudad = ciudad::all();
             $this->mesa = mesa::all();
             $this->metodo_pago = DB::table('metodo_pagos')->join('tipo_pagos', 'metodo_pagos.tipo_pago_id', '=', 'tipo_pagos.id')->join('bancos', 'metodo_pagos.banco_id', '=', 'bancos.id')->select('metodo_pagos.*', 'tipo_pagos.nombre as tipo_pago_nombre', 'bancos.nombre as banco_nombre')->get();
         }
     }
-
     public function subtractYears()
     {
+
         $this->fecha_evento = Carbon::parse($this->evento->fecha_evento)->subYears(15)->format('Y-m-d');
     }
-
     public function updatedCreateParticipante($value, $name)
     {
+
         $parts = explode('.', $name);
         $index = $parts[0];
         $field = $parts[1];
@@ -219,7 +203,6 @@ class FormularioCarrera extends Component
             $this->create_participante[$index]['ciudades'] = ciudad::where('estado_id', $value)->get();
         }
     }
-
     public function update_radio($index, $option)
     {
 
@@ -240,7 +223,6 @@ class FormularioCarrera extends Component
             $this->create_inscripcion[$index]['dolar_mixto'] = null;
         }
     }
-
     public function update_pago($index, $option)
     {
 
@@ -255,9 +237,9 @@ class FormularioCarrera extends Component
             $this->create_inscripcion[$index]['dolar'] = null;
         }
     }
-
     public function update_pago_mixto($index, $option2)
     {
+
         if ($option2 === 'bolivar_mixto') {
             $this->create_inscripcion[$index]['bolivar_mixto'] = 'bolivar_mixto';
             $this->create_inscripcion[$index]['dolar_mixto'] = null;
@@ -269,9 +251,9 @@ class FormularioCarrera extends Component
             $this->create_inscripcion[$index]['dolar_mixto'] = null;
         }
     }
-
     public function calculo($num)
     {
+
         $total = 0;
         $ultimoDolar = $this->dolars->latest()->first();
 
@@ -279,9 +261,9 @@ class FormularioCarrera extends Component
 
         return $total;
     }
-
     public function edad($fecha_nacimiento)
     {
+
         $fecha_nacimiento = Carbon::parse($fecha_nacimiento)->format('Y-m-d');
         $ahora = Carbon::parse($this->evento->fecha_evento)->format('Y-m-d');
         $edad = Carbon::parse($ahora)->diffInYears(Carbon::parse($fecha_nacimiento));
@@ -293,9 +275,9 @@ class FormularioCarrera extends Component
         }
         return null;
     }
-
     public function asignar_num_mesa($inscripcion_id, $cedula)
     {
+
         $ultimo_digito = substr($cedula, -1);
 
         $this->inscripcion = inscripcion::find($inscripcion_id);
@@ -417,7 +399,8 @@ class FormularioCarrera extends Component
     {
         $rules = [];
         for ($i = 0; $i <= $this->grupo->cantidad - 1; $i++) {
-            $rules["create_participante.$i.ciudad_id"] = 'required';
+            $rules["create_participante.$i.ciudad_id"] = 'required|integer';
+            $rules["create_participante.$i.estado_id"] = 'required|integer';
             $rules["create_participante.$i.cedula"] = 'required|string|max:8|regex:/^[0-9]+$/';
             $rules["create_participante.$i.nombre"] = 'required|string|max:25|regex:/^[a-zA-Z\s]+$/';
             $rules["create_participante.$i.apellido"] = 'required|string|max:25|regex:/^[a-zA-Z\s]+$/';
@@ -425,13 +408,17 @@ class FormularioCarrera extends Component
             $rules["create_participante.$i.correo"] = 'required|email|max:60';
             $rules["create_participante.$i.direccion"] = 'required|string|max:60|regex:/^[a-zA-Z0-9\s]+$/';
             $rules["create_participante.$i.fecha_nacimiento"] = 'required|date|before_or_equal:' . $this->fecha_evento;
+            $rules["create_participante.$i.genero_id"] = 'required|integer';
+            $rules["create_prendas.$i.prendas"] = 'required|integer';
+            $rules["create_prendas.$i.genero_id"] = 'required|integer';
+            $rules["create_prendas.$i.prenda_genero"] = 'required|integer';
 
             if (!is_null($this->create_inscripcion[$i]['unico'])) {
                 $rules["create_inscripcion.$i.metodo_pago_id"] = 'required';
                 $rules["create_inscripcion.$i.fecha"] = 'required|date|before_or_equal:' . $this->fecha_actual;
                 $rules["create_inscripcion.$i.referencia"] = 'required|numeric|digits:6';
 
-                if (!is_null($this->create_inscripcion[$i]['monto_Bs'])) {
+                if ($this->create_inscripcion[$i]['pago_BS_USD']=='bolivar') {
                     $rules["create_inscripcion.$i.monto_Bs"] = 'required|numeric';
                 } else {
                     $rules["create_inscripcion.$i.monto_USD"] = 'required|numeric';
@@ -458,6 +445,9 @@ class FormularioCarrera extends Component
         $messages = [];
         for ($i = 0; $i <= $this->grupo->cantidad - 1; $i++) {
             $messages["create_participante.$i.ciudad_id.required"] = __('El campo ciudad es obligatorio.');
+            $messages["create_participante.$i.ciudad_id.integer"] = __('El campo ciudad debe ser un numero.');
+            $messages["create_participante.$i.estado_id.required"] = __('El campo estado es obligatorio.');
+            $messages["create_participante.$i.estado_id.integer"] = __('El campo estado debe ser un numero.');
             $messages["create_participante.$i.cedula.required"] = __('El campo cedula es obligatorio.');
             $messages["create_participante.$i.cedula.string"] = __('El campo cedula debe ser una cadena de texto numerico.');
             $messages["create_participante.$i.cedula.max"] = __('El campo cedula no debe ser mayor a 8 caracteres.');
@@ -484,22 +474,26 @@ class FormularioCarrera extends Component
             $messages["create_participante.$i.fecha_nacimiento.required"] = __('El campo fecha de nacimiento es obligatorio.');
             $messages["create_participante.$i.fecha_nacimiento.date"] = __('El campo fecha de nacimiento debe ser de tipo fecha');
             $messages["create_participante.$i.fecha_nacimiento.before_or_equal"] = __('El campo fecha de nacimiento debe ser menor o igual a ' . Carbon::parse($this->fecha_evento)->format('d-m-Y'));
+            $messages["create_participante.$i.genero_id.required"] = __('El campo genero es obligatorio.');
+            $messages["create_participante.$i.genero_id.integer"] = __('El campo genero debe ser un numero.');
+            $messages["create_prendas.$i.prendas.required"] = __('El campo prenda es obligatorio.');
+            $messages["create_prendas.$i.prendas.integer"] = __('El campo prenda debe ser un numero.');
+            $messages["create_prendas.$i.genero_id.required"] = __('El campo genero es obligatorio.');
+            $messages["create_prendas.$i.genero_id.integer"] = __('El campo genero debe ser un numero.');
+            $messages["create_prendas.$i.prenda_genero.required"] = __('El campo genero es obligatorio.');
+            $messages["create_prendas.$i.prenda_genero.integer"] = __('El campo genero debe ser un numero.');
 
             $messages["create_inscripcion.$i.metodo_pago_id.required"] = __('El campo cuentas es obligatorio.');
-
-            $messages["create_inscripcion.$i.monto_Bs.required"] = __('El campo monto es obligatorio.');
+            $messages["create_inscripcion.$i.monto_Bs.required"] = __('El campo monto en BS es obligatorio.');
             $messages["create_inscripcion.$i.monto_Bs.numeric"] = __('El campo monto solo permite numeros.');
-            $messages["create_inscripcion.$i.monto_USD.required"] = __('El campo monto es obligatorio.');
+            $messages["create_inscripcion.$i.monto_USD.required"] = __('El campo monto en USD es obligatorio.');
             $messages["create_inscripcion.$i.monto_USD.numeric"] = __('El campo monto solo permite numeros.');
-
             $messages["create_inscripcion.$i.fecha.required"] = __('El campo fecha de pago es obligatorio.');
             $messages["create_inscripcion.$i.fecha.date"] = __('El campo fecha de pago debe tener la sintaxis correcta.');
             $messages["create_inscripcion.$i.fecha.before_or_equal"] = __('El campo fecha de pago debe ser menor o igual a ' . Carbon::parse($this->fecha_evento)->format('d-m-Y'));
             $messages["create_inscripcion.$i.referencia.required"] = __('El campo referencia es obligatorio.');
             $messages["create_inscripcion.$i.referencia.numeric"] = __('El campo referencia solo permite numeros.');
             $messages["create_inscripcion.$i.referencia.digits"] = __('El campo referencia solo admite 6 digitos');
-
-
             $messages["create_inscripcion.$i.monto_mixto_Bs.required"] = __('El campo monto es obligatorio.');
             $messages["create_inscripcion.$i.monto_mixto_Bs.numeric"] = __('El campo monto solo permite numeros.');
             $messages["create_inscripcion.$i.monto_mixto_USD.required"] = __('El campo monto es obligatorio.');
@@ -507,12 +501,9 @@ class FormularioCarrera extends Component
             $messages["create_inscripcion.$i.fecha_mixto.required"] = __('El campo fecha de pago es obligatorio.');
             $messages["create_inscripcion.$i.fecha_mixto.date"] = __('El campo fecha de pago debe tener la sintaxis correcta.');
             $messages["create_inscripcion.$i.fecha_mixto.before_or_equal"] = __('El campo fecha de pago debe ser menor o igual a ' . Carbon::parse($this->fecha_actual)->format('d-m-Y'));
-
             $messages["create_inscripcion.$i.referencia_mixto.required"] = __('El campo referencia es obligatorio.');
             $messages["create_inscripcion.$i.referencia_mixto.numeric"] = __('El campo referencia solo permite numeros.');
             $messages["create_inscripcion.$i.referencia_mixto.digits"] = __('El campo referencia solo admite los ultimos 6 digitos');
-
-
             $messages["create_inscripcion.$i.cuenta_mixto_1.required"] = __('El campo cuenta es obligatorio.');
             $messages["create_inscripcion.$i.cuenta_mixto_1.string"] = __('El campo cuenta debe ser una cadena de texto. ');
             $messages["create_inscripcion.$i.cuenta_mixto_2.required"] = __('El campo cuenta es obligatorio.');
@@ -545,13 +536,12 @@ class FormularioCarrera extends Component
     }
     public function save()
     {
+
         $this->validate();
         $evento = evento::select('id', 'nombre', 'fecha_evento')->where('estado', true)->orderBy('id', 'desc')->first();
         $ultimoNumeroOrden = Inscripcion::max('id');
         $this->nuevoNumeroOrden = $ultimoNumeroOrden ? $ultimoNumeroOrden + 1 : 1;
-
         $this->nomenclatura = 'GRCR' . '-' . $this->grupo->cantidad . $this->nuevoNumeroOrden;
-
         for ($i = 0; $i <= $this->grupo->cantidad - 1; $i++) {
             if (!empty($this->participante[$i]) && !is_null($this->participante[$i])) {
                 if (isset($this->participante[$i]->id)) {
@@ -559,33 +549,25 @@ class FormularioCarrera extends Component
                 }
             }
         }
-
         $this->inscripcion_validate_global = inscripcion::whereIn('participante_id', $this->participantes_ids)->join('participantes', 'participantes.id', '=', 'inscripcions.participante_id')->join('eventos', 'inscripcions.evento_id', '=', 'eventos.id')->where('eventos.estado', true)->get()->toArray();
-
         for ($i = 0; $i <= $this->grupo->cantidad - 1; $i++) {
-
             //Validar si alguno de los enviados ya se encuentra registrado en el evento actual
             if (!empty($this->inscripcion_validate_global)) {
-
                 $this->cedula = $this->inscripcion_validate_global[$i]['cedula'];
                 $nombre_inscripcion_validate_global = $this->inscripcion_validate_global[$i]['nombre'];
                 $apellido_inscripcion_validate_global = $this->inscripcion_validate_global[$i]['apellido'];
                 $this->inscripcion_validate_global = [];
-
                 $this->participantes_ids = [];
-
                 return $this->dispatch('existe', ['valor' => $this->cedula]);
                 //Retornar mensaje de validacion con datos del participante que se repite
 
             } elseif (empty($this->inscripcion_validate_global) && isset($this->participante[$i]) && !is_null($this->participante[$i])) {
-
                 $latestId = $this->participante[$i]->id;
                 $this->create_inscripcion[$i]['participante_id'] = $latestId;
                 $ultimoParticipante = participante::find($latestId);
                 $datos_json = [
                     'fecha' => $this->create_inscripcion[$i]['fecha'],
                     'referencia' => $this->create_inscripcion[$i]['referencia']
-
                 ];
                 if (!is_null($this->create_inscripcion[$i]['monto_Bs'])) {
                     $datos_json += [
@@ -596,7 +578,6 @@ class FormularioCarrera extends Component
                         'monto_USD' => $this->create_inscripcion[$i]['monto_USD'],
                     ];
                 }
-
                 if (!is_null($this->create_inscripcion[$i]['monto_mixto_Bs']) || !is_null($this->create_inscripcion[$i]['monto_mixto_USD'])) {
                     $datos_json += [
                         'fecha_mixto' => $this->create_inscripcion[$i]['fecha_mixto'],
@@ -622,10 +603,10 @@ class FormularioCarrera extends Component
                 if (is_null($this->create_inscripcion[$i]['metodo_pago_id'])) {
                     $this->create_inscripcion[$i]['metodo_pago_id'] = 3;
                 }
-                if (is_null($this->create_inscripcion[$i]['recorrido_id'])) {
-                    $this->create_inscripcion[$i]['recorrido_id'] = $this->grupo->recorrido_id;
+                if (is_null($this->create_inscripcion[$i]['recorrido_id_grupos'])) {
+                    $this->create_inscripcion[$i]['recorrido_id_grupos'] = 2;
                 }
-                $this->create_inscripcion[$i]['recorrido_id_grupos'] = $this->grupo->recorrido_id;
+                $this->create_inscripcion[$i]['recorrido_id'] = $this->grupo->recorrido_id;
 
                 $this->create_inscripcion[$i]['nomenclatura'] = $this->nomenclatura;
                 $this->create_inscripcion[$i]['ip'] = $this->userIp;
@@ -646,7 +627,7 @@ class FormularioCarrera extends Component
                     'categoria_habilitada_id' => $this->create_inscripcion[$i]['categoria_habilitada_id'] ?? null,
                     'mesa_id' => $this->create_inscripcion[$i]['mesa_id'] ?? null,
                     'datos' => $this->create_inscripcion[$i]['datos'],
-                    'monto_pagado_bs' => $this->create_inscripcion[$i]['monto_pagado_bs'],
+                    'monto_a_pagar_bs' => $this->create_inscripcion[$i]['monto_a_pagar_bs'],
                     'ip' => $this->create_inscripcion[$i]['ip'],
                     'nomenclatura' => $this->create_inscripcion[$i]['nomenclatura'],
                     'recorrido_id' => $this->create_inscripcion[$i]['recorrido_id'],
@@ -657,7 +638,6 @@ class FormularioCarrera extends Component
                 $ultima_inscripcion_id = inscripcion::latest('id')->first()->id;
                 $this->asignar_num_mesa($ultima_inscripcion_id, $this->create_participante[$i]['cedula']);
             } else {
-
                 $participante = participante::create([
                     'ciudad_id' => $this->create_participante[$i]['ciudad_id'],
                     'cedula' => $this->create_participante[$i]['cedula'],
@@ -672,7 +652,6 @@ class FormularioCarrera extends Component
                 $latestId = participante::latest('id')->first()->id;
                 $this->create_inscripcion[$i]['participante_id'] = $latestId;
                 $ultimoParticipante = participante::find($latestId);
-
                 $datos_json = [
                     'fecha' => $this->create_inscripcion[$i]['fecha'],
                     'referencia' => $this->create_inscripcion[$i]['referencia']
@@ -686,7 +665,6 @@ class FormularioCarrera extends Component
                         'monto_USD' => $this->create_inscripcion[$i]['monto_USD'],
                     ];
                 }
-
                 if (!is_null($this->create_inscripcion[$i]['fecha_mixto'])) {
                     $datos_json += [
                         'fecha_mixto' => $this->create_inscripcion[$i]['fecha_mixto'],
@@ -712,10 +690,10 @@ class FormularioCarrera extends Component
                 if (is_null($this->create_inscripcion[$i]['metodo_pago_id'])) {
                     $this->create_inscripcion[$i]['metodo_pago_id'] = 3;
                 }
-                if (is_null($this->create_inscripcion[$i]['recorrido_id'])) {
-                    $this->create_inscripcion[$i]['recorrido_id'] = $this->grupo->recorrido_id;
+                if (is_null($this->create_inscripcion[$i]['recorrido_id_grupos'])) {
+                    $this->create_inscripcion[$i]['recorrido_id_grupos'] = 2;
                 }
-                $this->create_inscripcion[$i]['recorrido_id_grupos'] = $this->grupo->recorrido_id;
+                $this->create_inscripcion[$i]['recorrido_id'] = $this->grupo->recorrido_id;
 
                 $this->create_inscripcion[$i]['nomenclatura'] = $this->nomenclatura;
                 $this->create_inscripcion[$i]['ip'] = $this->userIp;
@@ -735,7 +713,7 @@ class FormularioCarrera extends Component
                     'categoria_habilitada_id' => $this->create_inscripcion[$i]['categoria_habilitada_id'] ?? null,
                     'mesa_id' => $this->create_inscripcion[$i]['mesa_id'],
                     'datos' => $this->create_inscripcion[$i]['datos'],
-                    'monto_pagado_bs' => $this->create_inscripcion[$i]['monto_pagado_bs'],
+                    'monto_a_pagar_bs' => $this->create_inscripcion[$i]['monto_a_pagar_bs'],
                     'ip' => $this->create_inscripcion[$i]['ip'],
                     'nomenclatura' => $this->create_inscripcion[$i]['nomenclatura'],
                     'recorrido_id' => $this->create_inscripcion[$i]['recorrido_id'],
@@ -755,6 +733,7 @@ class FormularioCarrera extends Component
     public function asignar_prendas($value)
     {
         // Encuentra la prenda solo una vez
+
         $prenda = prenda::select('cantidad', 'restadas')->find($value);
         for ($i = 0; $i < $this->grupo->cantidad; $i++) {
             $this->create_prendas[$i]['prendas'] = $value;
@@ -772,6 +751,7 @@ class FormularioCarrera extends Component
 
     public function update_prendas($index, $option)
     {
+
         if ($option === '1') {
 
             $this->create_prendas[$index]['genero'] = 'Masculino';

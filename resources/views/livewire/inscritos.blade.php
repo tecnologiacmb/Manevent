@@ -1,7 +1,7 @@
 <div>
     <div class="bg-white shadow rounded-lg p-4 mb-2">
-        <h1 class="font-black text-xl text-gray-800 leading-tight text-normal text-center">
-            Inscripciones
+        <h1 class="font-black text-xl text-gray-800 leading-tight text-normal mx-2">
+           Total de Inscripciones: {{$this->cantidad_inscripcion}}
         </h1>
 
         <div class="flex items-center">
@@ -23,8 +23,8 @@
             <input type="date" wire:model.live="endDate"
                 class="w-1/6 px-4 mt-2 ml-1 py-2 border-2 border-slate-300 rounded-lg focus:outline-none focus:border-blue-200 transition duration-300" />
 
-            <x-button class="ml-2 bg-red-700 hover:bg-slate-300 " wire:click="limpiar()"
-                type="reset">Cancelar</x-button>
+            <x-danger-button class="ml-2 bg-red-700" wire:click="limpiar()"
+                type="reset">Cancelar</x-danger-button>
         </div>
 
     </div>
@@ -139,22 +139,12 @@
                             </p>
                         </td>
                         <td class="p-4 border-b border-blue-gray-50">
-                            <x-button class="bg-blue-500"><a href="incripcion/vista_inscripcion/{{ $inscripcion->id }}">
+                            <x-button class="bg-blue-500 hover:bg-slate-300 focus:bg-slate-300 active:bg-slate-300"><a href="incripcion/vista_inscripcion/{{ $inscripcion->id }}">
                                     <i class="bi bi-eye-fill"></i>
                                 </a>
                             </x-button>
-
                         </td>
-                        {{--   <td class="p-4 border-b border-blue-gray-50">
-                       <x-button class="bg-blue-500"><a href="#"
-                               class="block font-sans text-sm antialiased font-medium leading-normal text-blue-gray-900">
-                               <i class="bi bi-pencil-square"></i>
-                           </a></x-button>
-                           <x-danger-button class="bg-blue-500"><a href="#"
-                               class="block font-sans text-sm antialiased font-medium leading-normal text-blue-gray-900">
-                               <i class="bi bi-trash-fill"></i>
-                           </a></x-danger-button>
-                                 </td> --}}
+
                     </tr>
                 @endforeach
             </tbody>

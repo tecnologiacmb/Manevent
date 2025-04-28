@@ -84,6 +84,9 @@
                                 <option value="{{ $estado->id }}"> {{ $estado->estado }}</option>
                             @endforeach
                         </x-select>
+                        @error("create_participante.$i.estado_id")
+                            <span class="error text-red-500">{{ $message }}</span>
+                        @enderror
                     </div>
                     <div class="mb-4">
                         <x-label for="">Ciudad </x-label>
@@ -129,8 +132,10 @@
                             @foreach ($generos as $genero)
                                 <option value="{{ $genero->id }}">{{ $genero->genero }}</option>
                             @endforeach
-
                         </x-select>
+                        @error("create_participante.$i.genero_id")
+                            <span class="error text-red-500">{{ $message }}</span>
+                        @enderror
                     </div>
                     @if (!str_contains($grupo->nombre, 'sin franela'))
                         <div>
@@ -141,8 +146,10 @@
                                 <option value="1">Masculino</option>
                                 <option value="2">Femenino</option>
                             </x-select>
+                            @error("create_prendas.$i.prenda_genero")
+                                <span class="error text-red-500">{{ $message }}</span>
+                            @enderror
                         </div>
-
                         @if ($this->create_prendas[$i]['genero'] == 'Masculino')
                             <div>
                                 <x-label for="">Talla</x-label>
@@ -156,8 +163,11 @@
                                         </option>
                                     @endforeach
                                 </x-select>
+                                @error("create_prendas.$i.prendas")
+                                    <span class="error text-red-500">{{ $message }}</span>
+                                @enderror
                             </div>
-                            @elseif ($this->create_prendas[$i]['genero'] == 'Femenino')
+                        @elseif ($this->create_prendas[$i]['genero'] == 'Femenino')
                             <div>
                                 <x-label for="">Talla</x-label>
                                 <x-select class="w-full" wire:model="create_prendas.{{ $i }}.prendas">
@@ -170,6 +180,9 @@
                                         </option>
                                     @endforeach
                                 </x-select>
+                                @error("create_prendas.$i.prendas")
+                                    <span class="error text-red-500">{{ $message }}</span>
+                                @enderror
                             </div>
                         @endif
                     @endif
@@ -183,7 +196,7 @@
                         <div class="grid grid-cols-2 gap-4">
                             <div>
                                 <x-label for="">Pagos</x-label>
-                                <x-select class="w-full"
+                                <x-select class="w-full" wire:model="create_inscripcion.{{ $i }}.pago_BS_USD"
                                     wire:change="update_pago({{ $i }},$event.target.value)">
                                     <option value="">Seleccione un pago</option>
                                     <option value="bolivar">Bolivares Bs</option>
@@ -277,7 +290,7 @@
                         <div class="grid grid-cols-2 gap-4">
                             <div>
                                 <x-label for="">Pagos</x-label>
-                                <x-select class="w-full" name="pago_{{ $i }}"
+                                <x-select class="w-full" name="pago_{{ $i }}" wire:model="create_inscripcion.{{ $i }}.pago_BS_USD"
                                     wire:change="update_pago({{ $i }},$event.target.value)">
                                     <option value="">Seleccione un pago</option>
                                     <option value="bolivar">Bolivares Bs</option>
@@ -463,7 +476,7 @@
             <br>
         @endfor
         <div class="flex justify-end">
-            <x-button type="submit">
+            <x-button type="submit" class="hover:bg-slate-300 focus:bg-slate-300 active:bg-slate-300">
                 Agregar
             </x-button>
         </div>

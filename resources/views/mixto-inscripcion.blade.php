@@ -10,7 +10,7 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             @if (isset($id)  && !is_null($id))
 
-                      @livewire('formulario-inscripcion.formulario-mixto', ['id' => $id ,'cantidad_carrera' =>  $cantidad_carrera, 'cantidad_caminata' => $cantidad_caminata ])
+                      @livewire('formulario-inscripcion.formulario-mixto', compact('id','cantidad_carrera','cantidad_caminata'))
 
             @endif
 

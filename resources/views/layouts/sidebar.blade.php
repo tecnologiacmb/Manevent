@@ -12,9 +12,10 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 
     <script src="{{ asset('js/app.js') }}" defer></script>
@@ -26,13 +27,33 @@
 </head>
 
 <body class="font-sans antialiased">
+    <style>
+        .sidebar {
+            position: sticky;
+            /* O usa sticky si prefieres */
+            top: 0;
+            /* Mantén en la parte superior */
+            left: 0;
+            /* Alinea al lado izquierdo */
+            width: 260px;
+            /* Ancho deseado */
+            height: 100vh;
+            /* Altura completa de la ventana */
+            overflow-y: auto;
+            /* Scrolling interno si es necesario */
+        }
 
-    <div class=" w-full h-full bg-slate-100">
+        .main-content {
+            margin-left: 10px;
+            /* Debería ser igual al ancho del sidebar */
+        }
+    </style>
+    <div class="w-full h-full bg-slate-100">
         <dh-component>
             <div class="flex flex-no-wrap ">
 
-                <div
-                    class="min-h-screen w-64 absolute sm:relative shadow xl:h-full flex-col justify-between hidden sm:flex bg-slate-200">
+                <aside
+                    class="sidebar min-h-screen absolute sm:relative shadow flex-col justify-between hidden sm:flex bg-slate-200">
                     <div class="px-8">
                         <div class="h-16 w-full flex items-center text-black text-xl">
                             LOGO
@@ -46,18 +67,6 @@
                                         <h1 class="cursor-pointer px-3 text-xl rounded-md mt-1 hover:text-white">
                                             <a href="{{ route('dashboard') }}"
                                                 :active="request() - > routeIs('dashboard')" class="ml-2">Home</a>
-                                        </h1>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="flex w-full justify-between text-black cursor-pointer items-center mb-6">
-                                <div
-                                    class="p-2.5 mt-0 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-black text-black  hover:text-white">
-                                    <i class="bi bi-house-fill"></i>
-                                    <div class="flex justify-between w-full items-center">
-                                        <h1 class="cursor-pointer px-3 text-xl rounded-md mt-1 hover:text-white">
-                                            <a href="{{ route('reporte_fondo') }}"
-                                                :active="request() - > routeIs('reporte_fondo')" class="ml-2">Reportes</a>
                                         </h1>
                                     </div>
                                 </div>
@@ -89,7 +98,7 @@
                                         <i class="bi bi-gear-fill"></i>
                                         <div class="flex justify-between w-full items-center ">
                                             <h1 class="cursor-pointer px-3 text-xl rounded-md mt-1 hover:text-white">
-                                                Administrar
+                                                Administrador
                                             </h1>
                                             <span class="text-sm rotate-180" id="arrow1">
                                                 <i class="bi bi-chevron-down"></i>
@@ -101,9 +110,10 @@
                                         id="submenu1">
                                         <h1 class="cursor-pointer p-2 hover:bg-black rounded-md mt-1 hover:text-white">
                                             <i class="bi bi-bank"></i>
-                                            <a href="{{ route('metodo-pago') }}"
-                                                :active="request() - > routeIs('metodo-pago')" class="ml-2">Metodo
-                                                Pago</a>
+                                            <a href="{{ route('banco') }}" :active="request() - > routeIs('banco')"
+                                                class="ml-2">
+                                                Banco
+                                            </a>
                                         </h1>
                                         <h1 class="cursor-pointer p-2 hover:bg-black rounded-md mt-1 hover:text-white">
                                             <i class="bi bi-cash-coin"></i>
@@ -117,8 +127,8 @@
                                         </h1>
                                         <h1 class="cursor-pointer p-2 hover:bg-black rounded-md mt-1 hover:text-white">
                                             <i class="bi bi-collection-fill"></i>
-                                            <a href="{{ route('grupo') }}"
-                                                :active="request() - > routeIs('grupo')" class="ml-2">Grupo</a>
+                                            <a href="{{ route('grupo') }}" :active="request() - > routeIs('grupo')"
+                                                class="ml-2">Grupo</a>
                                         </h1>
                                     </div>
                                 </li>
@@ -127,10 +137,14 @@
                                 class=" w-full justify-between text-gray-400 hover:text-gray-300 cursor-pointer items-center mb-6 ">
                                 <div class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-black text-black hover:text-white"
                                     onclick="dropdown2()">
-                                    <i class="bi bi-pencil-square"></i>
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
+                                        <path d="M21.731 2.269a2.625 2.625 0 0 0-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 0 0 0-3.712ZM19.513 8.199l-3.712-3.712-8.4 8.4a5.25 5.25 0 0 0-1.32 2.214l-.8 2.685a.75.75 0 0 0 .933.933l2.685-.8a5.25 5.25 0 0 0 2.214-1.32l8.4-8.4Z" />
+                                        <path d="M5.25 5.25a3 3 0 0 0-3 3v10.5a3 3 0 0 0 3 3h10.5a3 3 0 0 0 3-3V13.5a.75.75 0 0 0-1.5 0v5.25a1.5 1.5 0 0 1-1.5 1.5H5.25a1.5 1.5 0 0 1-1.5-1.5V8.25a1.5 1.5 0 0 1 1.5-1.5h5.25a.75.75 0 0 0 0-1.5H5.25Z" />
+                                      </svg>
+
                                     <div class="flex justify-between w-full items-center">
                                         <h1 class="cursor-pointer px-3 text-xl rounded-md mt-1 hover:text-white">
-                                            Inscripciones
+                                            Registrar
                                         </h1>
                                         <span class="text-sm rotate-180" id="arrow2">
                                             <i class="bi bi-chevron-down"></i>
@@ -151,8 +165,8 @@
                                             class="ml-2">Caminata</a>
                                     </h1>
                                     <h1 class="flex cursor-pointer p-2 rounded-md mt-1 hover:bg-black hover:text-white">
-                                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                                            xmlns="http://www.w3.org/2000/svg">
+                                        <svg class="w-6 h-6" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                 d="M14 22V16.9612C14 16.3537 13.7238 15.7791 13.2494 15.3995L11.5 14M11.5 14L13 7.5M11.5 14L10 13M13 7.5L11 7M13 7.5L15.0426 10.7681C15.3345 11.2352 15.8062 11.5612 16.3463 11.6693L18 12M10 13L11 7M10 13L9.40011 16.2994C9.18673 17.473 8.00015 18.2 6.85767 17.8573L4 17M11 7L8.10557 8.44721C7.428 8.786 7 9.47852 7 10.2361V12M14.5 3.5C14.5 4.05228 14.0523 4.5 13.5 4.5C12.9477 4.5 12.5 4.05228 12.5 3.5C12.5 2.94772 12.9477 2.5 13.5 2.5C14.0523 2.5 14.5 2.94772 14.5 3.5Z">
                                             </path>
@@ -160,15 +174,13 @@
                                         <a href="{{ route('carrera') }}" :active="request() - > routeIs('carrera')"
                                             class="ml-2">Carrera</a>
                                     </h1>
-                                    <h1
-                                        class="flex cursor-pointer p-2 rounded-md mt-1 hover:bg-black hover:text-white  fill-[#0c0101] hover:fill-white">
-                                        <svg class="w-[24px] h-[24px]" viewBox="0 0 576 512"
-                                            xmlns="http://www.w3.org/2000/svg">
-                                            <!--! Font Awesome Free 6.4.2 by @fontawesome -->
-                                            <path
-                                                d="M256 32H181.2c-27.1 0-51.3 17.1-60.3 42.6L3.1 407.2C1.1 413 0 419.2 0 425.4C0 455.5 24.5 480 54.6 480H256V416c0-17.7 14.3-32 32-32s32 14.3 32 32v64H521.4c30.2 0 54.6-24.5 54.6-54.6c0-6.2-1.1-12.4-3.1-18.2L455.1 74.6C446 49.1 421.9 32 394.8 32H320V96c0 17.7-14.3 32-32 32s-32-14.3-32-32V32zm64 192v64c0 17.7-14.3 32-32 32s-32-14.3-32-32V224c0-17.7 14.3-32 32-32s32 14.3 32 32z">
-                                            </path>
-                                        </svg>
+                                    <h1 class="flex cursor-pointer p-2 rounded-md mt-1 hover:bg-black hover:text-white  fill-[#0c0101] hover:fill-white">
+                                        <svg class="w-[24px] h-[24px] " viewBox="0 0 640 512" xmlns="http://www.w3.org/2000/svg">
+
+                                            <!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
+                                            <path d="M72 88a56 56 0 1 1 112 0A56 56 0 1 1 72 88zM64 245.7C54 256.9 48 271.8 48 288s6 31.1 16 42.3V245.7zm144.4-49.3C178.7 222.7 160 261.2 160 304c0 34.3 12 65.8 32 90.5V416c0 17.7-14.3 32-32 32H96c-17.7 0-32-14.3-32-32V389.2C26.2 371.2 0 332.7 0 288c0-61.9 50.1-112 112-112h32c24 0 46.2 7.5 64.4 20.3zM448 416V394.5c20-24.7 32-56.2 32-90.5c0-42.8-18.7-81.3-48.4-107.7C449.8 183.5 472 176 496 176h32c61.9 0 112 50.1 112 112c0 44.7-26.2 83.2-64 101.2V416c0 17.7-14.3 32-32 32H480c-17.7 0-32-14.3-32-32zm8-328a56 56 0 1 1 112 0A56 56 0 1 1 456 88zM576 245.7v84.7c10-11.3 16-26.1 16-42.3s-6-31.1-16-42.3zM320 32a64 64 0 1 1 0 128 64 64 0 1 1 0-128zM240 304c0 16.2 6 31 16 42.3V261.7c-10 11.3-16 26.1-16 42.3zm144-42.3v84.7c10-11.3 16-26.1 16-42.3s-6-31.1-16-42.3zM448 304c0 44.7-26.2 83.2-64 101.2V448c0 17.7-14.3 32-32 32H288c-17.7 0-32-14.3-32-32V405.2c-37.8-18-64-56.5-64-101.2c0-61.9 50.1-112 112-112h32c61.9 0 112 50.1 112 112z"></path>
+
+                                          </svg>
                                         <a href="{{ route('mixto') }}" :active="request() - > routeIs('mixto')"
                                             class="ml-2">Mixto</a>
                                     </h1>
@@ -179,7 +191,11 @@
                                 class=" w-full justify-between text-gray-400 hover:text-gray-300 cursor-pointer items-center mb-6 ">
                                 <div class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-black text-black hover:text-white"
                                     onclick="dropdown3()">
-                                    <i class="bi bi-pencil-square"></i>
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
+                                        <path d="M3.375 3C2.339 3 1.5 3.84 1.5 4.875v.75c0 1.036.84 1.875 1.875 1.875h17.25c1.035 0 1.875-.84 1.875-1.875v-.75C22.5 3.839 21.66 3 20.625 3H3.375Z" />
+                                        <path fill-rule="evenodd" d="m3.087 9 .54 9.176A3 3 0 0 0 6.62 21h10.757a3 3 0 0 0 2.995-2.824L20.913 9H3.087Zm6.163 3.75A.75.75 0 0 1 10 12h4a.75.75 0 0 1 0 1.5h-4a.75.75 0 0 1-.75-.75Z" clip-rule="evenodd" />
+                                      </svg>
+
                                     <div class="flex justify-between w-full items-center">
                                         <h1 class="cursor-pointer px-3 text-xl rounded-md mt-1 hover:text-white">
                                             Registros
@@ -239,7 +255,23 @@
                                     </h1>
                                 </div>
                             </li>
+                            <li class="flex w-full justify-between text-black cursor-pointer items-center mb-6">
+                                <div
+                                    class="p-2.5 mt-0 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-black text-black  hover:text-white">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
+                                        <path d="M5.625 1.5c-1.036 0-1.875.84-1.875 1.875v17.25c0 1.035.84 1.875 1.875 1.875h12.75c1.035 0 1.875-.84 1.875-1.875V12.75A3.75 3.75 0 0 0 16.5 9h-1.875a1.875 1.875 0 0 1-1.875-1.875V5.25A3.75 3.75 0 0 0 9 1.5H5.625Z" />
+                                        <path d="M12.971 1.816A5.23 5.23 0 0 1 14.25 5.25v1.875c0 .207.168.375.375.375H16.5a5.23 5.23 0 0 1 3.434 1.279 9.768 9.768 0 0 0-6.963-6.963Z" />
+                                      </svg>
 
+                                    <div class="flex justify-between w-full items-center">
+                                        <h1 class="cursor-pointer px-3 text-xl rounded-md mt-1 hover:text-white">
+                                            <a href="{{ route('reporte_fondo') }}"
+                                                :active="request() - > routeIs('reporte_fondo')"
+                                                class="ml-2">Reportes</a>
+                                        </h1>
+                                    </div>
+                                </div>
+                            </li>
                             <li
                                 class="flex w-full justify-between text-black hover:text-black text-xl cursor-pointer items-center mb-6">
                                 <div
@@ -257,9 +289,9 @@
                             </li>
                         </ul>
                     </div>
-                </div>
+                </aside>
 
-                <div class="flex-1 overflow-y-auto">
+                <div class="flex-1 ">
                     @if (isset($header))
                         <header class="shadow bg-slate-200">
                             <div class="max-w-7xl mx-auto flex justify-between items-center py-6 px-4 sm:px-6 lg:px-8">
@@ -327,7 +359,7 @@
                             </div>
                         </header>
                     @endif
-                    <main>
+                    <main class="main-content">
                         {{ $slot }}
                     </main>
                 </div>

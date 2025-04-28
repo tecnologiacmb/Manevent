@@ -23,6 +23,8 @@ class AdminGrupo extends Component
     public $recorridos;
     public $open_edit = false;
     public $open = false;
+    public $actualizar = false;
+    public $registrar = false;
     public $post_edit_id;
     public $post_create = [
         'recorrido_id' => "",
@@ -98,6 +100,7 @@ class AdminGrupo extends Component
     }
     public function update()
     {
+        $this->validate();
         $posts = grupo::find($this->post_edit_id);
         $posts->update([
             'recorrido_id' => $this->post_update['recorrido_id'],
@@ -119,34 +122,82 @@ class AdminGrupo extends Component
         $post = grupo::find($delete_id);
         $post->delete();
     }
+    public function validar1()
+    {
+        $this->registrar = true;
+        $this->actualizar = false;
+    }
+    public function validar2()
+    {
+        $this->actualizar = true;
+        $this->registrar = false;
+    }
     public function rules(): array
     {
-        $rules["post_create.recorrido_id"] = 'required|regex:/^[0-9]+$/';
-        $rules["post_create.nombre"] = 'required|string|max:49|regex:/^[a-zA-Z\s]+$/';
-        $rules["post_create.precio"] = 'required|string|regex:/^[0-9]+$/';
-        $rules["post_create.cantidad"] = 'required|string|regex:/^[0-9]+$/';
-        $rules["post_create.estado"] = 'required';
-
-        return $rules;
+        if ($this->registrar == true) {
+            $this->actualizar = false;
+            return [
+                "post_create.recorrido_id" => 'required|integer',
+                "post_create.nombre" => 'required|string|max:70|regex:/^[a-zA-Z0-9 ]+$/',
+                'post_create.precio' => 'required|numeric|min:0',
+                "post_create.cantidad" => 'required|integer|regex:/^[0-9]+$/',
+                "post_create.estado" => 'required',
+            ];
+        } else if ($this->actualizar == true) {
+            $this->registrar = false;
+            return [
+                "post_update.recorrido_id" => 'required|integer',
+                'post_update.nombre' => 'required|string|max:70|regex:/^[a-zA-Z0-9 ]+$/',
+                'post_update.precio' => 'required|numeric|min:0',
+                "post_update.cantidad" => 'required|integer|regex:/^[0-9]+$/',
+                "post_update.estado" => 'required',
+            ];
+        } else {
+            return [];
+        }
     }
+
     public function messages(): array
     {
-        $messages["post_create.nombre.required"] = __('El campo nombre es obligatorio.');
-        $messages["post_create.nombre.string"] = __('El campo nombre debe ser una cadena de texto .');
-        $messages["post_create.nombre.max"] = __('El campo nombre no debe ser mayor a 49 letras.');
-        $messages["post_create.nombre.regex"] = __('El campo nombre solo acepta letras.');
-        $messages["post_create.precio.required"] = __('El campo precio de inicio es obligatorio.');
-        $messages["post_create.precio.string"] = __('El campo precio de inicio debe debe ser una cadena de texto.');
-        $messages["post_create.precio.regex"] = __('El campo precio solo acepta numeros.');
-        $messages["post_create.cantidad.required"] = __('El campo cantidad de inicio es obligatorio.');
-        $messages["post_create.cantidad.string"] = __('El campo cantidad de inicio debe debe ser una cadena de texto.');
-        $messages["post_create.cantidad.regex"] = __('El campo cantidad solo acepta numeros.');
-        $messages["post_create.estado.required"] = __('El campo estado es obligatorio.');
-        $messages["post_create.recorrido_id.required"] = __('El campo categoria es obligatorio.');
-        $messages["post_create.recorrido_id.regex"] = __('El campo recorrido_id solo acepta numeros.');
-        $messages["post_create.estado.required"] = __('Este campo es obligatorio.');
-        return $messages;
+        if ($this->registrar == true) {
+            $this->actualizar = false;
+            return [
+                "post_create.recorrido_id.required" => __('El campo recorrido es obligatorio.'),
+                "post_create.recorrido_id.integer" => __('El campo recorrido debe ser un numero.'),
+                "post_create.nombre.required" => __('El campo nombre es obligatorio.'),
+                "post_create.nombre.string" => __('El campo nombre debe ser una cadena de texto.'),
+                "post_create.nombre.max" => __('El campo nombre no debe ser mayor a 70 letras.'),
+                "post_create.nombre.regex" => __('El campo nombre solo acepta letras y numeros.'),
+                "post_create.precio.required" => __('El campo precio es obligatorio.'),
+                "post_create.precio.numeric" => __('El campo precio debe ser un numero.'),
+                "post_create.precio.min" => __('El campo precio debe ser mayor a 0.'),
+                "post_create.cantidad.required" => __('El campo cantidad es obligatorio.'),
+                "post_update.cantidad.integer" => __('El campo cantidad debe ser un numero.'),
+                "post_create.cantidad.regex" => __('El campo cantidad solo acepta numeros.'),
+                "post_create.estado.required" => __('Este campo es obligatorio.'),
+            ];
+        } else if ($this->actualizar == true) {
+            $this->registrar = false;
+            return [
+                "post_update.recorrido_id.required" => __('El campo recorrido es obligatorio.'),
+                "post_update.recorrido_id.integer" => __('El campo recorrido debe ser un numero.'),
+                "post_update.nombre.required" => __('El campo nombre es obligatorio.'),
+                "post_update.nombre.string" => __('El campo nombre debe ser una cadena de texto.'),
+                "post_update.nombre.max" => __('El campo nombre no debe ser mayor a 70 letras.'),
+                "post_update.nombre.regex" => __('El campo nombre solo acepta letras y numeros.'),
+                "post_update.precio.required" => __('El campo precio es obligatorio.'),
+                "post_update.precio.numeric" => __('El campo precio debe ser un numero.'),
+                "post_update.precio.min" => __('El campo precio debe ser mayor a 0.'),
+                "post_update.cantidad.required" => __('El campo cantidad es obligatorio.'),
+                "post_update.cantidad.integer" => __('El campo cantidad debe ser un numero.'),
+                "post_update.cantidad.regex" => __('El campo cantidad solo acepta numeros.'),
+                "post_update.estado.required" => __('Este campo es obligatorio.'),
+            ];
+        } else {
+            return [];
+        }
     }
+
     public function render()
     {
         $grupos =  grupo::select('grupos.*')->join('recorridos', 'grupos.recorrido_id', '=', 'recorridos.id')

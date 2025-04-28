@@ -22,7 +22,7 @@ return new class extends Migration
             $table->foreignId("categoria_habilitada_id")->nullable()->constrained();
             $table->foreignId("mesa_id")->nullable()->constrained();
             $table->json("datos")->nullable();
-            $table->double("monto_pagado_bs")->nullable();
+            $table->double("monto_a_pagar_bs")->nullable();
             $table->string("ip", 30)->nullable();
             $table->string("nomenclatura", 20)->nullable();
             $table->foreignId("recorrido_id")->nullable()->constrained();

@@ -14,6 +14,8 @@ class AdminEvento extends Component
     public $open = false;
     public $open_edit = false;
     public $evento, $post_edit_id;
+    public $actualizar = false;
+    public $registrar = false;
     public $post_create = [
         'nombre',
         'fecha_inicio',
@@ -31,7 +33,11 @@ class AdminEvento extends Component
         'estado' => "",
     ];
     protected $listeners = ['delete'];
+    public function mount()
+    {
 
+        $this->evento = evento::all();
+    }
     public function crear()
     {
         $this->open = true;
@@ -69,6 +75,8 @@ class AdminEvento extends Component
     }
     public function update()
     {
+        $this->validate();
+
         $posts = evento::find($this->post_edit_id);
         $posts->update([
             'nombre' => $this->post_update['nombre'],
@@ -91,46 +99,85 @@ class AdminEvento extends Component
         $post = evento::find($delete_id);
         $post->delete();
     }
-    public function mount()
+
+    public function validar1()
+    {
+        $this->registrar = true;
+        $this->actualizar = false;
+    }
+    public function validar2()
+    {
+        $this->actualizar = true;
+        $this->registrar = false;
+    }
+    public function rules(): array
+    {
+        if ($this->registrar == true) {
+            $this->actualizar = false;
+            return [
+                "post_create.nombre" => 'required|string|max:70',
+                "post_create.fecha_inicio" => 'required|date',
+                "post_create.fecha_finalizacion" => 'required|date',
+                "post_create.lugar_evento" => 'required|string|max:70',
+                "post_create.fecha_evento" => 'required|date',
+                "post_create.estado" => 'required',
+            ];
+        } else if ($this->actualizar == true) {
+            $this->registrar = false;
+            return [
+                "post_update.nombre" => 'required|string|max:70',
+                "post_update.fecha_inicio" => 'required|date',
+                "post_update.fecha_finalizacion" => 'required|date',
+                "post_update.lugar_evento" => 'required|string|max:70',
+                "post_update.fecha_evento" => 'required|date',
+                "post_update.estado" => 'required',
+            ];
+        } else {
+            return [];
+        }
+    }
+    public function messages(): array
     {
 
-        $this->evento = evento::all();
-
-    }
-
-    public function rules():array{
-
-        $rules["post_create.nombre"] = 'required|string|max:49|regex:/^[a-zA-Z\s]+$/';
-        $rules["post_create.fecha_inicio"] = 'required|date';
-        $rules["post_create.fecha_finalizacion"] = 'required|date';
-        $rules["post_create.lugar_evento"] = 'required|string|max:59|regex:/^[a-zA-Z\s]+$/';
-        $rules["post_create.fecha_evento"] = 'required|date';
-        $rules["post_create.estado"] = 'required';
-
-        return $rules;
-    }
-    public function messages():array
-    {
-        $messages["post_create.nombre.required"] = __('El campo nombre es obligatorio.');
-        $messages["post_create.nombre.string"] = __('El campo nombre debe ser una cadena de texto .');
-        $messages["post_create.nombre.max"] = __('El campo nombre no debe ser mayor a 49 letras.');
-        $messages["post_create.nombre.regex"] = __('El campo nombre solo acepta letras.');
-        $messages["post_create.fecha_inicio.required"] = __('El campo fecha de inicio es obligatorio.');
-        $messages["post_create.fecha_inicio.date"] = __('El campo fecha de inicio debe tener el formato correcto.');
-        $messages["post_create.fecha_finalizacion.required"] = __('El campo fecha de finalización es obligatorio.');
-        $messages["post_create.fecha_finalizacion.date"] = __('El campo fecha de finalización debe tener el formato correcto.');
-        $messages["post_create.lugar_evento.required"] = __('El campo lugar del evento es obligatorio.');
-        $messages["post_create.lugar_evento.string"] = __('El campo lugar del evento debe ser una cadena de texto .');
-        $messages["post_create.lugar_evento.max"] = __('El campo lugar del evento no debe ser mayor a 59 letras.');
-        $messages["post_create.lugar_evento.regex"] = __('El campo lugar del evento solo acepta letras.');
-        $messages["post_create.fecha_evento.required"] = __('El campo fecha del evento es obligatorio.');
-        $messages["post_create.fecha_evento.date"] = __('El campo fecha del evento debe tener el formato correcto.');
-        $messages["post_create.estado.required"] = __('Este campo es obligatorio.');
-        return $messages;
+        if ($this->registrar) {
+            return [
+                "post_create.nombre.required" => __('El campo nombre es obligatorio.'),
+                "post_create.nombre.string" => __('El campo nombre debe ser una cadena de texto .'),
+                "post_create.nombre.max" => __('El campo nombre no debe ser mayor a 70 letras.'),
+                "post_create.fecha_inicio.required" => __('El campo fecha de inicio es obligatorio.'),
+                "post_create.fecha_inicio.date" => __('El campo fecha de inicio debe tener el formato correcto.'),
+                "post_create.fecha_finalizacion.required" => __('El campo fecha de finalización es obligatorio.'),
+                "post_create.fecha_finalizacion.date" => __('El campo fecha de finalización debe tener el formato correcto.'),
+                "post_create.lugar_evento.required" => __('El campo lugar del evento es obligatorio.'),
+                "post_create.lugar_evento.string" => __('El campo lugar del evento debe ser una cadena de texto .'),
+                "post_create.lugar_evento.max" => __('El campo lugar del evento no debe ser mayor a 70 letras.'),
+                "post_create.fecha_evento.required" => __('El campo fecha del evento es obligatorio.'),
+                "post_create.fecha_evento.date" => __('El campo fecha del evento debe tener el formato correcto.'),
+                "post_create.estado.required" => __('Este campo es obligatorio.'),
+            ];
+        } else if ($this->actualizar) {
+            return [
+                "post_update.nombre.required" => __('El campo nombre es obligatorio.'),
+                "post_update.nombre.string" => __('El campo nombre debe ser una cadena de texto .'),
+                "post_update.nombre.max" => __('El campo nombre no debe ser mayor a 70 letras.'),
+                "post_update.fecha_inicio.required" => __('El campo fecha de inicio es obligatorio.'),
+                "post_update.fecha_inicio.date" => __('El campo fecha de inicio debe tener el formato correcto.'),
+                "post_update.fecha_finalizacion.required" => __('El campo fecha de finalización es obligatorio.'),
+                "post_update.fecha_finalizacion.date" => __('El campo fecha de finalización debe tener el formato correcto.'),
+                "post_update.lugar_evento.required" => __('El campo lugar del evento es obligatorio.'),
+                "post_update.lugar_evento.string" => __('El campo lugar del evento debe ser una cadena de texto .'),
+                "post_update.lugar_evento.max" => __('El campo lugar del evento no debe ser mayor a 70 letras.'),
+                "post_update.fecha_evento.required" => __('El campo fecha del evento es obligatorio.'),
+                "post_update.fecha_evento.date" => __('El campo fecha del evento debe tener el formato correcto.'),
+                "post_update.estado.required" => __('Este campo es obligatorio.'),
+            ];
+        } else {
+            return [];
+        }
     }
     public function render()
     {
-        $evento=evento::orderBy('id', 'desc')->paginate(8);
+        $evento = evento::orderBy('id', 'desc')->paginate(8);
         return view('livewire.administrar.admin-evento', [
             'posts' => $evento
 

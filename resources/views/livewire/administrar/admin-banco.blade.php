@@ -3,14 +3,14 @@
         <h1 class="font-black text-2xl text-gray-800 leading-tight text-normal">
             Lista de Bancos Registrados
         </h1>
-        <x-button class="shadow" wire:click="crear">
+        <x-button class="shadow hover:bg-slate-300 focus:bg-slate-300 active:bg-slate-300" wire:click="crear">
             Agregar
         </x-button>
     </div>
     <div class="bg-white shadow rounded-lg p-2 mb-2 px-8">
         <input type="text" wire:model.live="query" placeholder="Buscar..."
             class="w-2/4 px-8 mt-2 py-2 border-2 border-slate-300 rounded-lg focus:outline-none focus:border-blue-200 transition duration-300" />
-        <x-button class="ml-6 bg-red-700 hover:bg-slate-300 " wire:click="limpiar()" type="reset">Cancelar</x-button>
+        <x-danger-button class="ml-6" wire:click="limpiar()" type="reset">Cancelar</x-danger-button>
     </div>
     <div
         class="relative flex flex-col w-full h-full overflow-scroll text-black bg-white shadow-md rounded-xl bg-clip-border overflow-x-auto overflow-y-hidden">
@@ -84,7 +84,7 @@
                         </td>
 
                         <td class="p-4 border-b border-blue-gray-50 space-x-8">
-                            <x-button class="bg-blue-500" wire:click="edit({{ $post->id }})">
+                            <x-button class="bg-blue-500 hover:bg-slate-300 focus:bg-slate-300 active:bg-slate-300" wire:click="edit({{ $post->id }})">
                                 <i class="bi bi-pencil-square"></i>
                             </x-button>
 
@@ -153,7 +153,7 @@
                             Cancelar
                         </x-danger-button>
 
-                        <x-button>
+                        <x-button wire:click="validar1()">
                             Agregar
                         </x-button>
                     </div>
@@ -178,16 +178,11 @@
                     </div>
                     <div class="mb-4">
                         <x-label for="">Logo</x-label>
-                        <x-input type="file" class="w-full" wire:model="post_update.logo" accept="image/*"
-                            required />
+                        <x-input type="file" class="w-full" wire:model="post_update.logo"/>
                     </div>
-                    @if ($post_update['logo'])
+
                         <!-- Asegúrate de que esto apunta correctamente -->
-                        <div>
-                            <h4>Vista Previa del Logo:</h4>
-                            <img src="{{ $post_update['logo']->temporaryUrl() }}" alt="Vista previa" width="100">
-                        </div>
-                    @endif
+                        <img src="{{ $this->logoUrl }}" alt="Logo" />
                     <div class="mb-4">
                         <x-label for="">Estado</x-label>
                         <x-select class="w-full" wire:model="post_update.estado">
@@ -204,7 +199,7 @@
                             Cancelar
                         </x-danger-button>
 
-                        <x-button>
+                        <x-button wire:click="validar2()">
                             Actualizar
                         </x-button>
                     </div>
