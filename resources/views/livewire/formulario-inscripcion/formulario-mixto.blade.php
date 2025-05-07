@@ -614,9 +614,7 @@
                                 <option value="1">Masculino</option>
                                 <option value="2">Femenino</option>
                             </x-select>
-                            @error("create_prendas_carrera.$i.prenda_genero")
-                                <span class="error text-red-500">{{ $message }}</span>
-                            @enderror
+
                         </div>
 
                         @if ($this->create_prendas_carrera[$i]['genero'] == 'Masculino')

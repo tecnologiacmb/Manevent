@@ -1,10 +1,27 @@
 <div>
-    <div class="bg-white shadow rounded-lg p-4 mb-2">
-        <h1 class="font-black text-xl text-gray-800 leading-tight text-normal mx-2">
-           Total de Inscripciones: {{$this->cantidad_inscripcion}}
-        </h1>
+    <div class="w-full max-[500px]:w-full mb-2">
+        <div
+            class="flex group w-full h-24 rounded-lg bg-white shadow transition relative duration-300 cursor-pointer hover:translate-y-[3px] hover:shadow-[0_-8px_0px_0px_#000000] justify-between">
+            <div>
+                <p class="pt-2 text-black text-2xl pl-8">Inscripciones</p>
+                <p class="mx-4 text-black text-xl pl-4 group-hover:text-blue-900">Total:
+                    {{ $this->cantidad_inscripcion }} </p>
+            </div>
+            <div>
+                <p class="text-center text-black text-2xl pt-8 group-hover:text-green-800">Lista de Inscripciones</p>
+            </div>
 
-        <div class="flex items-center">
+            <div>
+                <img src="{{ asset('storage/image/inscripcion.png') }}" alt="Imagen de dolar almacenada en storage"
+                    class="pt-8 group-hover:opacity-100 absolute right-[8%] top-[40%] translate-y-[-50%] opacity-50 transition group-hover:scale-110 duration-300 w-16">
+            </div>
+            <br>
+        </div>
+    </div>
+
+    <div
+        class="relative flex flex-col w-full h-full overflow-scroll text-black bg-white shadow-md rounded-xl bg-clip-border overflow-x-auto overflow-y-hidden">
+        <div class="flex items-center px-4 justify-between mb-8">
             <input type="text" wire:model.live="query" placeholder="Buscar..."
                 class="w-5/12 px-4 mt-2 py-2 border-2 border-slate-300 rounded-lg focus:outline-none focus:border-blue-200 transition duration-300" />
 
@@ -23,16 +40,8 @@
             <input type="date" wire:model.live="endDate"
                 class="w-1/6 px-4 mt-2 ml-1 py-2 border-2 border-slate-300 rounded-lg focus:outline-none focus:border-blue-200 transition duration-300" />
 
-            <x-danger-button class="ml-2 bg-red-700" wire:click="limpiar()"
-                type="reset">Cancelar</x-danger-button>
+            <x-danger-button class="ml-2 mt-1 bg-red-700" wire:click="limpiar()" type="reset">Cancelar</x-danger-button>
         </div>
-
-    </div>
-
-
-    <div
-        class="relative flex flex-col w-full h-full overflow-scroll text-black bg-white shadow-md rounded-xl bg-clip-border overflow-x-hidden overflow-y-hidden">
-
         <table class="w-full text-center table-auto min-w-max">
             <thead>
                 <tr>
@@ -139,7 +148,8 @@
                             </p>
                         </td>
                         <td class="p-4 border-b border-blue-gray-50">
-                            <x-button class="bg-blue-500 hover:bg-slate-300 focus:bg-slate-300 active:bg-slate-300"><a href="incripcion/vista_inscripcion/{{ $inscripcion->id }}">
+                            <x-button class="bg-blue-500 hover:bg-slate-300 focus:bg-slate-300 active:bg-slate-300"><a
+                                    href="incripcion/vista_inscripcion/{{ $inscripcion->id }}">
                                     <i class="bi bi-eye-fill"></i>
                                 </a>
                             </x-button>

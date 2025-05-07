@@ -19,7 +19,6 @@ class AdminCategoria extends Component
     public $open_edit = false;
     public $actualizar = false;
     public $registrar = false;
-
     public $post_create = [
         'nombre' => null,
         'edad_min' => null,
@@ -151,9 +150,6 @@ class AdminCategoria extends Component
     public function render()
     {
         $categoria =  categoriaHabilitada::select('categoria_habilitadas.*')
-            ->where(function ($query) {
-                $query->orWhere('categoria_habilitadas.nombre', 'like', '%' . $this->query . '%');
-            })
             ->orderBy('created_at', 'desc')->paginate(6);
         return view('livewire.administrar.admin-categoria', [
             'posts' => $categoria

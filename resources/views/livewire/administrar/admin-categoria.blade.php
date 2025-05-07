@@ -1,18 +1,27 @@
 <div>
-    <div class="bg-white shadow rounded-lg p-2 mb-4 flex items-center justify-between">
-        <h1 class="font-black text-2xl text-gray-800 leading-tight text-normal">
-            Lista de Categorias Registradas
-        </h1>
-        <x-button class="shadow hover:bg-slate-300 focus:bg-slate-300 active:bg-slate-300" wire:click="crear">
-            Agregar
-        </x-button>
+    <div class="w-full max-[500px]:w-full mb-2">
+        <div
+            class="flex group w-full h-24 rounded-lg bg-white shadow transition relative duration-300 cursor-pointer hover:translate-y-[3px] hover:shadow-[0_-8px_0px_0px_#000000] justify-between">
+            <div>
+                <img src="{{ asset('storage/image/categoria.png') }}" alt="Imagen de dolar almacenada en storage"
+                    class="pt-8 group-hover:opacity-100 absolute left-[8%] top-[40%] translate-y-[-50%] opacity-50 transition group-hover:scale-110 duration-300 w-16">
+            </div>
+            <div>
+                <p class="text-center px-64 text-black text-2xl pt-8 group-hover:text-green-800">Categorias Registradas
+                </p>
+            </div>
+            <div>
+                <x-button
+                    class=" absolute right-[8%] top-[50%] translate-y-[-50%] shadow hover:bg-slate-300 focus:bg-slate-300 active:bg-slate-300"
+                    wire:click="crear">
+                    Agregar
+                </x-button>
+            </div>
+            <br>
+        </div>
     </div>
-    <div class="bg-white shadow rounded-lg p-4 mb-2 px-8">
-        <input type="text" wire:model.live="query" placeholder="Buscar..."
-            class="w-4/5 px-8 mt-2 py-2 border-2 border-slate-300 rounded-lg focus:outline-none focus:border-blue-200 transition duration-300" />
 
-        <x-danger-button class="ml-4" wire:click="limpiar()" type="reset">Cancelar</x-danger-button>
-    </div>
+
     <div
         class="relative flex flex-col w-full h-full overflow-scroll text-black bg-white shadow-md rounded-xl bg-clip-border overflow-x-auto overflow-y-hidden">
 
@@ -151,7 +160,7 @@
                 <div class="h-28 grid grid-cols-3 gap-4 content-start ">
                     <div class="mb-4">
                         <x-label for="">Edad Minima</x-label>
-                        <x-input  class="w-full" wire:model="post_update.edad_min" />
+                        <x-input class="w-full" wire:model="post_update.edad_min" />
                         @error('post_update.edad_min')
                             <span class="error text-red-500">{{ $message }}</span>
                         @enderror
@@ -159,7 +168,7 @@
 
                     <div class="mb-4">
                         <x-label for="">Edad Maxima</x-label>
-                        <x-input  class="w-full" wire:model="post_update.edad_max" />
+                        <x-input class="w-full" wire:model="post_update.edad_max" />
                         @error('post_update.edad_max')
                             <span class="error text-red-500">{{ $message }}</span>
                         @enderror

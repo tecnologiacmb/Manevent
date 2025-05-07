@@ -163,9 +163,7 @@
                                         </option>
                                     @endforeach
                                 </x-select>
-                                @error("create_prendas.$i.prendas")
-                                    <span class="error text-red-500">{{ $message }}</span>
-                                @enderror
+
                             </div>
                         @elseif ($this->create_prendas[$i]['genero'] == 'Femenino')
                             <div>

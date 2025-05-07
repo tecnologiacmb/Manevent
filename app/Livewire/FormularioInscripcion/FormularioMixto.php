@@ -656,9 +656,7 @@ class FormularioMixto extends Component
             $rules["participante_carrera.$i.direccion"] = 'required|string|max:60|regex:/^[a-zA-Z0-9\s]+$/';
             $rules["participante_carrera.$i.fecha_nacimiento"] = 'required|date|before_or_equal:' . $this->fecha_evento;
             $rules["participante_carrera.$i.genero_id"] = 'required|integer';
-            $rules["create_prendas_carrera.$i.genero"] = 'required|integer';
             $rules["create_prendas_carrera.$i.prendas"] = 'required|integer';
-            $rules["create_prendas_carrera.$i.prenda_genero"] = 'required|integer';
 
             if (!is_null($this->inscripcion_carrera[$i]['unico'])) {
                 $rules["inscripcion_carrera.$i.metodo_pago_id"] = 'required';
@@ -697,9 +695,7 @@ class FormularioMixto extends Component
             $rules["participante_caminata.$j.direccion"] = 'required|string|max:60|regex:/^[a-zA-Z0-9\s]+$/';
             $rules["participante_caminata.$j.fecha_nacimiento"] = 'required|date|before_or_equal:' . $this->fecha_evento;
             $rules["participante_caminata.$j.genero_id"] = 'required|integer';
-            $rules["create_prendas_caminata.$j.genero"] = 'required|integer';
             $rules["create_prendas_caminata.$j.prendas"] = 'required|integer';
-            $rules["create_prendas_caminata.$j.prenda_genero"] = 'required|integer';
             if (!is_null($this->inscripcion_caminata[$j]['unico'])) {
                 $rules["inscripcion_caminata.$j.metodo_pago_id"] = 'required';
                 $rules["inscripcion_caminata.$j.fecha"] = 'required|date|before_or_equal:' . $this->fecha_actual;

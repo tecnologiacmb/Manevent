@@ -121,7 +121,6 @@ class Dashboar extends Component
             return $this->total;
         }
     }
-
     public function render()
     {
         return view('livewire.dashboar');

@@ -40,7 +40,7 @@ class InscripMixto extends Component
         // Generar la URL para la vista en lugar del PDF
         /* $viewLink = route('mixto/inscripcion/{id}/{cantidad_carrera}/{cantidad_caminata}', ['id' => $this->id, 'cantidad_carrera' => $this->cantidad_carrera, 'cantidad_caminata' => $this->cantidad_caminata]); */
 
-        $viewLink = route('mixto/inscripcion/{id}/{cantidad_carrera}/{cantidad_caminata}', ['id' => $this->id, 'cantidad_carrera' => $this->cantidad_carrera, 'cantidad_caminata' => $this->cantidad_caminata]);
+        $viewLink = route('mixto.inscripcion', ['id' => $this->id, 'cantidad_carrera' => $this->cantidad_carrera, 'cantidad_caminata' => $this->cantidad_caminata]);
 
         $this->cantidad_carrera='';
         $this->cantidad_caminata='';

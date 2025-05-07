@@ -1,22 +1,36 @@
 <div>
-    <div class="bg-white shadow rounded-lg p-2 mb-2 flex items-center justify-between">
-        <h1 class="font-black text-2xl text-gray-800 leading-tight text-normal">
-            Lista de Bancos Registrados
-        </h1>
-        <x-button class="shadow hover:bg-slate-300 focus:bg-slate-300 active:bg-slate-300" wire:click="crear">
-            Agregar
-        </x-button>
+    <div class="w-full max-[500px]:w-full mb-2">
+        <div
+            class="flex group w-full h-24 rounded-lg bg-white shadow transition relative duration-300 cursor-pointer hover:translate-y-[3px] hover:shadow-[0_-8px_0px_0px_#000000] justify-between">
+            <div>
+                <img src="{{ asset('storage/image/banco.png') }}" alt="Imagen de dolar almacenada en storage"
+                    class="pt-8 group-hover:opacity-100 absolute left-[8%] top-[40%] translate-y-[-50%] opacity-50 transition group-hover:scale-110 duration-300 w-16">
+            </div>
+            <div>
+                <p class="text-center  text-black text-2xl pt-8 group-hover:text-green-800">Bancos Registrados</p>
+            </div>
+
+            <div>
+                <x-button
+                    class=" absolute right-[8%] top-[50%] translate-y-[-50%] shadow hover:bg-slate-300 focus:bg-slate-300 active:bg-slate-300"
+                    wire:click="crear">
+                    Registar
+                </x-button>
+            </div>
+        </div>
     </div>
-    <div class="bg-white shadow rounded-lg p-2 mb-2 px-8">
-        <input type="text" wire:model.live="query" placeholder="Buscar..."
-            class="w-2/4 px-8 mt-2 py-2 border-2 border-slate-300 rounded-lg focus:outline-none focus:border-blue-200 transition duration-300" />
-        <x-danger-button class="ml-6" wire:click="limpiar()" type="reset">Cancelar</x-danger-button>
-    </div>
+
     <div
         class="relative flex flex-col w-full h-full overflow-scroll text-black bg-white shadow-md rounded-xl bg-clip-border overflow-x-auto overflow-y-hidden">
+        <div class="p-4 pl-2 mb-2 flex items-center justify-between ">
+            <input type="text" wire:model.live="query" placeholder="Buscar..."
+                class="w-9/12 px-4 mt-2 py-2 border-2 border-slate-300 rounded-lg focus:outline-none focus:border-blue-200 transition duration-300 ml-4" />
+            <div>
+                <x-danger-button class="mr-16 mt-1" wire:click="limpiar()" type="reset">Limpiar</x-danger-button>
 
-
-        <table class="w-full text-center table-auto min-w-max ">
+            </div>
+        </div>
+        <table class=" w-full text-center table-auto min-w-max ">
             <thead>
                 <tr>
                     <th class="p-4 border-b border-blue-gray-100 bg-blue-gray-50">
@@ -46,6 +60,7 @@
                     <th class="p-4 border-b border-blue-gray-100 bg-blue-gray-50">
                         <p
                             class="block font-sans text-sm antialiased font-normal leading-none text-blue-gray-900 opacity-70">
+                            Opciones
                         </p>
                     </th>
                 </tr>
@@ -83,8 +98,9 @@
                             </p>
                         </td>
 
-                        <td class="p-4 border-b border-blue-gray-50 space-x-8">
-                            <x-button class="bg-blue-500 hover:bg-slate-300 focus:bg-slate-300 active:bg-slate-300" wire:click="edit({{ $post->id }})">
+                        <td class="p-4 border-b border-blue-gray-50">
+                            <x-button class="bg-blue-500 hover:bg-slate-300 focus:bg-slate-300 active:bg-slate-300"
+                                wire:click="edit({{ $post->id }})">
                                 <i class="bi bi-pencil-square"></i>
                             </x-button>
 
@@ -98,7 +114,7 @@
             </tbody>
 
         </table>
-        <div>
+        <div class="text-black font-bold text-xl">
             {{ $posts->links() }}
         </div>
 
@@ -170,7 +186,8 @@
                 <x-slot name="content">
                     <div class="mb-4">
                         <x-label for="">Banco</x-label>
-                        <x-input class="w-full" wire:model="post_update.nombre" /> <!-- Asegúrate que el campo existe -->
+                        <x-input class="w-full" wire:model="post_update.nombre" />
+                        <!-- Asegúrate que el campo existe -->
                     </div>
                     <div class="mb-4">
                         <x-label for="">Código</x-label>
@@ -178,11 +195,11 @@
                     </div>
                     <div class="mb-4">
                         <x-label for="">Logo</x-label>
-                        <x-input type="file" class="w-full" wire:model="post_update.logo"/>
+                        <x-input type="file" class="w-full" wire:model="post_update.logo" />
                     </div>
 
-                        <!-- Asegúrate de que esto apunta correctamente -->
-                        <img src="{{ $this->logoUrl }}" alt="Logo" />
+                    <!-- Asegúrate de que esto apunta correctamente -->
+                    <img src="{{ $this->logoUrl }}" alt="Logo" />
                     <div class="mb-4">
                         <x-label for="">Estado</x-label>
                         <x-select class="w-full" wire:model="post_update.estado">

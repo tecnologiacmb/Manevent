@@ -1,24 +1,36 @@
  <div>
-     <div class="bg-white shadow rounded-lg p-2 mb-4">
-         <form wire:submit="save">
-             <div class="flex space-x-4 py-2">
-                 <h1 class="mt-2 font-black text-2xl text-gray-800 leading-tight text-normal">
-                     Registrar Precio del Dolar
-                 </h1>
-                 <x-input placeholder="Precio del Dolar" type="number" step="0.01"
-                     wire:model.live="post_create.precio" />
 
-                 <x-button class="hover:bg-gray-300 focus:bg-gray-300 active:bg-gray-300" wire:click="validar_registro()">
-                     Registrar
-                 </x-button>
+     <div class="w-full max-[500px]:w-full mb-2">
+         <div
+             class="flex group w-full h-24 rounded-lg bg-white shadow transition relative duration-300 cursor-pointer hover:translate-y-[3px] hover:shadow-[0_-8px_0px_0px_#000000] items-center justify-between">
+             <div>
+                 <img src="{{ asset('storage/image/dolar.png') }}" alt="Imagen de dolar almacenada en storage"
+                     class="pt-8 group-hover:opacity-100 absolute left-[8%] top-[30%] translate-y-[-50%] opacity-50 transition group-hover:scale-110 duration-300 w-20">
+             </div>
+             <div class="pr-24">
+                 <form wire:submit="save">
+                     <div class="flex space-x-4 ">
+                         <h1 class="mt-2 font-black text-2xl text-gray-800 leading-tight text-normal">
+                             Registrar Precio del Dolar
+                         </h1>
+                         <x-input placeholder="Precio del Dolar" type="number" step="0.01"
+                             wire:model.live="post_create.precio" />
 
+                         <x-button class="ml-2 hover:bg-gray-300 focus:bg-gray-300 active:bg-gray-300"
+                             wire:click="validar_registro()">
+                             Registrar
+                         </x-button>
+
+                     </div>
+                     <div class="flex justify-center mr-32">
+                         @error('post_create.precio')
+                             <span class="text-center error text-red-500">{{ $message }}</span>
+                         @enderror
+                     </div>
+                 </form>
              </div>
-             <div class="flex justify-center mr-28">
-                 @error('post_create.precio')
-                     <span class="text-center error text-red-500">{{ $message }}</span>
-                 @enderror
-             </div>
-         </form>
+
+         </div>
      </div>
      <div
          class="relative flex flex-col w-full h-full overflow-scroll text-black bg-white shadow-md rounded-xl bg-clip-border overflow-x-hidden overflow-y-hidden">

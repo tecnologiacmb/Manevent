@@ -410,8 +410,7 @@ class FormularioCarrera extends Component
             $rules["create_participante.$i.fecha_nacimiento"] = 'required|date|before_or_equal:' . $this->fecha_evento;
             $rules["create_participante.$i.genero_id"] = 'required|integer';
             $rules["create_prendas.$i.prendas"] = 'required|integer';
-            $rules["create_prendas.$i.genero_id"] = 'required|integer';
-            $rules["create_prendas.$i.prenda_genero"] = 'required|integer';
+
 
             if (!is_null($this->create_inscripcion[$i]['unico'])) {
                 $rules["create_inscripcion.$i.metodo_pago_id"] = 'required';
@@ -478,10 +477,7 @@ class FormularioCarrera extends Component
             $messages["create_participante.$i.genero_id.integer"] = __('El campo genero debe ser un numero.');
             $messages["create_prendas.$i.prendas.required"] = __('El campo prenda es obligatorio.');
             $messages["create_prendas.$i.prendas.integer"] = __('El campo prenda debe ser un numero.');
-            $messages["create_prendas.$i.genero_id.required"] = __('El campo genero es obligatorio.');
-            $messages["create_prendas.$i.genero_id.integer"] = __('El campo genero debe ser un numero.');
-            $messages["create_prendas.$i.prenda_genero.required"] = __('El campo genero es obligatorio.');
-            $messages["create_prendas.$i.prenda_genero.integer"] = __('El campo genero debe ser un numero.');
+
 
             $messages["create_inscripcion.$i.metodo_pago_id.required"] = __('El campo cuentas es obligatorio.');
             $messages["create_inscripcion.$i.monto_Bs.required"] = __('El campo monto en BS es obligatorio.');

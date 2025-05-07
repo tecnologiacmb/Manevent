@@ -43,8 +43,8 @@ Route::middleware([
 
 
     Route::controller(ExportPDF::class)->group(function () {
-        Route::group(['prefix' => 'reportes/reporte_fondo'], function () {
-            Route::get('', 'index')->name('reporte_fondo');
+        Route::group(['prefix' => 'reporte'], function () {
+            Route::get('', 'index')->name('reporte');
             Route::get('/detalle/', 'reportPDF')->name('reportes.ReporteFondoPDF.detalle');
             Route::get('/Excel/', 'reportExcel')->name('reportes.ReporteExcel.Excel');
             Route::get('/ExcelGlobal/', 'reportGlobalExcel')->name('reportes.ReporteGlobalExcel.ExcelGlobal');
@@ -59,13 +59,13 @@ Route::middleware([
     Route::controller(Usuarios_Controller::class)->group(function () {
         Route::group(['prefix' => 'vista_usuarios',], function () {
             Route::get('',  "index")->name('vista_usuarios');
-            Route::get('/detalle/{id}',  "create")->name('vista_usuarios/detalle/{id}');
+            Route::get('/detalle/{id}',  "create")->name('vista_usuarios.detalle');
         });
     });
     Route::controller(Inscrippcion_Controller::class)->group(function () {
         Route::group(['prefix' => 'incripcion',], function () {
             Route::get('',  "index")->name('incripcion');
-            Route::get('/vista_inscripcion/{id}',  "create")->name('incripcion/vista_inscripcion/{id}');
+            Route::get('/vista_inscripcion/{id}',  "create")->name('incripcion.vista_inscripcion');
         });
     });
     Route::controller(Categoria_Controller::class)->group(function () {
@@ -83,25 +83,24 @@ Route::middleware([
             Route::get('',  "index")->name('grupo');
         });
     });
-
     Route::controller(Caminata_controller::class)->group(function () {
         Route::group(['prefix' => 'caminata',], function () {
             Route::get('',  "index")->name('caminata');
-            Route::get('/inscripcion/{id}',  "create")->name('caminata/inscripcion/{id}');
+            Route::get('/inscripcion/{id}',  "create")->name('caminata.inscripcion');
             Route::get('/editar/{id}', "edit")->name('inmobiliaria/editar/{id}');
         });
     });
     Route::controller(Carrera_controller::class)->group(function () {
         Route::group(['prefix' => 'carrera',], function () {
             Route::get('',  "index")->name('carrera');
-            Route::get('/inscripcion/{id}',  "create")->name('carrera/inscripcion/{id}');
+            Route::get('/inscripcion/{id}',  "create")->name('carrera.inscripcion');
             Route::get('/editar/{id}', "edit")->name('inmobiliaria/editar/{id}');
         });
     });
     Route::controller(Mixto_controller::class)->group(function () {
         Route::group(['prefix' => 'mixto',], function () {
             Route::get('',  "index")->name('mixto');
-            Route::get('/inscripcion/{id}/{cantidad_carrera}/{cantidad_caminata}',  "create")->name('mixto/inscripcion/{id}/{cantidad_carrera}/{cantidad_caminata}');
+            Route::get('/inscripcion/{id}/{cantidad_carrera}/{cantidad_caminata}',  "create")->name('mixto.inscripcion');
         });
     });
 });

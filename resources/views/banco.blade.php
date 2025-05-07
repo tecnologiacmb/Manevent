@@ -1,7 +1,14 @@
 <x-sidebar-layout>
     <x-slot name="header">
-        <h2 class="font-black text-2xl text-gray-800 leading-tight">
-            {{ __('Inscricciones/Caminata') }}
+        <h2 class="font-black text-xl text-gray-800 leading-tight">
+            <a href="{{ route('dashboard') }}" class="underline">
+                Inicio/
+            </a>
+            <!-- Barra diagonal y espacio antes de Banco -->
+            <a href="{{ route('banco') }}" :active="request() - > routeIs('banco')"
+                class="{{ request()->routeIs('banco') ? 'text-blue-500 font-bold' : 'ml-1' }} mx-0 underline">
+                Banco
+            </a>
         </h2>
     </x-slot>
 

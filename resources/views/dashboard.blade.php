@@ -1,7 +1,11 @@
 <x-sidebar-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Home') }}
+        <h2 class="font-black text-xl text-gray-800 leading-tight">
+            <!-- Barra diagonal y espacio antes de Banco -->
+            <a href="{{ route('dashboard') }}" :active="request() - > routeIs('dashboard')"
+                class="{{ request()->routeIs('dashboard') ? 'text-blue-500 font-bold' : 'ml-1' }} mx-0 underline capitalize">
+                Inicio
+            </a>
         </h2>
     </x-slot>
 
