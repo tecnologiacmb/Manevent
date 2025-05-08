@@ -6,7 +6,9 @@ use App\Models\dolar;
 use App\Models\inscripcion;
 use App\Models\participante;
 use App\Models\prenda;
+use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use Illuminate\Support\Facades\DB;
 
@@ -33,10 +35,9 @@ class Dashboar extends Component
     public $PorcentaFranelas_XL;
     public $PorcentajeHombre;
     public $PorcentajeMujer;
-
     public $totalCarrera = 500;
     public $totalCaminata = 298;
-
+    public $users;
     public $totalParticipantes = 999;
 
     public function mount()
@@ -52,6 +53,7 @@ class Dashboar extends Component
         if (!$this->dolars) {
             $this->dolars = dolar::latest()->first();
         }
+        $this->users = User::select('name', 'profile_photo_path')->get();
     }
 
     public function calcularTotalMontoPagado()
@@ -123,6 +125,9 @@ class Dashboar extends Component
     }
     public function render()
     {
-        return view('livewire.dashboar');
+        $useres = User::all(); // O la consulta que uses para obtener los usuarios
+        $currentUserId = Auth::check() ? Auth::user()->id : null; // ID del usuario en sesión
+
+        return view('livewire.dashboar', compact('useres', 'currentUserId'));
     }
 }

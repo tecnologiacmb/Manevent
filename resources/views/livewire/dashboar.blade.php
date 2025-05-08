@@ -3,7 +3,7 @@
 
         <a href="{{ route('reporte') }}" :active="request() - > routeIs('reporte')">
             <div
-                class="group w-full p-2 rounded-lg bg-white shadow-xl transition relative duration-300 cursor-pointer hover:translate-y-[3px] text-black hover:text-green-800 hover:shadow-[0_-8px_0px_0px_#000000]" >
+                class="group w-full p-2 rounded-lg bg-white shadow-xl transition relative duration-300 cursor-pointer hover:translate-y-[3px] text-black hover:text-green-800 hover:shadow-[0_-8px_0px_0px_#000000]">
                 <p class="py-2 text-xl pl-8">Carrera/Caminata</p>
                 <p class=" mx-4 text-blue-800 text-xl pl-4 group-hover:text-blue-500">{{ $totalMontoPagado }} Bs</p>
                 <p class="mx-4 text-green-800 text-md pl-4 group-hover:text-green-600">
@@ -166,5 +166,30 @@
         </a>
 
     </div>
-
+    <div class="bg-white p-4 rounded-xl shadow-2xl font-semibold text-white max-w-sm mx-auto space-y-2">
+        @foreach ($useres as $user)
+            @php
+                // Comparar si el usuario en la lista es el usuario en sesión
+                $isCurrentUser = $user->id === $currentUserId;
+            @endphp
+            <div class="flex items-center space-x-4 p-3 rounded-lg">
+                @if (Laravel\Jetstream\Jetstream::managesProfilePhotos() && $user->profile_photo_path)
+                    <!-- Fotos de perfil si existen -->
+                    <img class="h-10 w-10 rounded-full object-cover"
+                        src="{{ asset('storage/' . $user->profile_photo_path) }}" alt="{{ $user->name }}">
+                @else
+                    <!-- Inicial si no -->
+                    <span
+                        class="inline-flex rounded-full bg-black h-10 w-10 items-center justify-center text-white font-semibold uppercase">
+                        {{ strtoupper(substr($user->name, 0, 1)) }}
+                    </span>
+                @endif
+                <div class="flex-1 flex items-center justify-between">
+                    <p class="text-black font-semibold">{{ $user->name }}</p>
+                    <!-- Punto verde solo si es usuario en sesión: -->
+                    <span class="{{ $isCurrentUser ? 'bg-green-500' : 'bg-red-500' }} h-3 w-3 rounded-full"></span>
+                </div>
+            </div>
+        @endforeach
+    </div>
 </div>
