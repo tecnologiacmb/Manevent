@@ -92,7 +92,6 @@ class FormularioCarrera extends Component
         'recorrido_id' => null,
         'recorrido_id_grupos' => null,
         'prenda_id' => null,
-        'pago_BS_USD' => null
     ];
     public $create_prendas = [
         'prendas' => null,
@@ -104,7 +103,12 @@ class FormularioCarrera extends Component
     public $nomenclatura;
     public $nuevoNumeroOrden = null;
     public $userIp;
-
+    public $resultado = 0;
+    public $totalPagoBs = null, $totalPagoUsd = null, $totalPagoMixtoBs = null, $totalPagoMixtoUsd = null;
+    public $fecha, $fechaMixto;
+    public $referencia, $referenciaMixto;
+    public $cuenta = null, $cuentaMixto = null;
+    public $metodoPago, $tipoMoneda, $tipoMonedaMixto, $seleccionPago;
     public function mount($id = null)
     {
 
@@ -173,8 +177,6 @@ class FormularioCarrera extends Component
                     'recorrido_id' => null,
                     'recorrido_id_grupos' => null,
                     'prenda_id' => null,
-                    'pago_BS_USD' => null
-
                 ];
                 $this->create_prendas[$i] = [
                     'prendas' => null,
@@ -203,52 +205,45 @@ class FormularioCarrera extends Component
             $this->create_participante[$index]['ciudades'] = ciudad::where('estado_id', $value)->get();
         }
     }
-    public function update_radio($index, $option)
+    public function update_radio($option)
+    {
+        if ($option === '1') {
+            $this->create_inscripcion['unico'] = '1';
+            $this->create_inscripcion['mixto'] = null;
+        } elseif ($option === '2') {
+            $this->create_inscripcion['unico'] = null;
+            $this->create_inscripcion['mixto'] = '2';
+        } elseif ($option === '') {
+            $this->create_inscripcion['unico'] = null;
+            $this->create_inscripcion['mixto'] = null;
+        }
+    }
+    public function update_pago($option)
+    {
+        if ($option === '1') {
+            $this->create_inscripcion['bolivar'] = '1';
+            $this->create_inscripcion['dolar'] = null;
+        } elseif ($option === '2') {
+            $this->create_inscripcion['bolivar'] = null;
+            $this->create_inscripcion['dolar'] = '2';
+        } elseif ($option === '') {
+            $this->create_inscripcion['bolivar'] = null;
+            $this->create_inscripcion['dolar'] = null;
+        }
+    }
+    public function update_pago_mixto($option)
     {
 
         if ($option === '1') {
-            $this->create_inscripcion[$index]['tipo_pago_id'] = null;
-            $this->create_inscripcion[$index]['unico'] = '1';
-            $this->create_inscripcion[$index]['mixto'] = null;
+
+            $this->create_inscripcion['bolivar_mixto'] = '1';
+            $this->create_inscripcion['dolar_mixto'] = null;
         } elseif ($option === '2') {
-            $this->create_inscripcion[$index]['tipo_pago_id'] = null;
-            $this->create_inscripcion[$index]['unico'] = null;
-            $this->create_inscripcion[$index]['mixto'] = '2';
+            $this->create_inscripcion['bolivar_mixto'] = null;
+            $this->create_inscripcion['dolar_mixto'] = '2';
         } elseif ($option === '') {
-            $this->create_inscripcion[$index]['unico'] = null;
-            $this->create_inscripcion[$index]['mixto'] = null;
-            $this->create_inscripcion[$index]['bolivar'] = null;
-            $this->create_inscripcion[$index]['dolar'] = null;
-            $this->create_inscripcion[$index]['bolivar_mixto'] = null;
-            $this->create_inscripcion[$index]['dolar_mixto'] = null;
-        }
-    }
-    public function update_pago($index, $option)
-    {
-
-        if ($option === 'bolivar') {
-            $this->create_inscripcion[$index]['bolivar'] = 'bolivar';
-            $this->create_inscripcion[$index]['dolar'] = null;
-        } elseif ($option === 'dolar') {
-            $this->create_inscripcion[$index]['bolivar'] = null;
-            $this->create_inscripcion[$index]['dolar'] = 'dolar';
-        } elseif ($option === '') {
-            $this->create_inscripcion[$index]['bolivar'] = null;
-            $this->create_inscripcion[$index]['dolar'] = null;
-        }
-    }
-    public function update_pago_mixto($index, $option2)
-    {
-
-        if ($option2 === 'bolivar_mixto') {
-            $this->create_inscripcion[$index]['bolivar_mixto'] = 'bolivar_mixto';
-            $this->create_inscripcion[$index]['dolar_mixto'] = null;
-        } elseif ($option2 === 'dolar_mixto') {
-            $this->create_inscripcion[$index]['bolivar_mixto'] = null;
-            $this->create_inscripcion[$index]['dolar_mixto'] = 'dolar_mixto';
-        } elseif ($option2 === '') {
-            $this->create_inscripcion[$index]['bolivar_mixto'] = null;
-            $this->create_inscripcion[$index]['dolar_mixto'] = null;
+            $this->create_inscripcion['bolivar_mixto'] = null;
+            $this->create_inscripcion['dolar_mixto'] = null;
         }
     }
     public function calculo($num)
@@ -410,30 +405,31 @@ class FormularioCarrera extends Component
             $rules["create_participante.$i.fecha_nacimiento"] = 'required|date|before_or_equal:' . $this->fecha_evento;
             $rules["create_participante.$i.genero_id"] = 'required|integer';
             $rules["create_prendas.$i.prendas"] = 'required|integer';
-
-
-            if (!is_null($this->create_inscripcion[$i]['unico'])) {
-                $rules["create_inscripcion.$i.metodo_pago_id"] = 'required';
-                $rules["create_inscripcion.$i.fecha"] = 'required|date|before_or_equal:' . $this->fecha_actual;
-                $rules["create_inscripcion.$i.referencia"] = 'required|numeric|digits:6';
-
-                if ($this->create_inscripcion[$i]['pago_BS_USD']=='bolivar') {
-                    $rules["create_inscripcion.$i.monto_Bs"] = 'required|numeric';
-                } else {
-                    $rules["create_inscripcion.$i.monto_USD"] = 'required|numeric';
+            $rules["seleccionPago"] = 'required|integer';
+            if (!is_null($this->create_inscripcion['unico'])) {
+                $rules["metodoPago"] = 'required|integer';
+                $rules["fecha"] = 'required|date|before_or_equal:' . $this->fecha_actual;
+                $rules["referencia"] = 'required|numeric|digits:6';
+                $rules["metodoPago"] = 'required|integer';
+                $rules["tipoMoneda"] = 'required|integer';
+                if ($this->create_inscripcion['bolivar']) {
+                    $rules["totalPagoBs"] = 'required|numeric';
+                } else if ($this->create_inscripcion['dolar']) {
+                    $rules["totalPagoUsd"] = 'required|numeric';
                 }
             } else {
-                $rules["create_inscripcion.$i.fecha"] = 'required|date|before_or_equal:' . $this->fecha_actual;
-                $rules["create_inscripcion.$i.referencia"] = 'required|numeric|digits:6';
-                $rules["create_inscripcion.$i.fecha_mixto"] = 'required|date|before_or_equal:' . $this->fecha_actual;
-                $rules["create_inscripcion.$i.referencia_mixto"] = 'required|numeric|digits:6';
-                $rules["create_inscripcion.$i.cuenta_mixto_1"] = 'required|string';
-                $rules["create_inscripcion.$i.cuenta_mixto_2"] = 'required|string';
-
-                if (!is_null($this->create_inscripcion[$i]['monto_mixto_Bs'])) {
-                    $rules["create_inscripcion.$i.monto_mixto_Bs"] = 'required|numeric';
-                } else {
-                    $rules["create_inscripcion.$i.monto_mixto_USD"] = 'required|numeric';
+                $rules["fecha"] = 'required|date|before_or_equal:' . $this->fecha_actual;
+                $rules["referencia"] = 'required|numeric|digits:6';
+                $rules["fechaMixto"] = 'required|date|before_or_equal:' . $this->fecha_actual;
+                $rules["referenciaMixto"] = 'required|numeric|digits:6';
+                $rules["cuenta"] = 'required|string';
+                $rules["cuentaMixto"] = 'required|string';
+                $rules["tipoMoneda"] = 'required|integer';
+                $rules["tipoMonedaMixto"] = 'required|integer';
+                if ($this->create_inscripcion['bolivar_mixto'] = '1') {
+                    $rules["totalPagoMixtoBs"] = 'required|numeric';
+                } else if ($this->create_inscripcion['dolar_mixto'] = '2') {
+                    $rules["totalPagoMixtoUsd"] = 'required|numeric';
                 }
             }
         }
@@ -478,36 +474,126 @@ class FormularioCarrera extends Component
             $messages["create_prendas.$i.prendas.required"] = __('El campo prenda es obligatorio.');
             $messages["create_prendas.$i.prendas.integer"] = __('El campo prenda debe ser un numero.');
 
-
             $messages["create_inscripcion.$i.metodo_pago_id.required"] = __('El campo cuentas es obligatorio.');
-            $messages["create_inscripcion.$i.monto_Bs.required"] = __('El campo monto en BS es obligatorio.');
-            $messages["create_inscripcion.$i.monto_Bs.numeric"] = __('El campo monto solo permite numeros.');
-            $messages["create_inscripcion.$i.monto_USD.required"] = __('El campo monto en USD es obligatorio.');
-            $messages["create_inscripcion.$i.monto_USD.numeric"] = __('El campo monto solo permite numeros.');
-            $messages["create_inscripcion.$i.fecha.required"] = __('El campo fecha de pago es obligatorio.');
-            $messages["create_inscripcion.$i.fecha.date"] = __('El campo fecha de pago debe tener la sintaxis correcta.');
-            $messages["create_inscripcion.$i.fecha.before_or_equal"] = __('El campo fecha de pago debe ser menor o igual a ' . Carbon::parse($this->fecha_evento)->format('d-m-Y'));
-            $messages["create_inscripcion.$i.referencia.required"] = __('El campo referencia es obligatorio.');
-            $messages["create_inscripcion.$i.referencia.numeric"] = __('El campo referencia solo permite numeros.');
-            $messages["create_inscripcion.$i.referencia.digits"] = __('El campo referencia solo admite 6 digitos');
-            $messages["create_inscripcion.$i.monto_mixto_Bs.required"] = __('El campo monto es obligatorio.');
-            $messages["create_inscripcion.$i.monto_mixto_Bs.numeric"] = __('El campo monto solo permite numeros.');
-            $messages["create_inscripcion.$i.monto_mixto_USD.required"] = __('El campo monto es obligatorio.');
-            $messages["create_inscripcion.$i.monto_mixto_USD.numeric"] = __('El campo monto solo permite numeros.');
-            $messages["create_inscripcion.$i.fecha_mixto.required"] = __('El campo fecha de pago es obligatorio.');
-            $messages["create_inscripcion.$i.fecha_mixto.date"] = __('El campo fecha de pago debe tener la sintaxis correcta.');
-            $messages["create_inscripcion.$i.fecha_mixto.before_or_equal"] = __('El campo fecha de pago debe ser menor o igual a ' . Carbon::parse($this->fecha_actual)->format('d-m-Y'));
-            $messages["create_inscripcion.$i.referencia_mixto.required"] = __('El campo referencia es obligatorio.');
-            $messages["create_inscripcion.$i.referencia_mixto.numeric"] = __('El campo referencia solo permite numeros.');
-            $messages["create_inscripcion.$i.referencia_mixto.digits"] = __('El campo referencia solo admite los ultimos 6 digitos');
-            $messages["create_inscripcion.$i.cuenta_mixto_1.required"] = __('El campo cuenta es obligatorio.');
-            $messages["create_inscripcion.$i.cuenta_mixto_1.string"] = __('El campo cuenta debe ser una cadena de texto. ');
-            $messages["create_inscripcion.$i.cuenta_mixto_2.required"] = __('El campo cuenta es obligatorio.');
-            $messages["create_inscripcion.$i.cuenta_mixto_2.string"] = __('El campo cuenta debe ser una cadena de texto. ');
+            $messages["create_participante.$i.metodo_pago_id.integer"] = __('El campo ciudad debe ser un numero.');
+            $messages["seleccionPago.required"] = __('El campo metodo de pago es obligatorio.');
+            $messages["seleccionPago.integer"] = __('El campo metodo de pago debe ser un numero.');
+            $messages["metodoPago.required"] = __('El campo metodo de pago es obligatorio.');
+            $messages["metodoPago.integer"] = __('El campo metodo de pago debe ser un numero.');
+            $messages["tipoMoneda.required"] = __('El campo tipo de moneda es obligatorio.');
+            $messages["tipoMoneda.integer"] = __('El campo tipo de moneda debe ser un numero.');
+            $messages["tipoMonedaMixto.required"] = __('El campo tipo de moneda es obligatorio.');
+            $messages["tipoMonedaMixto.integer"] = __('El campo tipo de moneda debe ser un numero.');
+            $messages["fecha.required"] = __('El campo fecha de pago es obligatorio.');
+            $messages["fecha.date"] = __('El campo fecha de pago debe tener la sintaxis correcta.');
+            $messages["fecha.before_or_equal"] = __('El campo fecha de pago debe ser menor o igual a ' . Carbon::parse($this->fecha_actual)->format('d-m-Y'));
+            $messages["referencia.required"] = __('El campo referencia es obligatorio.');
+            $messages["referencia.numeric"] = __('El campo referencia solo permite numeros.');
+            $messages["referencia.digits"] = __('El campo referencia solo admite 6 digitos');
+            $messages["fechaMixto.required"] = __('El campo fecha de pago es obligatorio.');
+            $messages["fechaMixto.date"] = __('El campo fecha de pago debe tener la sintaxis correcta.');
+            $messages["fechaMixto.before_or_equal"] = __('El campo fecha de pago debe ser menor o igual a ' . Carbon::parse($this->fecha_actual)->format('d-m-Y'));
+            $messages["referenciaMixto.required"] = __('El campo referencia es obligatorio.');
+            $messages["referenciaMixto.numeric"] = __('El campo referencia solo permite numeros.');
+            $messages["referenciaMixto.digits"] = __('El campo referencia solo admite los ultimos 6 digitos');
+            $messages["cuenta.required"] = __('El campo cuenta es obligatorio.');
+            $messages["cuenta.string"] = __('El campo cuenta debe ser una cadena de texto. ');
+            $messages["cuentaMixto.required"] = __('El campo cuenta es obligatorio.');
+            $messages["cuentaMixto.string"] = __('El campo cuenta debe ser una cadena de texto. ');
+            $messages["totalPagoBs.required"] = __('El campo monto a pagar es obligatorio.');
+            $messages["totalPagoBs.numeric"] = __('El campo monto a pagar solo permite numeros.');
+            $messages["totalPagoUsd.required"] = __('El campo monto a pagar es obligatorio.');
+            $messages["totalPagoUsd.numeric"] = __('El campo monto a pagar solo permite numeros.');
+            $messages["totalPagoMixtoBs.required"] = __('El campo monto a pagar es obligatorio.');
+            $messages["totalPagoMixtoBs.numeric"] = __('El campo monto a pagar solo permite numeros.');
+            $messages["totalPagoMixtoUsd.required"] = __('El campo monto a pagar es obligatorio.');
+            $messages["totalPagoMixtoUsd.numeric"] = __('El campo monto a pagar solo permite numeros.');
         }
         return $messages;
     }
+    public function dividir_pagos()
+    {
+        if ($this->create_inscripcion['unico'] == '1') {
+            if ($this->totalPagoBs !== null) {
+                $fecha = $this->fecha;
+                $referencia = $this->referencia;
+                $metodoPago = $this->metodoPago;
+                $pagoPorFormulario = $this->totalPagoBs / $this->cantidad;
 
+                for ($i = 0; $i < $this->cantidad; $i++) {
+                    $this->create_inscripcion[$i]['monto_Bs'] = $pagoPorFormulario;
+                    $this->create_inscripcion[$i]['fecha'] = $fecha;
+                    $this->create_inscripcion[$i]['referencia'] = $referencia;
+                    $this->create_inscripcion[$i]['metodo_pago_id'] = $metodoPago;
+                }
+            } else if ($this->cantidad > 0 && $this->totalPagoUsd !== null) {
+                $fecha = $this->fecha;
+                $referencia = $this->referencia;
+                $metodoPago = $this->metodoPago;
+                $pagoPorFormulario = $this->totalPagoUsd / $this->cantidad;
+                for ($i = 0; $i < $this->cantidad; $i++) {
+                    $this->create_inscripcion[$i]['monto_USD'] = $pagoPorFormulario;
+                    $this->create_inscripcion[$i]['fecha'] = $fecha;
+                    $this->create_inscripcion[$i]['referencia'] = $referencia;
+                    $this->create_inscripcion[$i]['metodo_pago_id'] = $metodoPago;
+                }
+            }
+        } else if ($this->create_inscripcion['mixto'] == '2') {
+            if ($this->totalPagoBs !== null) {
+                $fecha = $this->fecha;
+                $referencia = $this->referencia;
+                $metodoPago = $this->metodoPago;
+                $cuenta = $this->cuenta;
+                $pagoPorFormulario = $this->totalPagoBs / $this->cantidad;
+
+                for ($i = 0; $i < $this->cantidad; $i++) {
+                    $this->create_inscripcion[$i]['monto_Bs'] = $pagoPorFormulario;
+                    $this->create_inscripcion[$i]['fecha'] = $fecha;
+                    $this->create_inscripcion[$i]['referencia'] = $referencia;
+
+                    $this->create_inscripcion[$i]['cuenta'] = $cuenta;
+                    $this->create_inscripcion[$i]['metodo_pago_id'] = 1;
+                }
+            } else if ($this->cantidad > 0 && $this->totalPagoUsd !== null) {
+                $fecha = $this->fecha;
+                $referencia = $this->referencia;
+                $metodoPago = $this->metodoPago;
+                $cuenta = $this->cuenta;
+                $pagoPorFormulario = $this->totalPagoUsd / $this->cantidad;
+                for ($i = 0; $i < $this->cantidad; $i++) {
+                    $this->create_inscripcion[$i]['monto_USD'] = $pagoPorFormulario;
+                    $this->create_inscripcion[$i]['fecha'] = $fecha;
+                    $this->create_inscripcion[$i]['referencia'] = $referencia;
+
+                    $this->create_inscripcion[$i]['cuenta'] = $cuenta;
+                    $this->create_inscripcion[$i]['metodo_pago_id'] = 1;
+                }
+            }
+            if ($this->cantidad > 0 && $this->totalPagoMixtoBs !== null) {
+                $fechaMixto = $this->fechaMixto;
+                $referenciaMixto = $this->referenciaMixto;
+                $cuentaMixto = $this->cuentaMixto;
+                $pagoPorFormularioMixto = $this->totalPagoMixtoBs / $this->cantidad;
+                for ($i = 0; $i < $this->cantidad; $i++) {
+                    $this->create_inscripcion[$i]['monto_mixto_Bs'] = $pagoPorFormularioMixto;
+                    $this->create_inscripcion[$i]['fecha_mixto'] = $fechaMixto;
+                    $this->create_inscripcion[$i]['referencia_mixto'] = $referenciaMixto;
+                    $this->create_inscripcion[$i]['cuentaMixto'] = $cuentaMixto;
+                }
+            } else if ($this->cantidad > 0 && $this->totalPagoMixtoUsd !== null) {
+                $fechaMixto = $this->fechaMixto;
+                $referenciaMixto = $this->referenciaMixto;
+                $cuentaMixto = $this->cuentaMixto;
+                $pagoPorFormularioMixto = $this->totalPagoMixtoUsd / $this->cantidad;
+                for ($i = 0; $i < $this->cantidad; $i++) {
+                    $this->create_inscripcion[$i]['monto_mixto_USD'] = $pagoPorFormularioMixto;
+                    $this->create_inscripcion[$i]['fecha_mixto'] = $fechaMixto;
+                    $this->create_inscripcion[$i]['referencia_mixto'] = $referenciaMixto;
+                    $this->create_inscripcion[$i]['cuentaMixto'] = $cuentaMixto;
+                }
+            }
+        }
+    }
     public function buscarCedula()
     {
         for ($i = 0; $i <= $this->cantidad - 1; $i++) {
@@ -561,6 +647,8 @@ class FormularioCarrera extends Component
                 $latestId = $this->participante[$i]->id;
                 $this->create_inscripcion[$i]['participante_id'] = $latestId;
                 $ultimoParticipante = participante::find($latestId);
+                $this->dividir_pagos();
+
                 $datos_json = [
                     'fecha' => $this->create_inscripcion[$i]['fecha'],
                     'referencia' => $this->create_inscripcion[$i]['referencia']
@@ -596,9 +684,6 @@ class FormularioCarrera extends Component
                 $categoria_id = $this->edad($ultimoParticipante->fecha_nacimiento);
                 $this->create_inscripcion[$i]['categoria_habilitada_id'] = $categoria_id;
 
-                if (is_null($this->create_inscripcion[$i]['metodo_pago_id'])) {
-                    $this->create_inscripcion[$i]['metodo_pago_id'] = 3;
-                }
                 if (is_null($this->create_inscripcion[$i]['recorrido_id_grupos'])) {
                     $this->create_inscripcion[$i]['recorrido_id_grupos'] = 2;
                 }
@@ -648,6 +733,8 @@ class FormularioCarrera extends Component
                 $latestId = participante::latest('id')->first()->id;
                 $this->create_inscripcion[$i]['participante_id'] = $latestId;
                 $ultimoParticipante = participante::find($latestId);
+                $this->dividir_pagos();
+
                 $datos_json = [
                     'fecha' => $this->create_inscripcion[$i]['fecha'],
                     'referencia' => $this->create_inscripcion[$i]['referencia']
@@ -682,10 +769,6 @@ class FormularioCarrera extends Component
                 $this->create_inscripcion[$i]['datos'] = $datos_json;
                 $categoria_id = $this->edad($ultimoParticipante->fecha_nacimiento);
                 $this->create_inscripcion[$i]['categoria_habilitada_id'] = $categoria_id;
-
-                if (is_null($this->create_inscripcion[$i]['metodo_pago_id'])) {
-                    $this->create_inscripcion[$i]['metodo_pago_id'] = 3;
-                }
                 if (is_null($this->create_inscripcion[$i]['recorrido_id_grupos'])) {
                     $this->create_inscripcion[$i]['recorrido_id_grupos'] = 2;
                 }
