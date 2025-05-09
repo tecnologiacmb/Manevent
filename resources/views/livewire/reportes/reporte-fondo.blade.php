@@ -172,85 +172,74 @@
 
     <x-dialog-report wire:model="open">
         <x-slot name="title">
-            Detalles
+            <h1 class="fons-bold text-2xl">Detalles de Inscripción</h1>
         </x-slot>
-
         <x-slot name="content">
             <div class="">
                 <table class="w-full text-center min-w-max shadow-md">
                     <thead>
-                        <tr class="bg-blue-600 text-white">
-                            <th class="p-4 border-b border-blue-300">Cod. Inscrip</th>
-                            <th class="p-4 border-b border-blue-300">N° Referencia</th>
-                            <th class="p-4 border-b border-blue-300">Cédula</th>
-                            <th class="p-4 border-b border-blue-300">Recorrido</th>
-                            <th class="p-4 border-b border-blue-300">Fecha</th>
-                            <th class="p-4 border-b border-blue-300">Monto $</th>
-                            <th class="p-4 border-b border-blue-300">Monto Bs</th>
+                        <tr class="text-white" style=" background-color: #12a612;">
+                            <th class="p-4 border-b ">Cod. Inscrip</th>
+                            <th class="p-4 border-b ">Cédula</th>
+                            <th class="p-4 border-b ">Recorrido</th>
+                            <th class="p-4 border-b ">Fecha</th>
+                            <th class="p-4 border-b ">N°1 Referencia</th>
+                            <th class="p-4 border-b ">Monto $</th>
+                            <th class="p-4 border-b ">Monto Bs</th>
+                            <th class="p-4 border-b ">N°2 Referencia</th>
+                            <th class="p-4 border-b ">Monto $</th>
+                            <th class="p-4 border-b ">Monto Bs</th>
+                            <th class="p-4">Total Monto</th>
+
                         </tr>
                     </thead>
                     <tbody class="bg-white">
                         @php
                             $totalBs = 0; // Inicializa la suma de montos en bolívares
                             $totalBsMixto = 0; // Inicializa la suma de montos mixtos en bolívares
+                            $totalMonto = 0; // Inicializa la suma total
                         @endphp
 
                         @if ($detalles)
                             @foreach ($detalles as $detalle)
                                 @php
                                     $datos = json_decode($detalle->datos);
+                                    $montoBs = $datos->monto_Bs ?? 0;
+                                    $montoMixtoBs = $datos->monto_mixto_Bs ?? 0;
+
                                     // Sumar los montos en bolívares si existen
-                                    if (isset($datos->monto_Bs)) {
-                                        $totalBs += $datos->monto_Bs;
-                                    } elseif (isset($datos->monto_mixto_Bs)) {
-                                        $totalBsMixto += $datos->monto_mixto_Bs;
-                                    }
+                                    $totalBs += $montoBs;
+                                    $totalBsMixto += $montoMixtoBs;
+
+                                    // Calcular el total monto en dólares y bolívares
+                                    $montoUSD1 = $datos->monto_USD ?? 0;
+                                    $montoUSD2 = $datos->monto_mixto_USD ?? 0;
+                                    $totalMontoPorFila =
+                                        $montoUSD1 * $detalle->dolar_precio +
+                                        $montoUSD2 * $detalle->dolar_precio +
+                                        $montoBs +
+                                        $montoMixtoBs;
+                                    $totalMonto += $totalMontoPorFila; // Suma total
                                 @endphp
-                                <tr class="hover:bg-blue-100 border-b border-blue-200 transition duration-200">
+                                <tr class="border-b  transition duration-200">
                                     <td class="p-4">{{ $detalle->nomenclatura }}</td>
-                                    <td class="p-4">
-                                        {{ isset($datos->referencia) ? $datos->referencia : $datos->referencia_mixta }}
-                                    </td>
                                     <td class="p-4">{{ $detalle->cedula }}</td>
                                     <td class="p-4">{{ $detalle->recorrido }}</td>
                                     <td class="p-4">{{ $detalle->created_at->format('d-m-Y') }}</td>
-                                    <td class="p-4">
-                                        @if (isset($datos->monto_USD) || isset($datos->monto_mixto_USD))
-                                            @if (isset($datos->monto_USD))
-                                                {{ $datos->monto_USD }}
-                                            @else
-                                                {{ $datos->monto_mixto_USD }}
-                                            @endif
-                                        @else
-                                            @if (isset($datos->monto_Bs))
-                                                {{ $this->calcular($datos->monto_Bs) }}
-                                            @else
-                                                {{ $this->calcular($datos->monto_mixto_Bs) }}
-                                            @endif
-                                        @endif
-                                    </td>
-                                    <td class="p-4">
-                                        @if (isset($datos->monto_Bs) || isset($datos->monto_mixto_Bs))
-                                            @if (isset($datos->monto_Bs))
-                                                {{ $datos->monto_Bs }}
-                                            @else
-                                                {{ $datos->monto_mixto_Bs }}
-                                            @endif
-                                        @else
-                                            @if (isset($datos->monto_Bs))
-                                                {{ $this->calcular_Bs($datos->monto_USD) }}
-                                            @else
-                                                {{ $this->calcular_Bs($datos->monto_mixto_USD) }}
-                                            @endif
-                                        @endif
-                                    </td>
+                                    <td>{{ $datos->referencia ?? 'N/A' }}</td>
+                                    <td>{{ $montoUSD1 }}</td>
+                                    <td>{{ $montoBs }}</td>
+                                    <td>{{ $datos->referencia_mixto ?? 'N/A' }}</td>
+                                    <td>{{ $montoUSD2 }}</td>
+                                    <td>{{ $montoMixtoBs }}</td>
+                                    <td>{{ $totalMontoPorFila }}</td>
                                 </tr>
                             @endforeach
 
-                            <tr class="bg-blue-200">
-                                <td colspan="6" class="p-4 text-right font-bold">Total:</td>
-                                <td class="p-4 font-bold text-blue-700">
-                                    {{ $totalBs + $totalBsMixto }}
+                            <tr style=" background-color: #59de4d31;">
+                                <td colspan="10" class="p-4 text-right font-bold text-black">Total:</td>
+                                <td class="p-4 font-bold text-black">
+                                    {{ $totalMonto }}
                                     <!-- Muestra la suma total de bolívares y bolívares mixtos -->
                                 </td>
                             </tr>
@@ -268,7 +257,7 @@
 
         <x-slot name="footer">
             <div class="flex justify-end">
-                <x-danger-button class="mr-2" wire:click="$set('open', false)">
+                <x-danger-button class="mr-2" wire:click="$set('open', false,'detalles',null)">
                     Cerrar
                 </x-danger-button>
             </div>

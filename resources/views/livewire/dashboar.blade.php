@@ -166,11 +166,11 @@
         </a>
 
     </div>
-    <div class="bg-white p-4 rounded-xl shadow-2xl font-semibold text-white max-w-sm mx-auto space-y-2">
-        @foreach ($useres as $user)
+    <div class="bg-white p-4 rounded-xl shadow-2xl font-semibold text-white max-w-sm mx-auto">
+        @foreach ($rolSeleccionado as $user)
             @php
                 // Comparar si el usuario en la lista es el usuario en sesión
-                $isCurrentUser = $user->id === $currentUserId;
+                $isCurrentUser = $user->id_model_rol === $currentUserId;
             @endphp
             <div class="flex items-center space-x-4 p-3 rounded-lg">
                 @if (Laravel\Jetstream\Jetstream::managesProfilePhotos() && $user->profile_photo_path)
@@ -186,10 +186,16 @@
                 @endif
                 <div class="flex-1 flex items-center justify-between">
                     <p class="text-black font-semibold">{{ $user->name }}</p>
+                    <p class="text-black font-semibold">{{ $user->rol_name }}</p>
+
                     <!-- Punto verde solo si es usuario en sesión: -->
                     <span class="{{ $isCurrentUser ? 'bg-green-500' : 'bg-red-500' }} h-3 w-3 rounded-full"></span>
                 </div>
             </div>
         @endforeach
+
     </div>
+     <div class="grid grid-cols-3 w-full gap-6 max-[500px]:grid-cols-1  max-[500px]:w-full ">
+
+     </div>
 </div>

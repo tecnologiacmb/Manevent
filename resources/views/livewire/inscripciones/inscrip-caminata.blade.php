@@ -13,15 +13,11 @@
             </div>
         </div>
     </div>
-
-
     <div
         class="relative flex flex-col w-full h-full overflow-scroll text-black bg-white shadow-md rounded-xl bg-clip-border overflow-x-hidden overflow-y-hidden">
-
         <table class="w-full text-center table-auto min-w-max">
             <thead>
                 <tr>
-
                     <th class="p-4 border-b border-blue-gray-100 bg-blue-gray-50">
                         <p
                             class="block font-sans text-sm antialiased font-normal leading-none text-blue-gray-900 opacity-70">
@@ -56,13 +52,10 @@
                     </th>
                 </tr>
             </thead>
-
             <tbody class=" capitalize">
-
                 @foreach ($grupos as $grupo)
                     @if ($grupo->recorrido_id == 1)
                         <tr>
-
                             <td class="p-4 border-b border-blue-gray-50">
                                 <p
                                     class="block font-sans text-sm antialiased font-normal leading-normal text-blue-gray-900">
@@ -89,12 +82,14 @@
                             </td>
 
                             <td class="p-4 border-b border-blue-gray-50">
-                                <x-button
-                                    class="bg-blue-500 hover:bg-slate-300 focus:bg-slate-300 active:bg-slate-300"><a
-                                        href="/caminata/inscripcion/{{ $grupo->id }} "
-                                        class="block font-sans text-sm antialiased font-medium leading-normal text-blue-gray-900">
+                                <a href="/caminata/inscripcion/{{ $grupo->id }} "
+                                    class="block font-sans text-sm antialiased font-medium leading-normal text-blue-gray-900">
+                                    <x-button
+                                        class="bg-blue-500 hover:bg-slate-300 focus:bg-slate-300 active:bg-slate-300">
+
                                         <i class="bi bi-pencil-square"></i>
-                                    </a></x-button>
+                                    </x-button>
+                                </a>
                             </td>
                         </tr>
                     @endif

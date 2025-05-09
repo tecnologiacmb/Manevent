@@ -4,7 +4,7 @@
         /* Habilitar desplazamiento horizontal en pantallas pequeñas */
         width: auto;
         /* Cambiar de 100% a auto para que tome el ancho completo de la hoja */
-        margin: -20px;
+        margin: -30px;
         /* Asegura que no haya margen */
     }
 
@@ -154,7 +154,7 @@
                         $montoUSD1 = $datos->monto_USD ?? 0;
                         $montoUSD2 = $datos->monto_mixto_USD ?? 0;
                         $totalMontoPorFila =
-                            $montoUSD1 / $detalle->dolar + $montoUSD2 / $detalle->dolar + $montoBs + $montoMixtoBs;
+                            $montoUSD1 * $detalle->dolar + $montoUSD2 * $detalle->dolar + $montoBs + $montoMixtoBs;
                         $totalMonto += $totalMontoPorFila; // Suma total
                     @endphp
                     <tr>

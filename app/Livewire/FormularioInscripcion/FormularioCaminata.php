@@ -112,6 +112,7 @@ class FormularioCaminata extends Component
     public $referencia, $referenciaMixto;
     public $cuenta = null, $cuentaMixto = null;
     public $metodoPago, $tipoMoneda, $tipoMonedaMixto, $seleccionPago;
+
     public function mount($id = null)
     {
 
@@ -550,10 +551,6 @@ class FormularioCaminata extends Component
             $messages["create_prendas.$i.prendas.required"] = __('El campo prenda es obligatorio.');
             $messages["create_prendas.$i.prendas.integer"] = __('El campo prenda debe ser un numero.');
 
-
-
-            $messages["create_inscripcion.$i.metodo_pago_id.required"] = __('El campo cuentas es obligatorio.');
-            $messages["create_participante.$i.metodo_pago_id.integer"] = __('El campo ciudad debe ser un numero.');
             $messages["seleccionPago.required"] = __('El campo metodo de pago es obligatorio.');
             $messages["seleccionPago.integer"] = __('El campo metodo de pago debe ser un numero.');
             $messages["metodoPago.required"] = __('El campo metodo de pago es obligatorio.');

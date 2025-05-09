@@ -38,6 +38,7 @@ class ReporteFondo extends Component
         if (!$this->dolars) {
             $this->dolars = dolar::latest()->first();
         }
+
     }
     public function generateDetailedReport()
     {
@@ -167,9 +168,10 @@ class ReporteFondo extends Component
     {
         $adjustedEndDate = date('Y-m-d', strtotime($this->dateTo . ' +1 day'));
 
-        $this->totalMontoPagado = inscripcion::select(DB::raw('count(inscripcions.nomenclatura) as cantidad'),
+        $this->totalMontoPagado = inscripcion::select(
+            DB::raw('count(inscripcions.nomenclatura) as cantidad'),
             'inscripcions.nomenclatura',
-        DB::raw('MIN(inscripcions.monto_a_pagar_bs) as monto_a_pagar_bs'),
+            DB::raw('MIN(inscripcions.monto_a_pagar_bs) as monto_a_pagar_bs'),
         )->join('eventos', 'inscripcions.evento_id', '=', 'eventos.id')->when($this->eventoId, function ($query) { // Add this when clause
             $query->where('inscripcions.evento_id', $this->eventoId);
         })->when($this->dateFrom && $this->dateTo, function ($value) use ($adjustedEndDate) {
@@ -190,40 +192,8 @@ class ReporteFondo extends Component
         }
     }
 
-    public function calcular($value_Bs)
-    {
-        $this->bolivares = $value_Bs;
-        // Acceder al primer elemento de la colección
-        try {
-            $resultado = $this->bolivares / ($this->detalles->first()->dolar);
-            $resultado_formateado = number_format($resultado, 3); // Limita a 3 decimales
-            return $resultado_formateado;
-        } catch (\Throwable $th) {
-            return 0;
-        }
-    }
-    public function calcular_Bs($value_USD)
-    {
-        $this->dolar = $value_USD;
-        // Acceder al primer elemento de la colección
-        try {
-            $resultado = $this->dolar * ($this->detalles->first()->dolar);
-            $resultado_formateado = number_format($resultado, 3); // Limita a 3 decimales
-            return $resultado_formateado;
-        } catch (\Throwable $th) {
-            return 0;
-        }
-    }
-    public function sumatoria_total($valo1, $valo2)
-    {
-        try {
-            $suma = $valo1 + $valo2;
-            return $suma;
-        } catch (\Throwable $th) {
-            return 0;
-        }
-    }
-    public function abrir($nomenclatura = '')
+
+    public function abrir($nomenclatura)
     {
         $this->open = true;
         $this->valor_nomenclatura = $nomenclatura;
@@ -235,15 +205,15 @@ class ReporteFondo extends Component
             'inscripcions.participante_id as participante_id',
             'inscripcions.recorrido_id as recorrido_id',
             'inscripcions.grupo_id as grupo_id',
-            'dolars.precio as dolar',
             'inscripcions.created_at as created_at',
             'participantes.cedula as cedula',
             'recorridos.nombre as recorrido',
+            'dolars.precio as dolar_precio',
             'grupos.cantidad as cantidad',
-            'grupos.precio as precio'
+            'grupos.precio as precio',
         )
-            ->join('dolars', 'inscripcions.dolar_id', '=', 'dolars.id')
             ->join('participantes', 'inscripcions.participante_id', '=', 'participantes.id')
+            ->join('dolars', 'inscripcions.dolar_id', '=', 'dolars.id')
             ->join('recorridos', 'inscripcions.recorrido_id', '=', 'recorridos.id')
             ->join('grupos', 'inscripcions.grupo_id', '=', 'grupos.id')
             ->when($this->valor_nomenclatura, function ($query) {
@@ -290,7 +260,7 @@ class ReporteFondo extends Component
             })
             ->groupBy('inscripcions.nomenclatura')
             // Cambia a nomenclatura
-            ->paginate(4);
+            ->paginate(8);
 
         return view('livewire.reportes.reporte-fondo', [
             'reporte' => $reporte,

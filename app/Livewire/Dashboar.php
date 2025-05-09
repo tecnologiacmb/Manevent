@@ -6,11 +6,18 @@ use App\Models\dolar;
 use App\Models\inscripcion;
 use App\Models\participante;
 use App\Models\prenda;
-use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use Illuminate\Support\Facades\DB;
+use Spatie\Permission\Models\Role;
+use App\Models\model_has_roles;
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Traits\HasRoles;
+
+use function Laravel\Prompts\select;
 
 class Dashboar extends Component
 {
@@ -125,9 +132,10 @@ class Dashboar extends Component
     }
     public function render()
     {
-        $useres = User::all(); // O la consulta que uses para obtener los usuarios
-        $currentUserId = Auth::check() ? Auth::user()->id : null; // ID del usuario en sesión
+         // O la consulta que uses para obtener los usuarios
+        $currentUserId = Auth::id(); // ID del usuario en sesión
+        $rolSeleccionado = DB::table('model_has_roles')->join('roles', 'model_has_roles.role_id', '=', 'roles.id')->join('users', 'model_has_roles.model_id', '=', 'users.id')->select('model_has_roles.model_id as id_model_rol','roles.name as rol_name','users.name as name','users.profile_photo_path as profile_photo_path')->get();
 
-        return view('livewire.dashboar', compact('useres', 'currentUserId'));
+        return view('livewire.dashboar', compact( 'currentUserId', 'rolSeleccionado'));
     }
 }

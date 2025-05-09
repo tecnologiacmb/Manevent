@@ -3,7 +3,8 @@
         <div
             class="flex group w-full h-24 rounded-lg bg-white shadow transition relative duration-300 cursor-pointer hover:translate-y-[3px] hover:shadow-[0_-8px_0px_0px_#000000] justify-between">
             <div>
-                <p class="px-12 text-center font-black text-2xl leading-tight text-normal pt-8 group-hover:text-green-800">
+                <p
+                    class="px-12 text-center font-black text-2xl leading-tight text-normal pt-8 group-hover:text-green-800">
                     Selecione un Grupo para la Carrera</p>
             </div>
             <div>
@@ -52,9 +53,7 @@
                     </th>
                 </tr>
             </thead>
-
             <tbody class="capitalize">
-
                 @foreach ($grupos as $grupo)
                     @if ($grupo->recorrido_id == 2)
                         <tr>
@@ -84,12 +83,14 @@
                             </td>
 
                             <td class="p-4 border-b border-blue-gray-50">
-                                <x-button class="bg-blue-500 hover:bg-slate-300 focus:bg-slate-300 active:bg-slate-300">
-                                    <a href="/carrera/inscripcion/{{ $grupo->id }} "
-                                        class="block font-sans text-sm antialiased font-medium leading-normal text-blue-gray-900">
+                                <a href="/carrera/inscripcion/{{ $grupo->id }}"
+                                    class="block font-sans text-sm antialiased font-medium leading-normal text-blue-gray-900">
+                                    <x-button
+                                        class="bg-blue-500 hover:bg-slate-300 focus:bg-slate-300 active:bg-slate-300">
+
                                         <i class="bi bi-pencil-square"></i>
-                                    </a>
-                                </x-button>
+                                    </x-button>
+                                </a>
                             </td>
                         </tr>
                     @endif
